@@ -1,7 +1,7 @@
 const parseCategory = (id, data) => ({
   id,
-  items: data.categories[id].items.map((itemId) => data.items[itemId]),
-  text: data.categories[id].text,
+  items: data.categoriesMap[id].items.map((itemId) => data.itemsMap[itemId]),
+  text: data.categoriesMap[id].text,
 });
 
 export default parseCategory;

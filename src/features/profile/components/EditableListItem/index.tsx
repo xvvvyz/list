@@ -23,10 +23,12 @@ const EditableSubtext = ({ text, ...rest }) => {
 
 const EditableListItem = ({
   inputHeight,
+  onChange,
+  onDelete,
   previewTextHeight,
   subtext,
   subtextOffset,
-  text,
+  value,
   ...rest
 }) => {
   const theme = C.useTheme();
@@ -56,7 +58,13 @@ const EditableListItem = ({
       w={`calc(100% - ${theme.space['14']})`}
       {...rest}
     >
-      <C.Editable pos="relative" submitOnBlur value={text} w="full">
+      <C.Editable
+        onChange={onChange}
+        pos="relative"
+        submitOnBlur
+        value={value}
+        w="full"
+      >
         <C.EditablePreview
           _after={subtext ? hideWrappingLinePseudoStyles : undefined}
           _before={subtext ? hideWrappingLinePseudoStyles : undefined}
@@ -90,6 +98,7 @@ const EditableListItem = ({
         boxSize={10}
         className="editable-list-item__delete"
         icon={<C.Icon as={X} boxSize={6} />}
+        onClick={onDelete}
         opacity={0}
         pos="absolute"
         right={2}

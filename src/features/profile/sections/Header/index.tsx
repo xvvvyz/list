@@ -7,7 +7,7 @@ import IconButtonChevronRight from '../../../../components/IconButtonChevronRigh
 import Logo from '../../../../images/logo.svg';
 import Plus from '../../../../images/plus.svg';
 
-const Header = ({ profiles }) => {
+const Header = ({ profiles, setProfilesMap, setUserMap }) => {
   const { isOpen: showAllProfiles, onToggle: onShowAllProfilesToggle } =
     C.useDisclosure();
 
@@ -26,50 +26,79 @@ const Header = ({ profiles }) => {
           w={14}
         />
       </C.Flex>
-      <EditableListItem
-        fontSize="3xl"
-        inputHeight="4rem"
-        previewTextHeight="4rem"
-        text={profiles[0].text}
-      />
-      <C.Collapse in={showAllProfiles}>
-        <C.SlideFade in={showAllProfiles} offsetY="1rem">
-          {profiles.slice(1).map((profile) => (
-            <C.Flex key={profile.id}>
-              <EditableListItem
-                fontSize="3xl"
-                inputHeight="4rem"
-                previewTextHeight="4rem"
-                text={profile.text}
-              />
-              <IconButtonChevronRight h="4rem" label="foo bar" />
-            </C.Flex>
-          ))}
-          <C.Box pr={14}>
-            <C.Button
-              h={14}
-              iconSpacing={6}
-              justifyContent="flex-start"
-              leftIcon={<C.Icon as={Plus} boxSize={6} />}
-              pl={4}
-              pr={5}
-              variant="ghost"
-              w="full"
-            >
-              add profile
-            </C.Button>
-          </C.Box>
-        </C.SlideFade>
+      {!!profiles.length && (
+        <EditableListItem
+          fontSize="3xl"
+          inputHeight="4rem"
+          onChange={(value) =>
+            setProfilesMap((profilesMap) => ({
+              ...profilesMap,
+              [profiles[0].id]: { ...profilesMap[profiles[0].id], text: value },
+            }))
+          }
+          onDelete={() =>
+            setUserMap((userMap) => ({
+              ...userMap,
+              profiles: userMap.profiles.filter((id) => id !== profiles[0].id),
+            }))
+          }
+          previewTextHeight="4rem"
+          value={profiles[0].text}
+        />
+      )}
+      <C.Collapse
+        in={showAllProfiles || !profiles.length}
+        transition={profiles.length ? undefined : { enter: { duration: 0 } }}
+      >
+        {profiles.slice(1).map((profile) => (
+          <C.Flex key={profile.id}>
+            <EditableListItem
+              fontSize="3xl"
+              inputHeight="4rem"
+              onChange={(value) =>
+                setProfilesMap((profilesMap) => ({
+                  ...profilesMap,
+                  [profile.id]: { ...profilesMap[profile.id], text: value },
+                }))
+              }
+              onDelete={() =>
+                setUserMap((userMap) => ({
+                  ...userMap,
+                  profiles: userMap.profiles.filter((id) => id !== profile.id),
+                }))
+              }
+              previewTextHeight="4rem"
+              value={profile.text}
+            />
+            <IconButtonChevronRight h="4rem" label="foo bar" />
+          </C.Flex>
+        ))}
+        <C.Box pr={profiles.length ? 14 : undefined}>
+          <C.Button
+            h={14}
+            iconSpacing={6}
+            justifyContent="flex-start"
+            leftIcon={<C.Icon as={Plus} boxSize={6} />}
+            pl={4}
+            pr={5}
+            variant="ghost"
+            w="full"
+          >
+            add profile
+          </C.Button>
+        </C.Box>
       </C.Collapse>
-      <IconButtonChevronExpand
-        bottom={2}
-        h={showAllProfiles ? 14 : '4rem'}
-        isToggled={showAllProfiles}
-        label="foo bar"
-        onToggle={onShowAllProfilesToggle}
-        pos="absolute"
-        right={2}
-      />
+      {!!profiles.length && (
+        <IconButtonChevronExpand
+          bottom={2}
+          h={showAllProfiles ? 14 : '4rem'}
+          isToggled={showAllProfiles}
+          label="foo bar"
+          onToggle={onShowAllProfilesToggle}
+          pos="absolute"
+          right={2}
+        />
+      )}
     </C.Box>
   );
 };

@@ -4,7 +4,7 @@ const parseChecklist = (id, data) => {
   let itemsCount = 0;
   let itemsCompletedCount = 0;
 
-  const checklist = data.checklists[id].categories.map((categoryId) => {
+  const checklist = data.checklistsMap[id].categories.map((categoryId) => {
     const category = parseCategory(categoryId, data);
 
     return {
@@ -13,7 +13,7 @@ const parseChecklist = (id, data) => {
         .filter((item) => {
           const include =
             !new RegExp(' {2}.+').test(item.text) ||
-            data.checklists[id].tags.some((tag) =>
+            data.checklistsMap[id].tags.some((tag) =>
               new RegExp(`${tag}($| {2})`).test(item.text)
             );
 
@@ -21,7 +21,7 @@ const parseChecklist = (id, data) => {
           return include;
         })
         .map((item) => {
-          const completed = data.checklists[id].completed.includes(item.id);
+          const completed = data.checklistsMap[id].completed.includes(item.id);
           if (completed) itemsCompletedCount++;
           return { ...item, completed };
         }),
@@ -33,7 +33,7 @@ const parseChecklist = (id, data) => {
     id,
     itemsCompletedCount,
     itemsCount,
-    text: data.checklists[id].text,
+    text: data.checklistsMap[id].text,
   };
 };
 

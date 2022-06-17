@@ -220,6 +220,10 @@ const theme = {
   },
   styles: {
     global: {
+      '.focus-visible': {
+        outline: 'none',
+        shadow: 'outline',
+      },
       '::selection': {
         background: 'blue.600',
       },

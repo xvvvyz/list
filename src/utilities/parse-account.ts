@@ -1,8 +1,8 @@
 import parseProfile from './parse-profile';
 
 const parseAccount = (data) => ({
-  id: data.user.id,
-  profiles: data.user.profiles.map((profileId) =>
+  id: data.userMap.id,
+  profiles: data.userMap.profiles.map((profileId) =>
     parseProfile(profileId, data)
   ),
 });

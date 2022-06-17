@@ -5,6 +5,11 @@ const mockData = {
       items: ['item-1', 'item-2'],
       text: 'before leaving',
     },
+    'category-2': {
+      id: 'category-2',
+      items: ['item-3', 'item-4'],
+      text: 'packed clothes',
+    },
   },
   checklists: {
     'checklist-1': {
@@ -31,10 +36,18 @@ const mockData = {
       id: 'item-2',
       text: 'download shows and movies  flight',
     },
+    'item-3': {
+      id: 'item-3',
+      text: 'socks  x3',
+    },
+    'item-4': {
+      id: 'item-4',
+      text: 'pants  x2',
+    },
   },
   profiles: {
     'profile-1': {
-      categories: ['category-1'],
+      categories: ['category-1', 'category-2'],
       checklists: ['checklist-1', 'checklist-2'],
       id: 'profile-1',
       tags: { international: { color: 0 } },
@@ -49,7 +62,7 @@ const mockData = {
     },
   },
   user: {
-    id: 'account-1',
+    id: 'user-1',
     profiles: ['profile-1', 'profile-2'],
   },
 };

@@ -8,25 +8,42 @@ import mockData from '../data/mock-data';
 import parseAccount from '../utilities/parse-account';
 
 const IndexPage: NextPage = () => {
-  const [categories] = useState(mockData.categories);
-  const [checklists] = useState(mockData.checklists);
-  const [items] = useState(mockData.items);
-  const [profiles] = useState(mockData.profiles);
-  const [user] = useState(mockData.user);
+  const [categoriesMap, setCategoriesMap] = useState(mockData.categories);
+  const [checklistsMap, setChecklistsMap] = useState(mockData.checklists);
+  const [itemsMap, setItemsMap] = useState(mockData.items);
+  const [profilesMap, setProfilesMap] = useState(mockData.profiles);
+  const [userMap, setUserMap] = useState(mockData.user);
 
   const account = parseAccount({
-    categories,
-    checklists,
-    items,
-    profiles,
-    user,
+    categoriesMap,
+    checklistsMap,
+    itemsMap,
+    profilesMap,
+    userMap,
   });
 
   return (
-    <C.Container maxW="container.sm" pb={12}>
-      <Header profiles={account.profiles} />
-      <Checklists checklists={account.profiles[0].checklists} />
-      <Items categories={account.profiles[0].categories} />
+    <C.Container maxW="container.sm" pb={24}>
+      <Header
+        profiles={account.profiles}
+        setProfilesMap={setProfilesMap}
+        setUserMap={setUserMap}
+      />
+      <Checklists
+        activeProfileId={userMap.profiles[0]}
+        checklists={account.profiles[0]?.checklists || []}
+        setChecklistsMap={setChecklistsMap}
+        setProfilesMap={setProfilesMap}
+      />
+      <Items
+        activeProfileId={userMap.profiles[0]}
+        categories={account.profiles[0]?.categories || []}
+        categoriesMap={categoriesMap}
+        profilesMap={profilesMap}
+        setCategoriesMap={setCategoriesMap}
+        setItemsMap={setItemsMap}
+        setProfilesMap={setProfilesMap}
+      />
     </C.Container>
   );
 };
