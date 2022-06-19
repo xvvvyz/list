@@ -39,6 +39,7 @@ const IndexPage: NextPage = () => {
         activeProfileId={userMap.profiles[0]}
         categories={account.profiles[0]?.categories || []}
         categoriesMap={categoriesMap}
+        itemsMap={itemsMap}
         profilesMap={profilesMap}
         setCategoriesMap={setCategoriesMap}
         setItemsMap={setItemsMap}

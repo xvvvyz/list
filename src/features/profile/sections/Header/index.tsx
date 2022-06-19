@@ -1,15 +1,14 @@
 import * as C from '@chakra-ui/react';
 import React from 'react';
+import AddButton from '../../../../components/AddButton';
 import CloudOffline from '../../../../images/cloud-offline.svg';
 import EditableListItem from '../../components/EditableListItem';
 import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
 import IconButtonChevronRight from '../../../../components/IconButtonChevronRight';
 import Logo from '../../../../images/logo.svg';
-import Plus from '../../../../images/plus.svg';
 
 const Header = ({ profiles, setProfilesMap, setUserMap }) => {
-  const { isOpen: showAllProfiles, onToggle: onShowAllProfilesToggle } =
-    C.useDisclosure();
+  const { isOpen, onToggle } = C.useDisclosure();
 
   return (
     <C.Box as="header" layerStyle="header">
@@ -47,7 +46,7 @@ const Header = ({ profiles, setProfilesMap, setUserMap }) => {
         />
       )}
       <C.Collapse
-        in={showAllProfiles || !profiles.length}
+        in={isOpen || !profiles.length}
         transition={profiles.length ? undefined : { enter: { duration: 0 } }}
       >
         {profiles.slice(1).map((profile) => (
@@ -74,27 +73,16 @@ const Header = ({ profiles, setProfilesMap, setUserMap }) => {
           </C.Flex>
         ))}
         <C.Box pr={profiles.length ? 14 : undefined}>
-          <C.Button
-            h={14}
-            iconSpacing={6}
-            justifyContent="flex-start"
-            leftIcon={<C.Icon as={Plus} boxSize={6} />}
-            pl={4}
-            pr={5}
-            variant="ghost"
-            w="full"
-          >
-            add profile
-          </C.Button>
+          <AddButton>add profile</AddButton>
         </C.Box>
       </C.Collapse>
       {!!profiles.length && (
         <IconButtonChevronExpand
           bottom={2}
-          h={showAllProfiles ? 14 : '4rem'}
-          isToggled={showAllProfiles}
+          h={isOpen ? 14 : '4rem'}
+          isToggled={isOpen}
           label="foo bar"
-          onToggle={onShowAllProfilesToggle}
+          onToggle={onToggle}
           pos="absolute"
           right={2}
         />

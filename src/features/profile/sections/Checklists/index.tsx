@@ -1,9 +1,9 @@
 import * as C from '@chakra-ui/react';
 import React from 'react';
+import AddButton from '../../../../components/AddButton';
 import EditableListItem from '../../components/EditableListItem';
 import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
 import IconButtonChevronRight from '../../../../components/IconButtonChevronRight';
-import Plus from '../../../../images/plus.svg';
 
 const Checklists = ({
   activeProfileId,
@@ -11,9 +11,7 @@ const Checklists = ({
   setChecklistsMap,
   setProfilesMap,
 }) => {
-  const { isOpen: showAllChecklists, onToggle: onShowAllChecklistsToggle } =
-    C.useDisclosure();
-
+  const { isOpen, onToggle } = C.useDisclosure();
   if (!activeProfileId) return null;
 
   return (
@@ -56,7 +54,7 @@ const Checklists = ({
             <IconButtonChevronRight h="5.25rem" label="foo bar" />
           </C.Flex>
         )}
-        <C.Collapse in={showAllChecklists}>
+        <C.Collapse in={isOpen}>
           {checklists.slice(1).map((checklist) => (
             <C.Flex key={checklist.id}>
               <EditableListItem
@@ -93,23 +91,12 @@ const Checklists = ({
           ))}
         </C.Collapse>
         <C.Flex>
-          <C.Button
-            h={14}
-            iconSpacing={6}
-            justifyContent="flex-start"
-            leftIcon={<C.Icon as={Plus} boxSize={6} />}
-            pl={4}
-            pr={5}
-            variant="ghost"
-            w="full"
-          >
-            add checklist
-          </C.Button>
+          <AddButton>add checklist</AddButton>
           {checklists.length > 1 && (
             <IconButtonChevronExpand
-              isToggled={showAllChecklists}
+              isToggled={isOpen}
               label="foo bar"
-              onToggle={onShowAllChecklistsToggle}
+              onToggle={onToggle}
             />
           )}
         </C.Flex>

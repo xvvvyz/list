@@ -1,6 +1,6 @@
 import * as C from '@chakra-ui/react';
 import React from 'react';
-import X from '../../../../images/x.svg';
+import IconButtonX from '../IconButtonX';
 
 const EditableSubtext = ({ text, ...rest }) => {
   const { isEditing } = C.useEditableControls();
@@ -93,18 +93,14 @@ const EditableListItem = ({
           w="full"
         />
       </C.Editable>
-      <C.IconButton
-        aria-label="foo bar"
-        boxSize={10}
+      <IconButtonX
         className="editable-list-item__delete"
-        icon={<C.Icon as={X} boxSize={6} />}
+        label="foo bar"
         onClick={onDelete}
-        opacity={0}
         pos="absolute"
         right={2}
         top="50%"
         transform="translateY(-50%)"
-        variant="ghost"
         zIndex="-1"
       />
     </C.Box>

@@ -200,7 +200,7 @@ const theme = {
     colors: {
       bgInput: { default: '#444444' },
       bgPrimary: { default: '#181818' },
-      bgSecondary: { default: '#1F1F1F' },
+      bgSecondary: { default: '#222' },
       fgGhost: { default: 'rgba(255, 255, 255, .4)' },
       fgPrimary: { default: 'rgba(255, 255, 255, .9)' },
       fgSecondary: { default: 'rgba(255, 255, 255, .65)' },
