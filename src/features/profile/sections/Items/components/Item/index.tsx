@@ -9,13 +9,17 @@ const Item = React.forwardRef(
   (
     {
       dragHandleProps,
+      inputRef,
       isActiveContainer,
       isDragging,
       isExpanded,
       isOverlay,
       item,
       nested,
+      onBackspaceDelete,
       onChange,
+      onDelete,
+      onEnter,
       toggleExpanded,
       value,
       ...rest
@@ -75,12 +79,43 @@ const Item = React.forwardRef(
               _focus={{ boxShadow: 'none' }}
               as={TextareaAutosize}
               onChange={onChange}
+              onKeyDown={(e) => {
+                switch (e.code) {
+                  case 'Backspace': {
+                    if (
+                      e.target.selectionStart > 0 ||
+                      e.target.selectionEnd > 0
+                    ) {
+                      return;
+                    }
+
+                    e.preventDefault();
+                    onBackspaceDelete({ carry: value });
+                    return;
+                  }
+
+                  case 'Enter': {
+                    e.preventDefault();
+                    onEnter({ carry: value.slice(e.target.selectionEnd) });
+                    return;
+                  }
+
+                  default: {
+                    // noop
+                  }
+                }
+              }}
+              ref={inputRef}
               resize="none"
               rows={1}
               value={value}
               variant="unstyled"
             />
-            <IconButtonX className="sortable-item__delete" label="foo bar" />
+            <IconButtonX
+              className="sortable-item__delete"
+              label="foo bar"
+              onClick={onDelete}
+            />
           </C.Flex>
           {!!nested && (
             <IconButtonChevronExpand
