@@ -11,26 +11,26 @@ import generateId from '../../../../utilities/generate-id';
 import { IdPrefix } from '../../../../enums';
 
 const Items = () => {
-  const { activeProfile, categories, items, setCategories, setItems, setProfiles } = React.useContext(AccountContext);
+  const [caretLocation, setCaretLocation] = React.useState<[T.Id, number]>(['', 0]);
   const [draggingId, setDraggingId] = React.useState<T.Id>('');
-  const [focusItem, setFocusItem] = React.useState<[T.Id, number]>(['', 0]);
-  const [isExpanded, setIsExpanded] = React.useState<Record<T.Id, boolean>>({});
-  const [overId, setOverId] = React.useState<T.Id>('');
+  const [isCategoryExpanded, setIsCategoryExpanded] = React.useState<Record<T.Id, boolean>>({});
+  const [overCategoryId, setOverCategoryId] = React.useState<T.Id>('');
   const sensors = D.useSensors(D.useSensor(D.PointerSensor));
-  const textareaRefs: Record<T.Id, React.RefObject<HTMLTextAreaElement>> = {};
+  const textareaRefs = React.useRef<Record<T.Id, React.RefObject<HTMLTextAreaElement>>>({});
+  const { activeProfile, categories, items, setCategories, setItems, setProfiles } = React.useContext(AccountContext);
 
   React.useEffect(() => {
-    if (!focusItem) return;
-    const [id, index] = focusItem;
-    const el = textareaRefs[id]?.current;
+    if (!caretLocation) return;
+    const [id, index] = caretLocation;
+    const el = textareaRefs.current[id]?.current;
     if (!el) return;
     el.focus();
     el.setSelectionRange(index, index);
-  }, [focusItem]);
+  }, [caretLocation]);
 
   if (!activeProfile) return null;
 
-  const findCategoryId = (id: T.Id): T.Id =>
+  const findCategoryId = (id: D.UniqueIdentifier): T.Id =>
     activeProfile.categories.find((c) => c.id === id || c.items.some((i) => i.id === id))?.id || '';
 
   const createCategory = ({ atIndex, text = '' }: { atIndex: number; text: string }) => {
@@ -57,7 +57,7 @@ const Items = () => {
       },
     }));
 
-    setFocusItem([newCategory.id, 0]);
+    setCaretLocation([newCategory.id, 0]);
     return newCategory;
   };
 
@@ -83,28 +83,25 @@ const Items = () => {
               ...args,
               droppableContainers: args.droppableContainers.filter(
                 ({ id }) =>
-                  (id in items && isExpanded[findCategoryId(String(id))]) ||
-                  (id in categories && (!isExpanded[id] || categories[id].items.length === 0))
+                  (id in items && isCategoryExpanded[findCategoryId(id)]) ||
+                  (id in categories && (!isCategoryExpanded[id] || categories[id].items.length === 0))
               ),
             });
           }}
           id="items-dnd-context"
           onDragCancel={() => {
             setDraggingId('');
-            setOverId('');
+            setOverCategoryId('');
           }}
           onDragEnd={({ active, over }) => {
             setDraggingId('');
-            setOverId('');
+            setOverCategoryId('');
 
             if (!over?.id) return;
 
-            const activeId = String(active.id);
-            const overId = String(over?.id);
-
-            if (activeId in categories) {
-              const activeCategoryIndex = activeProfile.categories.findIndex((c) => c.id === activeId);
-              const overCategoryIndex = activeProfile.categories.findIndex((c) => c.id === overId);
+            if (active.id in categories) {
+              const activeCategoryIndex = activeProfile.categories.findIndex((c) => c.id === active.id);
+              const overCategoryIndex = activeProfile.categories.findIndex((c) => c.id === over.id);
 
               if (activeCategoryIndex !== overCategoryIndex) {
                 setProfiles((state) => ({
@@ -123,56 +120,69 @@ const Items = () => {
               return;
             }
 
-            const activeParentCategoryId = findCategoryId(activeId);
-            const overCategoryId = findCategoryId(overId);
+            const activeParentCategoryId = findCategoryId(active.id);
+            const finalOverCategoryId = findCategoryId(over.id);
 
-            if (activeParentCategoryId === overCategoryId) {
-              const itemIds = categories[activeParentCategoryId].items;
-              const activeItemIndex = itemIds.indexOf(activeId);
-              const overItemIndex = itemIds.indexOf(overId);
-
-              if (activeItemIndex !== overItemIndex) {
-                const overCategoryId = findCategoryId(overId);
-
+            if (activeParentCategoryId !== finalOverCategoryId) {
+              if (!isCategoryExpanded[finalOverCategoryId] || categories[finalOverCategoryId].items.length === 0) {
                 setCategories((state) => ({
                   ...state,
-                  [overCategoryId]: {
-                    ...state[overCategoryId],
-                    items: DS.arrayMove(state[overCategoryId].items, activeItemIndex, overItemIndex),
+                  [activeParentCategoryId]: {
+                    ...state[activeParentCategoryId],
+                    items: state[activeParentCategoryId].items.filter((item) => item !== active.id),
+                  },
+                  [finalOverCategoryId]: {
+                    ...state[finalOverCategoryId],
+                    items: [String(active.id), ...state[finalOverCategoryId].items],
                   },
                 }));
               }
+
+              return;
+            }
+
+            const itemIds = categories[activeParentCategoryId].items;
+            const activeItemIndex = itemIds.indexOf(String(active.id));
+            const overItemIndex = itemIds.indexOf(String(over.id));
+
+            if (activeItemIndex !== overItemIndex) {
+              setCategories((state) => ({
+                ...state,
+                [finalOverCategoryId]: {
+                  ...state[finalOverCategoryId],
+                  items: DS.arrayMove(state[finalOverCategoryId].items, activeItemIndex, overItemIndex),
+                },
+              }));
             }
           }}
           onDragOver={({ active, over }) => {
             if (active.id in categories || !over?.id) return;
+            const activeParentCategoryId = findCategoryId(active.id);
+            const newOverCategoryId = findCategoryId(over.id);
+            setOverCategoryId(newOverCategoryId);
 
-            const activeId = String(active.id);
-            const overId = String(over?.id);
-
-            const activeParentCategoryId = findCategoryId(activeId);
-            const overCategoryId = findCategoryId(overId);
-
-            if (activeParentCategoryId === overCategoryId) return;
-
-            setCategories((state) => ({
-              ...state,
-              [activeParentCategoryId]: {
-                ...state[activeParentCategoryId],
-                items: state[activeParentCategoryId].items.filter((item) => item !== activeId),
-              },
-              [overCategoryId]: {
-                ...state[overCategoryId],
-                items: [activeId, ...state[overCategoryId].items],
-              },
-            }));
-
-            setOverId(overCategoryId);
+            if (
+              activeParentCategoryId !== newOverCategoryId &&
+              isCategoryExpanded[newOverCategoryId] &&
+              categories[newOverCategoryId].items.length > 0
+            ) {
+              setCategories((state) => ({
+                ...state,
+                [activeParentCategoryId]: {
+                  ...state[activeParentCategoryId],
+                  items: state[activeParentCategoryId].items.filter((item) => item !== active.id),
+                },
+                [newOverCategoryId]: {
+                  ...state[newOverCategoryId],
+                  items: [String(active.id), ...state[newOverCategoryId].items],
+                },
+              }));
+            }
           }}
           onDragStart={({ active }) => {
-            const activeId = String(active.id);
-            setDraggingId(activeId);
-            setOverId(findCategoryId(activeId));
+            setDraggingId(String(active.id));
+            if (active.id in categories) return;
+            setOverCategoryId(findCategoryId(active.id));
           }}
           sensors={sensors}
         >
@@ -194,7 +204,7 @@ const Items = () => {
                   },
                 }));
 
-                setFocusItem([newItem.id, 0]);
+                setCaretLocation([newItem.id, 0]);
                 return newItem;
               };
 
@@ -207,13 +217,13 @@ const Items = () => {
                   },
                 }));
 
-              textareaRefs[category.id] = React.createRef();
+              textareaRefs.current[category.id] = React.createRef();
 
               return (
                 <SortableItem
                   id={category.id}
-                  isActiveDropzone={overId === category.id}
-                  isExpanded={isExpanded[category.id]}
+                  isActiveDropzone={overCategoryId === category.id}
+                  isExpanded={isCategoryExpanded[category.id]}
                   key={category.id}
                   nestedItems={
                     <>
@@ -228,7 +238,7 @@ const Items = () => {
                               },
                             }));
 
-                          textareaRefs[item.id] = React.createRef();
+                          textareaRefs.current[item.id] = React.createRef();
 
                           return (
                             <SortableItem
@@ -248,7 +258,7 @@ const Items = () => {
                                       },
                                     }));
 
-                                    setFocusItem([previousItemId, items[previousItemId].text.length]);
+                                    setCaretLocation([previousItemId, items[previousItemId].text.length]);
                                     return;
                                   }
 
@@ -260,7 +270,7 @@ const Items = () => {
                                     },
                                   }));
 
-                                  setFocusItem([category.id, category.text.length]);
+                                  setCaretLocation([category.id, category.text.length]);
                                 },
                                 onChange: ({ value }) =>
                                   setItems((state) => ({
@@ -281,7 +291,7 @@ const Items = () => {
                                     text: carry,
                                   });
                                 },
-                                ref: textareaRefs[item.id],
+                                ref: textareaRefs.current[item.id],
                                 value: item.text,
                               }}
                             />
@@ -299,7 +309,7 @@ const Items = () => {
                       const previousCategoryId = categories[categoryIndex - 1].id;
                       if (!previousCategoryId) return;
 
-                      if (isExpanded[previousCategoryId]) {
+                      if (isCategoryExpanded[previousCategoryId]) {
                         const previousCategoryLastItemId =
                           categories[previousCategoryId].items[categories[previousCategoryId].items.length - 1];
 
@@ -311,7 +321,7 @@ const Items = () => {
                           },
                         }));
 
-                        setFocusItem([previousCategoryLastItemId, items[previousCategoryLastItemId].text.length]);
+                        setCaretLocation([previousCategoryLastItemId, items[previousCategoryLastItemId].text.length]);
                         return;
                       }
 
@@ -323,7 +333,7 @@ const Items = () => {
                         },
                       }));
 
-                      setFocusItem([previousCategoryId, categories[previousCategoryId].text.length]);
+                      setCaretLocation([previousCategoryId, categories[previousCategoryId].text.length]);
                     },
                     onChange: ({ value }) =>
                       setCategories((state) => ({
@@ -339,18 +349,18 @@ const Items = () => {
                         },
                       }));
 
-                      if (isExpanded[category.id]) {
+                      if (isCategoryExpanded[category.id]) {
                         createItem({ atIndex: 0, text: carry });
                         return;
                       }
 
                       createCategory({ atIndex: categoryIndex + 1, text: carry });
                     },
-                    ref: textareaRefs[category.id],
+                    ref: textareaRefs.current[category.id],
                     value: category.text,
                   }}
                   toggleExpanded={() =>
-                    setIsExpanded((state) => ({
+                    setIsCategoryExpanded((state) => ({
                       ...state,
                       [category.id]: !state[category.id],
                     }))
@@ -364,7 +374,7 @@ const Items = () => {
               {!!draggingId && (
                 <Item
                   id={`overlay-${draggingId}`}
-                  isExpanded={isExpanded[draggingId]}
+                  isExpanded={isCategoryExpanded[draggingId]}
                   isOverlay
                   nestedItems={
                     draggingCategory ? (

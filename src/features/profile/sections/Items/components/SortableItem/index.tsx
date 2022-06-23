@@ -13,6 +13,7 @@ const SortableItem = ({ id, nestedItems, ...rest }: SortableItemProps) => {
     animateLayoutChanges: DS.defaultAnimateLayoutChanges,
     data: { isContainer: true },
     id,
+    transition: { duration: 200, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' },
   });
 
   const categoryOrItem = nestedItems ? 'category' : 'item';
