@@ -2,7 +2,7 @@ import * as C from '@chakra-ui/react';
 import React from 'react';
 import Plus from '../../images/plus.svg';
 
-const AddButton = ({ children, ...rest }) => (
+const AddButton = (props: C.ButtonProps) => (
   <C.Button
     h={14}
     iconSpacing={6}
@@ -12,10 +12,8 @@ const AddButton = ({ children, ...rest }) => (
     pr={5}
     variant="ghost"
     w="full"
-    {...rest}
-  >
-    {children}
-  </C.Button>
+    {...props}
+  />
 );
 
 export default AddButton;

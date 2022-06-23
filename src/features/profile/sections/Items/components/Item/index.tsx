@@ -1,137 +1,158 @@
 import * as C from '@chakra-ui/react';
 import React from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
+import * as T from '../../../../../../types';
 import Grabber from '../../../../../../images/grabber.svg';
 import IconButtonChevronExpand from '../../../../../../components/IconButtonChevronExpand';
-import IconButtonX from '../../../../components/IconButtonX';
-import TextareaAutosize from 'react-textarea-autosize';
+import IconButtonX from '../../../../../../components/IconButtonX';
 
-const Item = React.forwardRef(
-  (
-    {
-      dragHandleProps,
-      inputRef,
-      isActiveContainer,
-      isDragging,
-      isExpanded,
-      isOverlay,
-      item,
-      nested,
-      onBackspaceDelete,
-      onChange,
-      onDelete,
-      onEnter,
-      toggleExpanded,
-      value,
-      ...rest
-    },
-    ref
-  ) => {
-    const focusOrHoverStyles = {
-      '.sortable-item__delete': { opacity: 1, zIndex: 1 },
-    };
+interface ItemProps {
+  containerProps?: {
+    ref: React.RefCallback<HTMLElement>;
+    transform: string | undefined;
+    transition: string | undefined;
+  };
+  dragHandleProps?: {
+    'aria-describedby': string;
+    'aria-disabled': boolean;
+    'aria-label': string;
+    'aria-pressed': boolean | undefined;
+    'aria-roledescription': string;
+    ref: React.RefCallback<HTMLElement>;
+    role?: string;
+    tabIndex: number;
+  };
+  id: T.Id;
+  isActiveDropzone?: boolean;
+  isDragging?: boolean;
+  isExpanded?: boolean;
+  isOverlay?: boolean;
+  nestedItems?: React.ReactNode;
+  onDelete?: ({ carry }: { carry: string }) => void;
+  textareaProps: {
+    onBackspaceDelete?: ({ carry }: { carry: string }) => void;
+    onChange?: ({ value }: { value: string }) => void;
+    onEnter?: ({ carry }: { carry: string }) => void;
+    ref?: React.RefObject<HTMLTextAreaElement>;
+    value: string;
+  };
+  toggleExpanded?: () => void;
+}
 
-    const containerStyles = {};
+const Item = ({
+  containerProps,
+  dragHandleProps,
+  id,
+  isActiveDropzone,
+  isDragging,
+  isExpanded,
+  isOverlay,
+  nestedItems,
+  onDelete,
+  textareaProps: { onBackspaceDelete, onChange, onEnter, ref, value },
+  toggleExpanded,
+}: ItemProps) => {
+  const focusOrHoverStyles = {
+    '.sortable-item__delete': { opacity: 1, zIndex: 1 },
+  };
 
-    if (isOverlay || isDragging) {
-      containerStyles.shadow = 'outline';
-    }
+  const containerStyles = {
+    bg: 'initial',
+    opacity: '1',
+    py: 0,
+    shadow: 'none',
+  };
 
-    if (isOverlay || isDragging || isActiveContainer) {
-      containerStyles.bg = 'bgPrimary';
-    }
-
-    if (isDragging) {
-      containerStyles.opacity = '0';
-    }
-
-    if (nested) {
-      containerStyles.py = 2;
-    }
-
-    return (
-      <C.Box
-        borderRadius="2xl"
-        pos="relative"
-        ref={ref}
-        sx={containerStyles}
-        {...rest}
-      >
-        <C.HStack pr={2}>
-          <C.IconButton
-            borderRadius="2xl"
-            color="fgSecondary"
-            cursor="move"
-            display="inline-flex"
-            flexShrink={0}
-            h={10}
-            icon={<C.Icon as={Grabber} boxSize={6} />}
-            variant="unstyled"
-            w={14}
-            {...dragHandleProps}
-          />
-          <C.Flex
-            _focusWithin={focusOrHoverStyles}
-            _hover={focusOrHoverStyles}
-            pos="relative"
-            w="full"
-          >
-            <C.Textarea
-              _focus={{ boxShadow: 'none' }}
-              as={TextareaAutosize}
-              onChange={onChange}
-              onKeyDown={(e) => {
-                switch (e.code) {
-                  case 'Backspace': {
-                    if (
-                      e.target.selectionStart > 0 ||
-                      e.target.selectionEnd > 0
-                    ) {
-                      return;
-                    }
-
-                    e.preventDefault();
-                    onBackspaceDelete({ carry: value });
-                    return;
-                  }
-
-                  case 'Enter': {
-                    e.preventDefault();
-                    onEnter({ carry: value.slice(e.target.selectionEnd) });
-                    return;
-                  }
-
-                  default: {
-                    // noop
-                  }
-                }
-              }}
-              ref={inputRef}
-              resize="none"
-              rows={1}
-              value={value}
-              variant="unstyled"
-            />
-            <IconButtonX
-              className="sortable-item__delete"
-              label="foo bar"
-              onClick={onDelete}
-            />
-          </C.Flex>
-          {!!nested && (
-            <IconButtonChevronExpand
-              boxSize={10}
-              isToggled={isExpanded}
-              label="foo bar"
-              onToggle={toggleExpanded}
-            />
-          )}
-        </C.HStack>
-        <C.Collapse in={isExpanded}>
-          <C.Box pl={5}>{nested}</C.Box>
-        </C.Collapse>
-      </C.Box>
-    );
+  if (isOverlay || isDragging) {
+    containerStyles.shadow = 'outline';
   }
-);
+
+  if (isOverlay || isDragging || isActiveDropzone) {
+    containerStyles.bg = 'bgPrimary';
+  }
+
+  if (isDragging) {
+    containerStyles.opacity = '0';
+  }
+
+  if (nestedItems) {
+    containerStyles.py = 2;
+  }
+
+  delete dragHandleProps?.role;
+
+  return (
+    <C.Box borderRadius="2xl" id={String(id)} pos="relative" sx={containerStyles} {...containerProps}>
+      <C.HStack pr={2}>
+        <C.IconButton
+          aria-label={dragHandleProps?.['aria-label'] || ''}
+          borderRadius="2xl"
+          color="fgSecondary"
+          cursor="move"
+          display="inline-flex"
+          flexShrink={0}
+          h={10}
+          icon={<C.Icon as={Grabber} boxSize={6} />}
+          variant="unstyled"
+          w={14}
+          {...dragHandleProps}
+        />
+        <C.Flex _focusWithin={focusOrHoverStyles} _hover={focusOrHoverStyles} pos="relative" w="full">
+          <C.Textarea
+            _focus={{ boxShadow: 'none' }}
+            as={TextareaAutosize}
+            onChange={(e) => {
+              if (!onChange) return;
+              onChange({ value: e.target.value });
+            }}
+            onKeyDown={(e) => {
+              const target = e.target as HTMLTextAreaElement;
+
+              switch (e.code) {
+                case 'Backspace': {
+                  if (!onBackspaceDelete || target.selectionStart + target.selectionEnd > 0) return;
+                  e.preventDefault();
+                  onBackspaceDelete({ carry: value });
+                  return;
+                }
+
+                case 'Enter': {
+                  if (!onEnter) return;
+                  e.preventDefault();
+                  onEnter({ carry: value.slice(target.selectionEnd) });
+                  return;
+                }
+
+                default: {
+                  // noop
+                }
+              }
+            }}
+            ref={ref}
+            resize="none"
+            rows={1}
+            value={value}
+            variant="unstyled"
+          />
+          <IconButtonX
+            aria-label="foo bar"
+            className="sortable-item__delete"
+            onClick={() => {
+              if (!onDelete) return;
+              onDelete({ carry: '' });
+            }}
+          />
+        </C.Flex>
+        {!!nestedItems && (
+          <IconButtonChevronExpand aria-label="foo bar" boxSize={10} isToggled={isExpanded} onToggle={toggleExpanded} />
+        )}
+      </C.HStack>
+      <C.Collapse in={isExpanded}>
+        <C.Box pl={5}>{nestedItems}</C.Box>
+      </C.Collapse>
+    </C.Box>
+  );
+};
 
 export default Item;
+export type { ItemProps };

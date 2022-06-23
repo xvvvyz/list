@@ -2,63 +2,67 @@ import * as C from '@chakra-ui/react';
 import * as D from '@dnd-kit/core';
 import * as DS from '@dnd-kit/sortable';
 import React from 'react';
+import * as T from '../../../../types';
+import AccountContext from '../../../../context/account';
 import AddButton from '../../../../components/AddButton';
 import Item from './components/Item';
 import SortableItem from './components/SortableItem';
 import generateId from '../../../../utilities/generate-id';
+import { IdPrefix } from '../../../../enums';
 
-const Items = ({
-  activeProfileId,
-  categories,
-  categoriesMap,
-  itemsMap,
-  profilesMap,
-  setCategoriesMap,
-  setItemsMap,
-  setProfilesMap,
-}) => {
-  const [activeCategoryId, setActiveCategoryId] = React.useState(null);
-  const [activeElementId, setActiveElementId] = React.useState(null);
-  const [focusByIdAtIndex, setFocusByIdAtIndex] = React.useState([]);
-  const [isCategoryExpandedMap, setIsCategoryExpandedMap] = React.useState({});
-  const idRefMap = {};
+const Items = () => {
+  const { activeProfile, categories, items, setCategories, setItems, setProfiles } = React.useContext(AccountContext);
+  const [draggingId, setDraggingId] = React.useState<T.Id>('');
+  const [focusItem, setFocusItem] = React.useState<[T.Id, number]>(['', 0]);
+  const [isExpanded, setIsExpanded] = React.useState<Record<T.Id, boolean>>({});
+  const [overId, setOverId] = React.useState<T.Id>('');
   const sensors = D.useSensors(D.useSensor(D.PointerSensor));
+  const textareaRefs: Record<T.Id, React.RefObject<HTMLTextAreaElement>> = {};
 
   React.useEffect(() => {
-    const [id, index] = focusByIdAtIndex;
-    if (!id) return;
-    const el = idRefMap[id].current;
+    if (!focusItem) return;
+    const [id, index] = focusItem;
+    const el = textareaRefs[id]?.current;
+    if (!el) return;
     el.focus();
     el.setSelectionRange(index, index);
-  }, [focusByIdAtIndex]);
+  }, [focusItem]);
 
-  if (!activeProfileId) return null;
+  if (!activeProfile) return null;
 
-  const findCategoryId = (id) =>
-    categories.find((c) => c.id === id || c.items.some((i) => i.id === id))?.id;
+  const findCategoryId = (id: T.Id): T.Id =>
+    activeProfile.categories.find((c) => c.id === id || c.items.some((i) => i.id === id))?.id || '';
 
-  const createCategory = ({ atIndex, text = '' }) => {
-    const newCategory = { id: generateId(), items: [], text };
-    setCategoriesMap((state) => ({ ...state, [newCategory.id]: newCategory }));
+  const createCategory = ({ atIndex, text = '' }: { atIndex: number; text: string }) => {
+    const newCategory = {
+      id: generateId(IdPrefix.Category),
+      items: [],
+      text,
+    };
 
-    setProfilesMap((state) => ({
+    setCategories((state) => ({
       ...state,
-      [activeProfileId]: {
-        ...state[activeProfileId],
+      [newCategory.id]: newCategory,
+    }));
+
+    setProfiles((state) => ({
+      ...state,
+      [activeProfile.id]: {
+        ...state[activeProfile.id],
         categories: [
-          ...state[activeProfileId].categories.slice(0, atIndex),
+          ...state[activeProfile.id].categories.slice(0, atIndex),
           newCategory.id,
-          ...state[activeProfileId].categories.slice(atIndex),
+          ...state[activeProfile.id].categories.slice(atIndex),
         ],
       },
     }));
 
-    setFocusByIdAtIndex([newCategory.id, 0]);
+    setFocusItem([newCategory.id, 0]);
     return newCategory;
   };
 
-  const activeElement =
-    categoriesMap[activeElementId] || itemsMap[activeElementId];
+  const draggingCategory = categories[draggingId];
+  const draggingItem = items[draggingId];
 
   return (
     <C.Box as="section" mt={12}>
@@ -68,12 +72,10 @@ const Items = ({
       <C.Box layerStyle="card" mt={5}>
         <D.DndContext
           collisionDetection={(args) => {
-            if (args.active.id in categoriesMap) {
+            if (args.active.id in categories) {
               return D.closestCenter({
                 ...args,
-                droppableContainers: args.droppableContainers.filter(
-                  ({ id }) => id in categoriesMap
-                ),
+                droppableContainers: args.droppableContainers.filter(({ id }) => id in categories),
               });
             }
 
@@ -81,119 +83,106 @@ const Items = ({
               ...args,
               droppableContainers: args.droppableContainers.filter(
                 ({ id }) =>
-                  (id in itemsMap &&
-                    isCategoryExpandedMap[findCategoryId(id)]) ||
-                  (id in categoriesMap &&
-                    (!isCategoryExpandedMap[id] ||
-                      categoriesMap[id].items.length === 0))
+                  (id in items && isExpanded[findCategoryId(String(id))]) ||
+                  (id in categories && (!isExpanded[id] || categories[id].items.length === 0))
               ),
             });
           }}
           id="items-dnd-context"
           onDragCancel={() => {
-            setActiveElementId(null);
-            setActiveCategoryId(null);
+            setDraggingId('');
+            setOverId('');
           }}
           onDragEnd={({ active, over }) => {
-            setActiveElementId(null);
-            setActiveCategoryId(null);
+            setDraggingId('');
+            setOverId('');
 
             if (!over?.id) return;
 
-            if (active.id in categoriesMap) {
-              const categoryIds = profilesMap[activeProfileId].categories;
-              const activeCategoryIndex = categoryIds.indexOf(active.id);
-              const overCategoryIndex = categoryIds.indexOf(over.id);
+            const activeId = String(active.id);
+            const overId = String(over?.id);
+
+            if (activeId in categories) {
+              const activeCategoryIndex = activeProfile.categories.findIndex((c) => c.id === activeId);
+              const overCategoryIndex = activeProfile.categories.findIndex((c) => c.id === overId);
 
               if (activeCategoryIndex !== overCategoryIndex) {
-                setProfilesMap({
-                  ...profilesMap,
-                  [activeProfileId]: {
-                    ...profilesMap[activeProfileId],
+                setProfiles((state) => ({
+                  ...state,
+                  [activeProfile.id]: {
+                    ...state[activeProfile.id],
                     categories: DS.arrayMove(
-                      categoryIds,
+                      state[activeProfile.id].categories,
                       activeCategoryIndex,
                       overCategoryIndex
                     ),
                   },
-                });
+                }));
               }
 
               return;
             }
 
-            const activeParentCategoryId = findCategoryId(active.id);
-            const overCategoryId = findCategoryId(over.id);
+            const activeParentCategoryId = findCategoryId(activeId);
+            const overCategoryId = findCategoryId(overId);
 
             if (activeParentCategoryId === overCategoryId) {
-              const itemIds = categoriesMap[activeParentCategoryId].items;
-              const activeItemIndex = itemIds.indexOf(active.id);
-              const overItemIndex = itemIds.indexOf(over.id);
+              const itemIds = categories[activeParentCategoryId].items;
+              const activeItemIndex = itemIds.indexOf(activeId);
+              const overItemIndex = itemIds.indexOf(overId);
 
               if (activeItemIndex !== overItemIndex) {
-                const overCategoryId = findCategoryId(over.id);
+                const overCategoryId = findCategoryId(overId);
 
-                setCategoriesMap({
-                  ...categoriesMap,
+                setCategories((state) => ({
+                  ...state,
                   [overCategoryId]: {
-                    ...categoriesMap[overCategoryId],
-                    items: DS.arrayMove(
-                      itemIds,
-                      activeItemIndex,
-                      overItemIndex
-                    ),
+                    ...state[overCategoryId],
+                    items: DS.arrayMove(state[overCategoryId].items, activeItemIndex, overItemIndex),
                   },
-                });
+                }));
               }
             }
           }}
           onDragOver={({ active, over }) => {
-            if (active.id in categoriesMap || !over?.id) return;
+            if (active.id in categories || !over?.id) return;
 
-            const activeParentCategoryId = findCategoryId(active.id);
-            const overCategoryId = findCategoryId(over.id);
+            const activeId = String(active.id);
+            const overId = String(over?.id);
+
+            const activeParentCategoryId = findCategoryId(activeId);
+            const overCategoryId = findCategoryId(overId);
 
             if (activeParentCategoryId === overCategoryId) return;
 
-            setCategoriesMap({
-              ...categoriesMap,
+            setCategories((state) => ({
+              ...state,
               [activeParentCategoryId]: {
-                ...categoriesMap[activeParentCategoryId],
-                items: categoriesMap[activeParentCategoryId].items.filter(
-                  (item) => item !== active.id
-                ),
+                ...state[activeParentCategoryId],
+                items: state[activeParentCategoryId].items.filter((item) => item !== activeId),
               },
               [overCategoryId]: {
-                ...categoriesMap[overCategoryId],
-                items: [active.id, ...categoriesMap[overCategoryId].items],
+                ...state[overCategoryId],
+                items: [activeId, ...state[overCategoryId].items],
               },
-            });
+            }));
 
-            setActiveCategoryId(overCategoryId);
+            setOverId(overCategoryId);
           }}
           onDragStart={({ active }) => {
-            setActiveElementId(active.id);
-            setActiveCategoryId(findCategoryId(active.id));
+            const activeId = String(active.id);
+            setDraggingId(activeId);
+            setOverId(findCategoryId(activeId));
           }}
           sensors={sensors}
         >
-          <DS.SortableContext
-            items={categories}
-            strategy={DS.verticalListSortingStrategy}
-          >
-            {categories.map((category, categoryIndex) => {
-              const createItem = ({ atIndex, text = '' }) => {
-                const newItem = {
-                  id: generateId(),
-                  text,
-                };
+          <DS.SortableContext items={activeProfile.categories} strategy={DS.verticalListSortingStrategy}>
+            {activeProfile.categories.map((category, categoryIndex) => {
+              const createItem = ({ atIndex, text = '' }: { atIndex: number; text: string }) => {
+                const newItem = { id: generateId(IdPrefix.Item), text };
+                setItems((state) => ({ ...state, [newItem.id]: newItem }));
 
-                setItemsMap((state) => ({
-                  ...state,
-                  [newItem.id]: newItem,
-                }));
-
-                setCategoriesMap((state) => ({
+                setCategories((state) => ({
                   ...state,
                   [category.id]: {
                     ...state[category.id],
@@ -205,243 +194,201 @@ const Items = ({
                   },
                 }));
 
-                setFocusByIdAtIndex([newItem.id, 0]);
-
+                setFocusItem([newItem.id, 0]);
                 return newItem;
               };
 
               const deleteCategory = () =>
-                setProfilesMap((state) => ({
+                setProfiles((state) => ({
                   ...state,
-                  [activeProfileId]: {
-                    ...state[activeProfileId],
-                    categories: state[activeProfileId].categories.filter(
-                      (c) => c !== category.id
-                    ),
+                  [activeProfile.id]: {
+                    ...state[activeProfile.id],
+                    categories: state[activeProfile.id].categories.filter((c) => c !== category.id),
                   },
                 }));
 
-              idRefMap[category.id] = React.createRef();
+              textareaRefs[category.id] = React.createRef();
 
               return (
                 <SortableItem
                   id={category.id}
-                  inputRef={idRefMap[category.id]}
-                  isActiveContainer={activeCategoryId === category.id}
-                  isExpanded={isCategoryExpandedMap[category.id]}
+                  isActiveDropzone={overId === category.id}
+                  isExpanded={isExpanded[category.id]}
                   key={category.id}
-                  nested={
+                  nestedItems={
                     <>
-                      <DS.SortableContext
-                        items={category.items}
-                        strategy={DS.verticalListSortingStrategy}
-                      >
+                      <DS.SortableContext items={category.items} strategy={DS.verticalListSortingStrategy}>
                         {category.items.map((item, itemIndex) => {
                           const deleteItem = () =>
-                            setCategoriesMap((state) => ({
+                            setCategories((state) => ({
                               ...state,
                               [category.id]: {
                                 ...state[category.id],
-                                items: state[category.id].items.filter(
-                                  (i) => i !== item.id
-                                ),
+                                items: state[category.id].items.filter((i) => i !== item.id),
                               },
                             }));
 
-                          idRefMap[item.id] = React.createRef();
+                          textareaRefs[item.id] = React.createRef();
 
                           return (
                             <SortableItem
                               id={item.id}
-                              inputRef={idRefMap[item.id]}
                               key={item.id}
-                              onBackspaceDelete={({ carry }) => {
-                                deleteItem();
+                              onDelete={deleteItem}
+                              textareaProps={{
+                                onBackspaceDelete: ({ carry }) => {
+                                  const previousItemId = categories[category.id].items[itemIndex - 1];
 
-                                const previousItemId =
-                                  categoriesMap[category.id].items[
-                                    itemIndex - 1
-                                  ];
+                                  if (previousItemId) {
+                                    setItems((state) => ({
+                                      ...state,
+                                      [previousItemId]: {
+                                        ...state[previousItemId],
+                                        text: state[previousItemId].text + carry,
+                                      },
+                                    }));
 
-                                if (previousItemId) {
-                                  setItemsMap((state) => ({
+                                    setFocusItem([previousItemId, items[previousItemId].text.length]);
+                                    return;
+                                  }
+
+                                  setCategories((state) => ({
                                     ...state,
-                                    [previousItemId]: {
-                                      ...state[previousItemId],
-                                      text: state[previousItemId].text + carry,
+                                    [category.id]: {
+                                      ...state[category.id],
+                                      text: state[category.id].text + carry,
                                     },
                                   }));
 
-                                  setFocusByIdAtIndex([
-                                    previousItemId,
-                                    itemsMap[previousItemId].text.length,
-                                  ]);
+                                  setFocusItem([category.id, category.text.length]);
+                                },
+                                onChange: ({ value }) =>
+                                  setItems((state) => ({
+                                    ...state,
+                                    [item.id]: { ...state[item.id], text: value },
+                                  })),
+                                onEnter: ({ carry }) => {
+                                  setItems((state) => ({
+                                    ...state,
+                                    [item.id]: {
+                                      ...state[item.id],
+                                      text: state[item.id].text.replace(carry, ''),
+                                    },
+                                  }));
 
-                                  return;
-                                }
-
-                                setCategoriesMap((state) => ({
-                                  ...state,
-                                  [category.id]: {
-                                    ...state[category.id],
-                                    text: state[category.id].text + carry,
-                                  },
-                                }));
-
-                                setFocusByIdAtIndex([
-                                  category.id,
-                                  category.text.length,
-                                ]);
+                                  createItem({
+                                    atIndex: itemIndex + 1,
+                                    text: carry,
+                                  });
+                                },
+                                ref: textareaRefs[item.id],
+                                value: item.text,
                               }}
-                              onChange={({ target }) =>
-                                setItemsMap((state) => ({
-                                  ...state,
-                                  [item.id]: {
-                                    ...state[item.id],
-                                    text: target.value,
-                                  },
-                                }))
-                              }
-                              onDelete={deleteItem}
-                              onEnter={({ carry }) => {
-                                setItemsMap((state) => ({
-                                  ...state,
-                                  [item.id]: {
-                                    ...state[item.id],
-                                    text: state[item.id].text.replace(
-                                      carry,
-                                      ''
-                                    ),
-                                  },
-                                }));
-
-                                createItem({
-                                  atIndex: itemIndex + 1,
-                                  text: carry,
-                                });
-                              }}
-                              value={item.text}
                             />
                           );
                         })}
                       </DS.SortableContext>
-                      <AddButton
-                        h={10}
-                        onClick={() =>
-                          createItem({ atIndex: category.items.length })
-                        }
-                      >
+                      <AddButton h={10} onClick={() => createItem({ atIndex: category.items.length, text: '' })}>
                         add item
                       </AddButton>
                     </>
                   }
-                  onBackspaceDelete={({ carry }) => {
-                    deleteCategory();
+                  onDelete={deleteCategory}
+                  textareaProps={{
+                    onBackspaceDelete: ({ carry }) => {
+                      const previousCategoryId = categories[categoryIndex - 1].id;
+                      if (!previousCategoryId) return;
 
-                    const previousCategoryId =
-                      profilesMap[activeProfileId].categories[
-                        categoryIndex - 1
-                      ];
+                      if (isExpanded[previousCategoryId]) {
+                        const previousCategoryLastItemId =
+                          categories[previousCategoryId].items[categories[previousCategoryId].items.length - 1];
 
-                    if (!previousCategoryId) return;
+                        setItems((state) => ({
+                          ...state,
+                          [previousCategoryLastItemId]: {
+                            ...state[previousCategoryLastItemId],
+                            text: state[previousCategoryLastItemId].text + carry,
+                          },
+                        }));
 
-                    if (isCategoryExpandedMap[previousCategoryId]) {
-                      const previousCategoryLastItemId =
-                        categoriesMap[previousCategoryId].items[
-                          categoriesMap[previousCategoryId].items.length - 1
-                        ];
+                        setFocusItem([previousCategoryLastItemId, items[previousCategoryLastItemId].text.length]);
+                        return;
+                      }
 
-                      setItemsMap((state) => ({
+                      setCategories((state) => ({
                         ...state,
-                        [previousCategoryLastItemId]: {
-                          ...state[previousCategoryLastItemId],
-                          text: state[previousCategoryLastItemId].text + carry,
+                        [previousCategoryId]: {
+                          ...state[previousCategoryId],
+                          text: state[previousCategoryId].text + carry,
                         },
                       }));
 
-                      setFocusByIdAtIndex([
-                        previousCategoryLastItemId,
-                        itemsMap[previousCategoryLastItemId].text.length,
-                      ]);
+                      setFocusItem([previousCategoryId, categories[previousCategoryId].text.length]);
+                    },
+                    onChange: ({ value }) =>
+                      setCategories((state) => ({
+                        ...state,
+                        [category.id]: { ...state[category.id], text: value },
+                      })),
+                    onEnter: ({ carry }) => {
+                      setCategories((state) => ({
+                        ...state,
+                        [category.id]: {
+                          ...state[category.id],
+                          text: state[category.id].text.replace(carry, ''),
+                        },
+                      }));
 
-                      return;
-                    }
+                      if (isExpanded[category.id]) {
+                        createItem({ atIndex: 0, text: carry });
+                        return;
+                      }
 
-                    setCategoriesMap((state) => ({
-                      ...state,
-                      [previousCategoryId]: {
-                        ...state[previousCategoryId],
-                        text: state[previousCategoryId].text + carry,
-                      },
-                    }));
-
-                    setFocusByIdAtIndex([
-                      previousCategoryId,
-                      categoriesMap[previousCategoryId].text.length,
-                    ]);
-                  }}
-                  onChange={({ target }) =>
-                    setCategoriesMap({
-                      ...categoriesMap,
-                      [category.id]: {
-                        ...categoriesMap[category.id],
-                        text: target.value,
-                      },
-                    })
-                  }
-                  onDelete={deleteCategory}
-                  onEnter={({ carry }) => {
-                    setCategoriesMap((state) => ({
-                      ...state,
-                      [category.id]: {
-                        ...state[category.id],
-                        text: state[category.id].text.replace(carry, ''),
-                      },
-                    }));
-
-                    if (isCategoryExpandedMap[category.id]) {
-                      createItem({ atIndex: 0, text: carry });
-                      return;
-                    }
-
-                    createCategory({ atIndex: categoryIndex + 1, text: carry });
+                      createCategory({ atIndex: categoryIndex + 1, text: carry });
+                    },
+                    ref: textareaRefs[category.id],
+                    value: category.text,
                   }}
                   toggleExpanded={() =>
-                    setIsCategoryExpandedMap({
-                      ...isCategoryExpandedMap,
-                      [category.id]: !isCategoryExpandedMap[category.id],
-                    })
+                    setIsExpanded((state) => ({
+                      ...state,
+                      [category.id]: !state[category.id],
+                    }))
                   }
-                  value={category.text}
                 />
               );
             })}
           </DS.SortableContext>
           <C.Portal>
             <D.DragOverlay dropAnimation={null}>
-              {!!activeElement && (
+              {!!draggingId && (
                 <Item
-                  isExpanded={isCategoryExpandedMap[activeElementId]}
+                  id={`overlay-${draggingId}`}
+                  isExpanded={isExpanded[draggingId]}
                   isOverlay
-                  nested={
-                    activeElement.items ? (
+                  nestedItems={
+                    draggingCategory ? (
                       <>
-                        {activeElement.items.map((itemId) => (
-                          <Item key={itemId} value={itemsMap[itemId].text} />
+                        {draggingCategory.items.map((itemId) => (
+                          <Item
+                            id={`overlay-${itemId}`}
+                            key={`overlay-${itemId}`}
+                            textareaProps={{ value: items[itemId].text }}
+                          />
                         ))}
                         <AddButton h={10}>add item</AddButton>
                       </>
                     ) : undefined
                   }
-                  value={activeElement.text}
+                  textareaProps={{
+                    value: (draggingCategory || draggingItem).text,
+                  }}
                 />
               )}
             </D.DragOverlay>
           </C.Portal>
         </D.DndContext>
-        <AddButton
-          onClick={() => createCategory({ atIndex: categories.length })}
-        >
+        <AddButton onClick={() => createCategory({ atIndex: activeProfile.categories.length, text: '' })}>
           add category
         </AddButton>
       </C.Box>

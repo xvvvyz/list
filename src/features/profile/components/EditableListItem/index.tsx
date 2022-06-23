@@ -1,25 +1,25 @@
 import * as C from '@chakra-ui/react';
 import React from 'react';
-import IconButtonX from '../IconButtonX';
+import IconButtonX from '../../../../components/IconButtonX';
 
-const EditableSubtext = ({ text, ...rest }) => {
+const EditableSubtext = (props: C.TextProps) => {
   const { isEditing } = C.useEditableControls();
   if (isEditing) return null;
 
   return (
-    <C.Text
-      color="fgSecondary"
-      fontSize="md"
-      fontWeight="normal"
-      left={5}
-      noOfLines={1}
-      pos="absolute"
-      {...rest}
-    >
-      {text}
-    </C.Text>
+    <C.Text color="fgSecondary" fontSize="md" fontWeight="normal" left={5} noOfLines={1} pos="absolute" {...props} />
   );
 };
+
+interface EditableListItemProps extends Omit<C.BoxProps, 'onChange'> {
+  inputHeight: string;
+  onChange: (value: string) => void;
+  onDelete: () => void;
+  previewTextHeight: string;
+  subtext?: string;
+  subtextOffset?: string;
+  value: string;
+}
 
 const EditableListItem = ({
   inputHeight,
@@ -30,7 +30,7 @@ const EditableListItem = ({
   subtextOffset,
   value,
   ...rest
-}) => {
+}: EditableListItemProps) => {
   const theme = C.useTheme();
 
   const hideWrappingLinePseudoStyles = {
@@ -58,13 +58,7 @@ const EditableListItem = ({
       w={`calc(100% - ${theme.space['14']})`}
       {...rest}
     >
-      <C.Editable
-        onChange={onChange}
-        pos="relative"
-        submitOnBlur
-        value={value}
-        w="full"
-      >
+      <C.Editable onChange={onChange} pos="relative" submitOnBlur value={value} w="full">
         <C.EditablePreview
           _after={subtext ? hideWrappingLinePseudoStyles : undefined}
           _before={subtext ? hideWrappingLinePseudoStyles : undefined}
@@ -83,19 +77,12 @@ const EditableListItem = ({
           w="full"
           zIndex={1}
         />
-        {subtext && <EditableSubtext bottom={subtextOffset} text={subtext} />}
-        <C.EditableInput
-          _focus={{ boxShadow: 'none' }}
-          borderRadius="2xl"
-          h={inputHeight}
-          pl={5}
-          pr={16}
-          w="full"
-        />
+        {subtext && <EditableSubtext bottom={subtextOffset}>{subtext}</EditableSubtext>}
+        <C.EditableInput _focus={{ boxShadow: 'none' }} borderRadius="2xl" h={inputHeight} pl={5} pr={16} w="full" />
       </C.Editable>
       <IconButtonX
+        aria-label="foo bar"
         className="editable-list-item__delete"
-        label="foo bar"
         onClick={onDelete}
         pos="absolute"
         right={2}

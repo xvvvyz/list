@@ -9,7 +9,7 @@
     "start": "next dev"
   },
   "dependencies": {
-    "@babel/core": "^7.18.2",
+    "@babel/core": "^7.18.5",
     "@chakra-ui/react": "^2.2.1",
     "@dnd-kit/core": "^6.0.5",
     "@dnd-kit/sortable": "^7.0.1",
@@ -26,7 +26,7 @@
     "eslint-config-next": "12.1.6",
     "eslint-config-prettier": "^8.5.0",
     "focus-visible": "^5.2.0",
-    "framer-motion": "^6.3.12",
+    "framer-motion": "^6.3.13",
     "idb-keyval": "^6.2.0",
     "nanoid": "^4.0.0",
     "next": "^12.1.6",

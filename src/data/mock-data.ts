@@ -62,7 +62,7 @@ const mockData = {
     },
   },
   user: {
-    id: 'user-1',
+    id: 'account-1',
     profiles: ['profile-1', 'profile-2'],
   },
 };
