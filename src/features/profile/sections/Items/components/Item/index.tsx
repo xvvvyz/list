@@ -28,7 +28,7 @@ interface ItemProps {
   isExpanded?: boolean;
   isOverlay?: boolean;
   nestedItems?: React.ReactNode;
-  onDelete?: ({ carry }: { carry: string }) => void;
+  onDelete?: () => void;
   textareaProps: {
     onBackspaceDelete?: ({ carry }: { carry: string }) => void;
     onChange?: ({ value }: { value: string }) => void;
@@ -110,8 +110,12 @@ const Item = ({
 
               switch (e.code) {
                 case 'Backspace': {
-                  if (!onBackspaceDelete || target.selectionStart + target.selectionEnd > 0) return;
+                  if (!onDelete || !onBackspaceDelete || target.selectionStart + target.selectionEnd > 0) {
+                    return;
+                  }
+
                   e.preventDefault();
+                  onDelete();
                   onBackspaceDelete({ carry: value });
                   return;
                 }
@@ -139,7 +143,7 @@ const Item = ({
             className="sortable-item__delete"
             onClick={() => {
               if (!onDelete) return;
-              onDelete({ carry: '' });
+              onDelete();
             }}
           />
         </C.Flex>

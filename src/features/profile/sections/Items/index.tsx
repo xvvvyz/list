@@ -306,7 +306,7 @@ const Items = () => {
                   onDelete={deleteCategory}
                   textareaProps={{
                     onBackspaceDelete: ({ carry }) => {
-                      const previousCategoryId = categories[categoryIndex - 1].id;
+                      const previousCategoryId = activeProfile.categories[categoryIndex - 1]?.id;
                       if (!previousCategoryId) return;
 
                       if (isCategoryExpanded[previousCategoryId]) {
