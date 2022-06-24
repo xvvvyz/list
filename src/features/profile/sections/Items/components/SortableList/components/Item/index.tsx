@@ -68,11 +68,11 @@ const Item = ({
   if (!isOverlay) textareaRefs.current[id] = React.createRef();
 
   return (
-    <C.Box borderRadius="2xl" id={id} pos="relative" sx={containerStyles} {...containerProps}>
+    <C.Box borderRadius="md" id={id} pos="relative" sx={containerStyles} {...containerProps}>
       <C.HStack pr={2}>
         <C.IconButton
           aria-label={dragHandleProps?.['aria-label'] || ''}
-          borderRadius="2xl"
+          borderRadius="md"
           color="fgSecondary"
           cursor="move"
           display="inline-flex"

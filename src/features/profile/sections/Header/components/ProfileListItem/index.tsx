@@ -12,7 +12,7 @@ const ProfileListItem = ({ profile }: ProfileListItemProps) => {
 
   return (
     <EditableListItem
-      fontSize="3xl"
+      fontSize="xl"
       inputHeight="4rem"
       onChange={(value) =>
         setProfiles((state) => ({

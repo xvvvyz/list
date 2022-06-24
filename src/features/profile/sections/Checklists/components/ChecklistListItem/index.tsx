@@ -13,7 +13,7 @@ const ChecklistListItem = ({ checklist }: ChecklistListItemProps) => {
 
   return (
     <EditableListItem
-      fontSize="xl"
+      fontSize="lg"
       fontWeight="bold"
       inputHeight="5.25rem"
       onChange={(value) =>

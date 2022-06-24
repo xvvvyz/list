@@ -66,7 +66,7 @@ const EditableListItem = ({
             _after: subtext ? { bg: 'whiteAlpha.50' } : undefined,
             bg: 'whiteAlpha.50',
           }}
-          borderRadius="2xl"
+          borderRadius="md"
           className="editable-list-item__preview"
           h={inputHeight}
           lineHeight={previewTextHeight}
@@ -78,7 +78,7 @@ const EditableListItem = ({
           zIndex={1}
         />
         {subtext && <EditableSubtext bottom={subtextOffset}>{subtext}</EditableSubtext>}
-        <C.EditableInput _focus={{ boxShadow: 'none' }} borderRadius="2xl" h={inputHeight} pl={5} pr={16} w="full" />
+        <C.EditableInput _focus={{ boxShadow: 'none' }} borderRadius="md" h={inputHeight} pl={5} pr={16} w="full" />
       </C.Editable>
       <IconButtonX
         aria-label="foo bar"

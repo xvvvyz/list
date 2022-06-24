@@ -122,6 +122,10 @@ const theme = {
       baseStyle: {
         fontWeight: 'normal',
       },
+      defaultProps: {
+        iconSpacing: 6,
+        variant: 'ghost',
+      },
       variants: {
         ghost: {
           _active: { bg: 'whiteAlpha.100' },
@@ -142,7 +146,7 @@ const theme = {
       },
       sizes: {
         lg: {
-          fontSize: '3xl',
+          fontSize: 'xl',
           lineHeight: 'shorter',
         },
       },
@@ -153,19 +157,9 @@ const theme = {
     initialColorMode: 'dark',
   },
   fontSizes: {
-    '2xl': '1.5rem',
-    '3xl': '1.75rem',
-    '4xl': '2.25rem',
-    '5xl': '3rem',
-    '6xl': '3.75rem',
-    '7xl': '4.5rem',
-    '8xl': '6rem',
-    '9xl': '8rem',
-    lg: '1.125rem',
+    lg: '1.25rem',
     md: '1rem',
-    sm: '0.875rem',
-    xl: '1.25rem',
-    xs: '0.75rem',
+    xl: '1.75rem',
   },
   fonts: {
     body: 'Inter, sans-serif',
@@ -186,15 +180,8 @@ const theme = {
     },
   },
   radii: {
-    '2xl': '1.25rem',
-    '3xl': '1.5rem',
-    base: '0.25rem',
-    full: '9999px',
-    lg: '0.5rem',
-    md: '0.375rem',
-    none: '0',
-    sm: '0.125rem',
-    xl: '0.75rem',
+    lg: '1.5rem',
+    md: '1.25rem',
   },
   semanticTokens: {
     colors: {

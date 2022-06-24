@@ -13,7 +13,6 @@ const IconButtonChevronExpand = ({ isToggled, onToggle, ...rest }: IconButtonChe
     h={14}
     icon={<C.Icon as={ChevronDown} boxSize={6} transform={isToggled ? 'rotate(-180deg)' : 'none'} />}
     onClick={onToggle}
-    variant="ghost"
     w={14}
     {...rest}
   />

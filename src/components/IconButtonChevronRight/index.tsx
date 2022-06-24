@@ -3,7 +3,7 @@ import React from 'react';
 import ChevronRight from '../../images/chevron-right.svg';
 
 const IconButtonChevronRight = (props: C.IconButtonProps) => (
-  <C.IconButton flexShrink={0} icon={<C.Icon as={ChevronRight} boxSize={6} />} variant="ghost" w={14} {...props} />
+  <C.IconButton flexShrink={0} h={14} icon={<C.Icon as={ChevronRight} boxSize={6} />} w={14} {...props} />
 );
 
 export default IconButtonChevronRight;
