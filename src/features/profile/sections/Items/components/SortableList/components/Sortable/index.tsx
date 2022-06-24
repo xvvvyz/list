@@ -3,23 +3,20 @@ import React from 'react';
 import { CSS } from '@dnd-kit/utilities';
 import Item, { ItemProps } from '../Item';
 
-type SortableItemProps = Pick<
-  ItemProps,
-  'id' | 'isActiveDropzone' | 'isExpanded' | 'nestedItems' | 'onDelete' | 'textareaProps' | 'toggleExpanded'
->;
+type SortableProps = Pick<ItemProps, 'categoryId' | 'children' | 'index' | 'itemId'>;
 
-const SortableItem = ({ id, nestedItems, ...rest }: SortableItemProps) => {
+const Sortable = ({ categoryId, itemId, ...rest }: SortableProps) => {
+  const categoryOrItem = itemId ? 'category' : 'item';
+  const id = itemId || categoryId;
+
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef, transform, transition } = DS.useSortable({
     animateLayoutChanges: DS.defaultAnimateLayoutChanges,
-    data: { isContainer: true },
     id,
-    transition: { duration: 200, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' },
   });
-
-  const categoryOrItem = nestedItems ? 'category' : 'item';
 
   return (
     <Item
+      categoryId={categoryId}
       containerProps={{
         ref: setNodeRef,
         transform: CSS.Translate.toString(transform),
@@ -32,12 +29,11 @@ const SortableItem = ({ id, nestedItems, ...rest }: SortableItemProps) => {
         'aria-roledescription': `sortable ${categoryOrItem}`,
         ref: setActivatorNodeRef,
       }}
-      id={id}
       isDragging={isDragging}
-      nestedItems={nestedItems}
+      itemId={itemId}
       {...rest}
     />
   );
 };
 
-export default SortableItem;
+export default Sortable;

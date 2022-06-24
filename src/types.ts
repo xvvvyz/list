@@ -8,16 +8,6 @@ export interface Account {
   profiles: Profiles;
 }
 
-export interface AccountContext extends Account {
-  activeProfile: ProfileParsed | null;
-  parsed: ProfileParsed[];
-  setCategories: ReactSetState<Categories>;
-  setChecklists: ReactSetState<Checklists>;
-  setItems: ReactSetState<Items>;
-  setProfiles: ReactSetState<Profiles>;
-  setUser: ReactSetState<User>;
-}
-
 export interface Category {
   id: Id;
   items: Id[];

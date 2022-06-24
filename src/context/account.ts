@@ -1,8 +1,18 @@
-import * as T from '../types';
 import React from 'react';
 import { noop } from '@chakra-ui/utils';
+import * as T from '../types';
 
-const AccountContext = React.createContext<T.AccountContext>({
+interface AccountContextValues extends T.Account {
+  activeProfile: T.ProfileParsed | null;
+  parsed: T.ProfileParsed[];
+  setCategories: T.ReactSetState<T.Categories>;
+  setChecklists: T.ReactSetState<T.Checklists>;
+  setItems: T.ReactSetState<T.Items>;
+  setProfiles: T.ReactSetState<T.Profiles>;
+  setUser: T.ReactSetState<T.User>;
+}
+
+const AccountContext = React.createContext<AccountContextValues>({
   activeProfile: null,
   categories: {},
   checklists: {},
