@@ -1,13 +1,14 @@
+import * as C from '@chakra-ui/react';
 import React from 'react';
 import * as T from '../../../../../../types';
 import AccountContext from '../../../../../../context/account';
 import EditableListItem from '../../../../components/EditableListItem';
 
-interface ProfileListItemProps {
+interface ProfileListItemProps extends Omit<C.BoxProps, 'onChange'> {
   profile: T.ProfileParsed;
 }
 
-const ProfileListItem = ({ profile }: ProfileListItemProps) => {
+const ProfileListItem = ({ profile, ...rest }: ProfileListItemProps) => {
   const { setProfiles, setUser } = React.useContext(AccountContext);
 
   return (
@@ -27,7 +28,9 @@ const ProfileListItem = ({ profile }: ProfileListItemProps) => {
         }))
       }
       previewTextHeight="4rem"
+      startWithEditView={profile.meta?.isNew}
       value={profile.text}
+      {...rest}
     />
   );
 };

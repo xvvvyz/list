@@ -10,7 +10,7 @@ interface SortableListContextValues {
   setDraggingId: T.ReactSetState<T.Id>;
   setIsCategoryExpanded: T.ReactSetState<Record<string, boolean>>;
   setOverCategoryId: T.ReactSetState<T.Id>;
-  textareaRefs: React.MutableRefObject<Record<T.Id, React.RefObject<HTMLTextAreaElement>>>;
+  inputRefs: React.MutableRefObject<Record<T.Id, React.RefObject<HTMLTextAreaElement>>>;
 }
 
 const SortableListContext = React.createContext<SortableListContextValues>({
@@ -21,7 +21,7 @@ const SortableListContext = React.createContext<SortableListContextValues>({
   setDraggingId: noop,
   setIsCategoryExpanded: noop,
   setOverCategoryId: noop,
-  textareaRefs: { current: {} },
+  inputRefs: { current: {} },
 });
 
 export default SortableListContext;

@@ -1,5 +1,11 @@
 import React from 'react';
 
+interface Metadata {
+  meta?: {
+    isNew?: boolean;
+  };
+}
+
 export interface Account {
   user: User;
   categories: Categories;
@@ -20,7 +26,7 @@ export interface CategoryParsed {
   text: string;
 }
 
-export interface Checklist {
+export interface Checklist extends Metadata {
   categories: Id[];
   completed: string[];
   id: Id;
@@ -28,7 +34,7 @@ export interface Checklist {
   text: string;
 }
 
-export interface ChecklistParsed {
+export interface ChecklistParsed extends Metadata {
   checklist: CategoryParsed[];
   id: Id;
   itemsCompletedCount: number;
@@ -47,7 +53,7 @@ export interface ItemParsed {
   completed?: boolean;
 }
 
-export interface Profile {
+export interface Profile extends Metadata {
   categories: Id[];
   checklists: Id[];
   id: string;
@@ -55,7 +61,7 @@ export interface Profile {
   text: string;
 }
 
-export interface ProfileParsed {
+export interface ProfileParsed extends Metadata {
   categories: CategoryParsed[];
   checklists: ChecklistParsed[];
   id: string;

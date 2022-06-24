@@ -16,6 +16,7 @@ interface EditableListItemProps extends Omit<C.BoxProps, 'onChange'> {
   onChange: (value: string) => void;
   onDelete: () => void;
   previewTextHeight: string;
+  startWithEditView?: boolean;
   subtext?: string;
   subtextOffset?: string;
   value: string;
@@ -26,6 +27,7 @@ const EditableListItem = ({
   onChange,
   onDelete,
   previewTextHeight,
+  startWithEditView,
   subtext,
   subtextOffset,
   value,
@@ -52,13 +54,19 @@ const EditableListItem = ({
 
   return (
     <C.Box
+      __css={{ pos: 'relative', w: `calc(100% - ${theme.space['14']})` }}
       _focusWithin={focusOrHoverStyles}
       _hover={focusOrHoverStyles}
-      pos="relative"
-      w={`calc(100% - ${theme.space['14']})`}
       {...rest}
     >
-      <C.Editable onChange={onChange} pos="relative" submitOnBlur value={value} w="full">
+      <C.Editable
+        onChange={onChange}
+        pos="relative"
+        startWithEditView={startWithEditView}
+        submitOnBlur
+        value={value}
+        w="full"
+      >
         <C.EditablePreview
           _after={subtext ? hideWrappingLinePseudoStyles : undefined}
           _before={subtext ? hideWrappingLinePseudoStyles : undefined}

@@ -48,7 +48,7 @@ const Item = ({
   itemId,
 }: ItemProps) => {
   const { categories, items } = React.useContext(AccountContext);
-  const { isCategoryExpanded, textareaRefs } = React.useContext(SortableListContext);
+  const { inputRefs, isCategoryExpanded } = React.useContext(SortableListContext);
 
   const id = itemId || categoryId;
   const value = itemId ? items[itemId].text : categories[categoryId].text;
@@ -65,7 +65,7 @@ const Item = ({
     itemId,
   });
 
-  if (!isOverlay) textareaRefs.current[id] = React.createRef();
+  if (!isOverlay) inputRefs.current[id] = React.createRef();
 
   return (
     <C.Box borderRadius="md" id={id} pos="relative" sx={containerStyles} {...containerProps}>
@@ -89,7 +89,7 @@ const Item = ({
             as={TextareaAutosize}
             onChange={onChange}
             onKeyDown={onKeyDown}
-            ref={textareaRefs.current[id]}
+            ref={inputRefs.current[id]}
             resize="none"
             rows={1}
             value={value}

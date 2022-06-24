@@ -1,20 +1,20 @@
 import React from 'react';
 import * as T from '../../../../../../../types';
 
-const useTextareaCaret = () => {
+const useInputCaret = () => {
   const [caretLocation, setCaretLocation] = React.useState<[T.Id, number]>(['', 0]);
-  const textareaRefs = React.useRef<Record<T.Id, React.RefObject<HTMLTextAreaElement>>>({});
+  const inputRefs = React.useRef<Record<T.Id, React.RefObject<HTMLTextAreaElement>>>({});
 
   React.useEffect(() => {
     if (!caretLocation) return;
     const [id, index] = caretLocation;
-    const el = textareaRefs.current[id]?.current;
+    const el = inputRefs.current[id]?.current;
     if (!el) return;
     el.focus();
     el.setSelectionRange(index, index);
   }, [caretLocation]);
 
-  return { setCaretLocation, textareaRefs };
+  return { inputRefs, setCaretLocation };
 };
 
-export default useTextareaCaret;
+export default useInputCaret;
