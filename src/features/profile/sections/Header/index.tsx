@@ -1,18 +1,22 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
+import React, { useContext } from 'react';
 import AccountContext from '../../../../context/account';
-import AddButton from '../../../../components/AddButton';
+import AddButton from '../../components/AddButton';
+import ApiContext from '../../../../context/api';
 import CloudOffline from '../../../../images/cloud-offline.svg';
-import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
-import IconButtonChevronRight from '../../../../components/IconButtonChevronRight';
+import IconButtonChevronExpand from '../../components/IconButtonChevronExpand';
+import IconButtonChevronRight from '../../components/IconButtonChevronRight';
+import ListItem from './components/ListItem';
 import Logo from '../../../../images/logo.svg';
-import ProfileListItem from './components/ProfileListItem';
-import generateId from '../../../../utilities/generate-id';
-import { IdPrefix } from '../../../../enums';
+import ProfilesContext from '../../../../context/profiles';
+import selectActiveProfile from '../../../../selectors/select-active-profile';
 
 const Header = () => {
-  const { parsed, setProfiles, setUser } = React.useContext(AccountContext);
+  const { account } = useContext(AccountContext);
+  const { dispatch } = useContext(ApiContext);
+  const { profiles } = useContext(ProfilesContext);
   const { isOpen, onOpen, onToggle } = C.useDisclosure();
+  const activeProfile = selectActiveProfile({ account, profiles });
 
   return (
     <C.Box as="header" layerStyle="header">
@@ -29,53 +33,35 @@ const Header = () => {
           w={14}
         />
       </C.Flex>
-      {!!parsed.length && <ProfileListItem profile={parsed[0]} w={isOpen ? 'full' : undefined} />}
-      <C.Collapse in={isOpen || !parsed.length} transition={parsed.length ? undefined : { enter: { duration: 0 } }}>
-        {parsed.slice(1).map((profile, index) => (
-          <C.Flex key={profile.id}>
-            <ProfileListItem profile={profile} />
+      {!!account.profiles.length && (
+        <ListItem key={activeProfile.id} profile={activeProfile} w={isOpen ? 'full' : undefined} />
+      )}
+      <C.Collapse
+        in={isOpen || !account.profiles.length}
+        transition={account.profiles.length ? undefined : { enter: { duration: 0 } }}
+      >
+        {account.profiles.slice(1).map((id) => (
+          <C.Flex key={id}>
+            <ListItem profile={profiles[id]} />
             <IconButtonChevronRight
               aria-label="foo bar"
               h="4rem"
-              onClick={() =>
-                setUser((state) => ({
-                  ...state,
-                  profiles: [profile.id, ...state.profiles.slice(0, index + 1), ...state.profiles.slice(index + 2)],
-                }))
-              }
+              onClick={() => dispatch({ id, type: 'SetActiveProfile' })}
             />
           </C.Flex>
         ))}
-        <C.Box pr={parsed.length ? 14 : undefined}>
+        <C.Box pr={account.profiles.length ? 14 : undefined}>
           <AddButton
             onClick={() => {
-              const newProfile = {
-                categories: [],
-                checklists: [],
-                id: generateId(IdPrefix.Profile),
-                meta: { isNew: true },
-                tags: {},
-                text: '',
-              };
-
               onOpen();
-
-              setProfiles((state) => ({
-                ...state,
-                [newProfile.id]: newProfile,
-              }));
-
-              setUser((state) => ({
-                ...state,
-                profiles: [...state.profiles, newProfile.id],
-              }));
+              dispatch({ type: 'CreateProfile' });
             }}
           >
             add profile
           </AddButton>
         </C.Box>
       </C.Collapse>
-      {!!parsed.length && (
+      {!!account.profiles.length && (
         <IconButtonChevronExpand
           aria-label="foo bar"
           bottom={2}

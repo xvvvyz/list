@@ -1,17 +1,27 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
+import React, { useContext } from 'react';
 import AccountContext from '../../../../context/account';
-import AddButton from '../../../../components/AddButton';
-import ChecklistListItem from './components/ChecklistListItem';
-import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
-import generateId from '../../../../utilities/generate-id';
-import { IdPrefix } from '../../../../enums';
+import AddButton from '../../components/AddButton';
+import ApiContext from '../../../../context/api';
+import CategoriesContext from '../../../../context/categories';
+import ChecklistsContext from '../../../../context/checklists';
+import IconButtonChevronExpand from '../../components/IconButtonChevronExpand';
+import ItemsContext from '../../../../context/items';
+import ListItem from './components/ListItem';
+import ProfilesContext from '../../../../context/profiles';
+import selectActiveProfile from '../../../../selectors/select-active-profile';
+import selectDenormalizedChecklist from '../../../../selectors/select-denormalized-checklist';
 
 const Checklists = () => {
-  const { activeProfile, setChecklists, setProfiles } = React.useContext(AccountContext);
+  const { account } = useContext(AccountContext);
+  const { categories } = useContext(CategoriesContext);
+  const { checklists } = useContext(ChecklistsContext);
+  const { dispatch } = useContext(ApiContext);
+  const { items } = useContext(ItemsContext);
+  const { profiles } = useContext(ProfilesContext);
   const { isOpen, onOpen, onToggle } = C.useDisclosure();
-  if (!activeProfile) return null;
-  const { checklists } = activeProfile;
+  if (!account.profiles.length) return null;
+  const activeProfile = selectActiveProfile({ account, profiles });
 
   return (
     <C.Box as="section" mt={12}>
@@ -19,43 +29,30 @@ const Checklists = () => {
         checklists
       </C.Heading>
       <C.Box layerStyle="card" mt={5}>
-        {!!checklists.length && <ChecklistListItem checklist={checklists[0]} />}
+        {!!activeProfile.checklists.length && (
+          <ListItem
+            checklist={selectDenormalizedChecklist(
+              { categories, checklists, items },
+              { id: activeProfile.checklists[0] }
+            )}
+            key={activeProfile.checklists[0]}
+          />
+        )}
         <C.Collapse in={isOpen}>
-          {checklists.slice(1).map((checklist) => (
-            <ChecklistListItem checklist={checklist} key={checklist.id} />
+          {activeProfile.checklists.slice(1).map((id) => (
+            <ListItem checklist={selectDenormalizedChecklist({ categories, checklists, items }, { id })} key={id} />
           ))}
         </C.Collapse>
         <C.Flex>
           <AddButton
             onClick={() => {
-              const newChecklist = {
-                categories: [],
-                completed: [],
-                id: generateId(IdPrefix.Checklist),
-                meta: { isNew: true },
-                tags: [],
-                text: '',
-              };
-
               onOpen();
-
-              setChecklists((state) => ({
-                ...state,
-                [newChecklist.id]: newChecklist,
-              }));
-
-              setProfiles((state) => ({
-                ...state,
-                [activeProfile.id]: {
-                  ...state[activeProfile.id],
-                  checklists: [...state[activeProfile.id].checklists, newChecklist.id],
-                },
-              }));
+              dispatch({ type: 'CreateChecklist' });
             }}
           >
             add checklist
           </AddButton>
-          {checklists.length > 1 && (
+          {activeProfile.checklists.length > 1 && (
             <IconButtonChevronExpand aria-label="foo bar" isToggled={isOpen} onToggle={onToggle} />
           )}
         </C.Flex>

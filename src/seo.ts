@@ -1,5 +1,5 @@
 const description =
-  'Easily create checklists that vary depending on the circumstance. Travel/packing lists, recipes and workout routines are all great use-cases for lliist.';
+  'Easily create checklists that vary depending on the circumstance. Travel/packing lists, recipes and other SOPs are all great use-cases for lliist.';
 
 const url = 'https://lliist.app';
 

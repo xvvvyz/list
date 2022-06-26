@@ -1,4 +1,8 @@
 const mockData = {
+  account: {
+    id: 'account-1',
+    profiles: ['profile-1', 'profile-2'],
+  },
   categories: {
     'category-1': {
       id: 'category-1',
@@ -60,10 +64,6 @@ const mockData = {
       tags: {},
       text: 'groceries',
     },
-  },
-  user: {
-    id: 'account-1',
-    profiles: ['profile-1', 'profile-2'],
   },
 };
 

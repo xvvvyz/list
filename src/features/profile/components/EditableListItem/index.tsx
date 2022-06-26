@@ -1,6 +1,6 @@
 import * as C from '@chakra-ui/react';
 import React from 'react';
-import IconButtonX from '../../../../components/IconButtonX';
+import IconButtonX from '../IconButtonX';
 
 const EditableSubtext = (props: C.TextProps) => {
   const { isEditing } = C.useEditableControls();
@@ -11,26 +11,26 @@ const EditableSubtext = (props: C.TextProps) => {
   );
 };
 
-interface EditableListItemProps extends Omit<C.BoxProps, 'onChange'> {
+interface EditableListItemProps extends Omit<C.BoxProps, 'onSubmit'> {
+  defaultValue: string;
   inputHeight: string;
-  onChange: (value: string) => void;
   onDelete: () => void;
+  onSubmit: (value: string) => void;
   previewTextHeight: string;
   startWithEditView?: boolean;
   subtext?: string;
   subtextOffset?: string;
-  value: string;
 }
 
 const EditableListItem = ({
+  defaultValue,
   inputHeight,
-  onChange,
   onDelete,
+  onSubmit,
   previewTextHeight,
   startWithEditView,
   subtext,
   subtextOffset,
-  value,
   ...rest
 }: EditableListItemProps) => {
   const theme = C.useTheme();
@@ -60,11 +60,11 @@ const EditableListItem = ({
       {...rest}
     >
       <C.Editable
-        onChange={onChange}
+        defaultValue={defaultValue}
+        onSubmit={onSubmit}
         pos="relative"
         startWithEditView={startWithEditView}
         submitOnBlur
-        value={value}
         w="full"
       >
         <C.EditablePreview
@@ -103,3 +103,4 @@ const EditableListItem = ({
 };
 
 export default EditableListItem;
+export type { EditableListItemProps };

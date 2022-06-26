@@ -130,7 +130,7 @@ const theme = {
         ghost: {
           _active: { bg: 'whiteAlpha.100' },
           _hover: { bg: 'whiteAlpha.50' },
-          borderRadius: '2xl',
+          borderRadius: 'md',
           color: 'fgSecondary',
         },
       },
@@ -168,13 +168,13 @@ const theme = {
   layerStyles: {
     card: {
       bg: 'bgSecondary',
-      borderRadius: '3xl',
+      borderRadius: 'lg',
       p: 2,
       pos: 'relative',
     },
     header: {
       bg: 'bgSecondary',
-      borderBottomRadius: '3xl',
+      borderBottomRadius: 'lg',
       p: 2,
       pos: 'relative',
     },

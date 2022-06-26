@@ -1,17 +1,6 @@
-import React from 'react';
-
-interface Metadata {
-  meta?: {
-    isNew?: boolean;
-  };
-}
-
 export interface Account {
-  user: User;
-  categories: Categories;
-  checklists: Checklists;
-  items: Items;
-  profiles: Profiles;
+  id: Id;
+  profiles: Id[];
 }
 
 export interface Category {
@@ -26,7 +15,7 @@ export interface CategoryParsed {
   text: string;
 }
 
-export interface Checklist extends Metadata {
+export interface Checklist {
   categories: Id[];
   completed: string[];
   id: Id;
@@ -34,7 +23,7 @@ export interface Checklist extends Metadata {
   text: string;
 }
 
-export interface ChecklistParsed extends Metadata {
+export interface ChecklistDenormalized {
   checklist: CategoryParsed[];
   id: Id;
   itemsCompletedCount: number;
@@ -53,7 +42,7 @@ export interface ItemParsed {
   completed?: boolean;
 }
 
-export interface Profile extends Metadata {
+export interface Profile {
   categories: Id[];
   checklists: Id[];
   id: string;
@@ -61,23 +50,9 @@ export interface Profile extends Metadata {
   text: string;
 }
 
-export interface ProfileParsed extends Metadata {
-  categories: CategoryParsed[];
-  checklists: ChecklistParsed[];
-  id: string;
-  tags?: TagsMap;
-  text: string;
-}
-
-export interface User {
-  id: Id;
-  profiles: Id[];
-}
-
 export type Categories = Record<Id, Category>;
 export type Checklists = Record<Id, Checklist>;
 export type Id = string;
 export type Items = Record<Id, Item>;
 export type Profiles = Record<Id, Profile>;
-export type ReactSetState<T> = React.Dispatch<React.SetStateAction<T>>;
 export type TagsMap = Record<Id, { color: number }>;
