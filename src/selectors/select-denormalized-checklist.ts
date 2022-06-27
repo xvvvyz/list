@@ -36,6 +36,7 @@ const selectDenormalizedChecklist = (state: Pick<State, 'categories' | 'checklis
     id,
     itemsCompletedCount,
     itemsCount,
+    meta: state.checklists[id].meta,
     text: state.checklists[id].text,
   };
 };

@@ -1,11 +1,12 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
+import React, { useRef } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import ApiContext from '../../../../../../context/api';
 import Grabber from '../../../../../../images/grabber.svg';
 import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
 import IconButtonX from '../../../../components/IconButtonX';
 import conditionalStyles from './utilities/conditional-styles';
+import useAutoFocus from './utilities/use-auto-focus';
 import { Category, Id, Item } from '../../../../../../types';
 
 interface ListItemProps {
@@ -27,9 +28,9 @@ interface ListItemProps {
     role: string;
     tabIndex: number;
   };
+  focusAtPosition?: number;
   id: Id;
   index: number;
-  inputRefs?: React.MutableRefObject<Record<Id, React.RefObject<HTMLTextAreaElement>>>;
   isCategory?: boolean;
   isDragging?: boolean;
   isDropzone?: boolean;
@@ -40,6 +41,7 @@ interface ListItemProps {
   previousCategoryLastItem?: Item;
   previousItem?: Item;
   toggleExpandCategory?: () => void;
+  updateValue?: string;
 }
 
 const ListItem = ({
@@ -48,9 +50,9 @@ const ListItem = ({
   containerProps,
   defaultValue,
   dragHandleProps,
+  focusAtPosition,
   id,
   index,
-  inputRefs,
   isCategory,
   isCategoryExpanded,
   isDragging,
@@ -61,8 +63,11 @@ const ListItem = ({
   previousCategoryLastItem,
   previousItem,
   toggleExpandCategory,
+  updateValue,
 }: ListItemProps) => {
   const { dispatch } = React.useContext(ApiContext);
+  const ref = useRef<HTMLTextAreaElement | null>(null);
+  useAutoFocus({ focusAtPosition, ref, updateValue });
 
   const { containerStyles, focusOrHoverStyles } = conditionalStyles({
     isCategory,
@@ -70,8 +75,6 @@ const ListItem = ({
     isDropzone,
     isOverlay,
   });
-
-  if (inputRefs) inputRefs.current[id] = React.createRef();
 
   return (
     <C.Box borderRadius="md" pos="relative" sx={containerStyles} {...containerProps}>
@@ -106,10 +109,7 @@ const ListItem = ({
 
               switch (e.code) {
                 case 'Backspace': {
-                  if (target.selectionStart + target.selectionEnd > 0) {
-                    return;
-                  }
-
+                  if (target.selectionStart + target.selectionEnd > 0) return;
                   e.preventDefault();
 
                   dispatch({
@@ -119,45 +119,44 @@ const ListItem = ({
                   });
 
                   if (isCategory) {
-                    if (!previousCategory) return;
+                    if (previousCategory) {
+                      if (isPreviousCategoryExpanded && previousCategoryLastItem) {
+                        const newText = previousCategoryLastItem.text + target.value;
 
-                    if (isPreviousCategoryExpanded && previousCategoryLastItem) {
-                      const newText = previousCategoryLastItem.text + target.value;
+                        return dispatch({
+                          id: previousCategoryLastItem.id,
+                          meta: { focusAtPosition: previousCategoryLastItem.text.length, updateValue: newText },
+                          text: newText,
+                          type: 'UpdateItem',
+                        });
+                      }
+
+                      const newText = previousCategory.text + target.value;
 
                       dispatch({
-                        id: previousCategoryLastItem.id,
+                        id: previousCategory.id,
+                        meta: { focusAtPosition: previousCategory.text.length, updateValue: newText },
                         text: newText,
-                        type: 'UpdateItem',
+                        type: 'UpdateCategory',
                       });
-
-                      return;
                     }
-
-                    const newText = previousCategory.text + target.value;
-
-                    dispatch({
-                      id: previousCategory.id,
-                      text: newText,
-                      type: 'UpdateCategory',
-                    });
                   } else {
                     if (previousItem) {
                       const newText = previousItem.text + target.value;
 
-                      dispatch({
+                      return dispatch({
                         id: previousItem.id,
+                        meta: { focusAtPosition: previousItem.text.length, updateValue: newText },
                         text: newText,
                         type: 'UpdateItem',
                       });
-
-                      return;
                     }
 
-                    if (!previousCategory) return;
-                    const newText = previousCategory.text + target.value;
+                    const newText = category.text + target.value;
 
                     dispatch({
                       id: category.id,
+                      meta: { focusAtPosition: category.text.length, updateValue: newText },
                       text: newText,
                       type: 'UpdateCategory',
                     });
@@ -169,40 +168,44 @@ const ListItem = ({
                 case 'Enter': {
                   e.preventDefault();
                   const carry = target.value.slice(target.selectionEnd);
+                  const newText = target.value.replace(carry, '');
 
                   if (isCategory) {
                     dispatch({
                       id,
-                      text: target.value.replace(carry, ''),
+                      meta: { updateValue: newText },
+                      text: newText,
                       type: 'UpdateCategory',
                     });
 
                     if (isCategoryExpanded) {
-                      dispatch({
+                      return dispatch({
                         atIndex: 0,
                         categoryId: id,
+                        meta: { focusAtPosition: 0 },
                         text: carry,
                         type: 'CreateItem',
                       });
-
-                      return;
                     }
 
                     dispatch({
                       atIndex: index + 1,
+                      meta: { focusAtPosition: 0 },
                       text: carry,
                       type: 'CreateCategory',
                     });
                   } else {
                     dispatch({
                       id,
-                      text: target.value.replace(carry, ''),
+                      meta: { updateValue: newText },
+                      text: newText,
                       type: 'UpdateItem',
                     });
 
                     dispatch({
                       atIndex: index + 1,
                       categoryId: category.id,
+                      meta: { focusAtPosition: 0 },
                       text: carry,
                       type: 'CreateItem',
                     });
@@ -216,7 +219,7 @@ const ListItem = ({
                 }
               }
             }}
-            ref={inputRefs ? inputRefs.current[id] : undefined}
+            ref={ref}
             resize="none"
             rows={1}
             variant="unstyled"

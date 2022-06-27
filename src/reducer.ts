@@ -6,6 +6,7 @@ import createProfile, { CreateProfileAction } from './reducers/create-profile';
 import deleteCategory, { DeleteCategoryAction } from './reducers/delete-category';
 import deleteChecklist, { DeleteChecklistAction } from './reducers/delete-checklist';
 import deleteItem, { DeleteItemAction } from './reducers/delete-item';
+import deleteMeta, { DeleteMetaAction } from './reducers/delete-meta';
 import deleteProfile, { DeleteProfileAction } from './reducers/delete-profile';
 import moveItem, { MoveItemAction } from './reducers/move-item';
 import reorderCategory, { ReorderCategoryAction } from './reducers/reorder-category';
@@ -33,6 +34,7 @@ type Action =
   | DeleteCategoryAction
   | DeleteChecklistAction
   | DeleteItemAction
+  | DeleteMetaAction
   | DeleteProfileAction
   | MoveItemAction
   | ReorderCategoryAction
@@ -66,6 +68,9 @@ const reducer: Reducer<State, Action> = (state, action) => {
     case 'DeleteItem':
       return deleteItem(state, action);
 
+    case 'DeleteMeta':
+      return deleteMeta(state);
+
     case 'DeleteProfile':
       return deleteProfile(state, action);
 
@@ -79,7 +84,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
       return reorderItem(state, action);
 
     case 'SetActiveProfile':
-      return setActiveProfile(state, action);
+      return deleteMeta(setActiveProfile(state, action));
 
     case 'UpdateCategory':
       return updateCategory(state, action);

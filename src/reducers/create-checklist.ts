@@ -14,6 +14,7 @@ const createChecklist = (state: State) => {
     categories: [],
     completed: [],
     id: generateId(IdPrefix.Checklist),
+    meta: { autoFocus: true },
     tags: [],
     text: '',
   };

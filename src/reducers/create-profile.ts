@@ -11,6 +11,7 @@ const createProfile = (state: State) => {
     categories: [],
     checklists: [],
     id: generateId(IdPrefix.Profile),
+    meta: { autoFocus: true },
     tags: {},
     text: '',
   };

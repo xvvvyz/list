@@ -1,7 +1,7 @@
 import * as C from '@chakra-ui/react';
 import * as D from '@dnd-kit/core';
 import * as DS from '@dnd-kit/sortable';
-import React, { RefObject, useContext, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import AccountContext from '../../../../context/account';
 import AddButton from '../../components/AddButton';
 import ApiContext from '../../../../context/api';
@@ -23,7 +23,6 @@ const Items = () => {
   const [draggingId, setDraggingId] = useState<Id>('');
   const [draggingOverCategoryId, setDraggingOverCategoryId] = useState<Id>('');
   const [isCategoryExpanded, setIsCategoryExpanded] = useState<Record<Id, boolean>>({});
-  const inputRefs = useRef<Record<Id, RefObject<HTMLTextAreaElement>>>({});
   const sensors = D.useSensors(D.useSensor(D.PointerSensor));
   if (!account.profiles.length) return null;
   const state = { account, categories, items, profiles };
@@ -146,9 +145,9 @@ const Items = () => {
                 <SortableListItem
                   category={category}
                   defaultValue={category.text}
+                  focusAtPosition={category.meta?.focusAtPosition}
                   id={categoryId}
                   index={categoryIndex}
-                  inputRefs={inputRefs}
                   isCategory
                   isCategoryExpanded={isCategoryExpanded[categoryId]}
                   isDropzone={draggingOverCategoryId === categoryId}
@@ -159,17 +158,19 @@ const Items = () => {
                   toggleExpandCategory={() =>
                     setIsCategoryExpanded((state) => ({ ...state, [categoryId]: !state[categoryId] }))
                   }
+                  updateValue={category.meta?.updateValue}
                 >
                   <DS.SortableContext items={categories[categoryId].items} strategy={DS.verticalListSortingStrategy}>
                     {categories[categoryId].items.map((itemId, itemIndex) => (
                       <SortableListItem
                         category={category}
                         defaultValue={items[itemId].text}
+                        focusAtPosition={items[itemId].meta?.focusAtPosition}
                         id={itemId}
                         index={itemIndex}
-                        inputRefs={inputRefs}
                         key={itemId}
                         previousItem={items[category.items[itemIndex - 1]]}
+                        updateValue={items[itemId].meta?.updateValue}
                       />
                     ))}
                   </DS.SortableContext>

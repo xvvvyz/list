@@ -47,7 +47,7 @@ const Checklists = () => {
           <AddButton
             onClick={() => {
               onOpen();
-              dispatch({ type: 'CreateChecklist' });
+              requestAnimationFrame(() => dispatch({ type: 'CreateChecklist' }));
             }}
           >
             add checklist

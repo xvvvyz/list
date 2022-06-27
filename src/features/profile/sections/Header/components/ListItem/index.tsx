@@ -19,6 +19,7 @@ const ListItem = ({ profile, ...rest }: ListItemProps) => {
       onDelete={() => dispatch({ id: profile.id, type: 'DeleteProfile' })}
       onSubmit={(value) => dispatch({ id: profile.id, text: value, type: 'UpdateProfile' })}
       previewTextHeight="4rem"
+      startWithEditView={profile.meta?.autoFocus}
       {...rest}
     />
   );

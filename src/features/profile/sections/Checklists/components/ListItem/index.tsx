@@ -22,6 +22,7 @@ const ListItem = ({ checklist }: ListItemProps) => {
         onDelete={() => dispatch({ id: checklist.id, type: 'DeleteChecklist' })}
         onSubmit={(value) => dispatch({ id: checklist.id, text: value, type: 'UpdateChecklist' })}
         previewTextHeight="3.6rem"
+        startWithEditView={checklist.meta?.autoFocus}
         subtext={`${checklist.itemsCompletedCount} of ${checklist.itemsCount} completed`}
         subtextOffset="1rem"
       />

@@ -1,11 +1,12 @@
 import generateId from '../utilities/generate-id';
-import { Id } from '../types';
+import { Id, Meta } from '../types';
 import { State } from '../reducer';
 import { IdPrefix } from '../enums';
 
 interface CreateItemAction {
   atIndex: number;
   categoryId: Id;
+  meta?: Meta;
   text?: string;
   type: 'CreateItem';
 }
@@ -13,7 +14,8 @@ interface CreateItemAction {
 const createItem = (state: State, action: CreateItemAction) => {
   const newItem = {
     id: generateId(IdPrefix.Item),
-    text: action.text || '',
+    meta: action.meta ?? { focusAtPosition: 0 },
+    text: action.text ?? '',
   };
 
   return {

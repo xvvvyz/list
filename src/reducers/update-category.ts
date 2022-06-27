@@ -1,9 +1,10 @@
-import { Id } from '../types';
+import { Id, Meta } from '../types';
 import { State } from '../reducer';
 
 interface UpdateCategoryAction {
   id: Id;
-  text: string;
+  meta?: Meta;
+  text?: string;
   type: 'UpdateCategory';
 }
 
@@ -13,7 +14,8 @@ const updateCategory = (state: State, action: UpdateCategoryAction) => ({
     ...state.categories,
     [action.id]: {
       ...state.categories[action.id],
-      text: action.text,
+      meta: action.meta ?? state.categories[action.id].meta,
+      text: action.text ?? state.categories[action.id].text,
     },
   },
 });
