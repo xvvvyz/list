@@ -95,6 +95,7 @@ const ListItem = ({
         <C.Flex _focusWithin={focusOrHoverStyles} _hover={focusOrHoverStyles} pos="relative" w="full">
           <C.Textarea
             _focus={{ boxShadow: 'none' }}
+            aria-label={isCategory ? 'category' : 'item'}
             as={TextareaAutosize}
             defaultValue={defaultValue}
             onBlur={(e) =>
@@ -105,6 +106,7 @@ const ListItem = ({
               })
             }
             onKeyDown={(e) => {
+              alert(e.key);
               const target = e.target as HTMLTextAreaElement;
 
               switch (e.key) {
@@ -225,7 +227,7 @@ const ListItem = ({
             variant="unstyled"
           />
           <IconButtonX
-            aria-label="foo bar"
+            aria-label="delete"
             className="sortable-item__delete"
             onClick={() =>
               dispatch({
@@ -237,12 +239,7 @@ const ListItem = ({
           />
         </C.Flex>
         {isCategory && (
-          <IconButtonChevronExpand
-            aria-label="foo bar"
-            boxSize={10}
-            isToggled={isCategoryExpanded}
-            onToggle={toggleExpandCategory}
-          />
+          <IconButtonChevronExpand boxSize={10} isToggled={isCategoryExpanded} onToggle={toggleExpandCategory} />
         )}
       </C.HStack>
       {isCategory && (

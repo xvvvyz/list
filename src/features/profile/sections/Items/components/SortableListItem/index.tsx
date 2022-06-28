@@ -3,13 +3,11 @@ import { CSS } from '@dnd-kit/utilities';
 import { defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import ListItem, { ListItemProps } from '../ListItem';
 
-const SortableListItem = ({ category, id, isCategory, ...rest }: ListItemProps) => {
+const SortableListItem = ({ category, id, ...rest }: ListItemProps) => {
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef, transform, transition } = useSortable({
     animateLayoutChanges: defaultAnimateLayoutChanges,
     id,
   });
-
-  const categoryOrItem = isCategory ? 'category' : 'item';
 
   return (
     <ListItem
@@ -22,12 +20,11 @@ const SortableListItem = ({ category, id, isCategory, ...rest }: ListItemProps) 
       dragHandleProps={{
         ...attributes,
         ...listeners,
-        'aria-label': `sort ${categoryOrItem}`,
-        'aria-roledescription': `sortable ${categoryOrItem}`,
+        'aria-label': 'sort',
+        'aria-roledescription': 'sortable',
         ref: setActivatorNodeRef,
       }}
       id={id}
-      isCategory={isCategory}
       isDragging={isDragging}
       {...rest}
     />

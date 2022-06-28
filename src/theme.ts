@@ -1,12 +1,6 @@
-const theme = {
-  breakpoints: {
-    '2xl': '96rem',
-    lg: '62rem',
-    md: '48rem',
-    sm: '30rem',
-    xl: '80rem',
-    xs: '20rem',
-  },
+import { extendTheme, ThemeConfig } from '@chakra-ui/react';
+
+const theme = extendTheme({
   colors: {
     blue: {
       50: '#e8f2ff',
@@ -128,8 +122,8 @@ const theme = {
       },
       variants: {
         ghost: {
-          _active: { bg: 'whiteAlpha.100' },
-          _hover: { bg: 'whiteAlpha.50' },
+          _active: { bg: 'alpha100' },
+          _hover: { bg: 'alpha50' },
           borderRadius: 'md',
           color: 'fgSecondary',
         },
@@ -155,7 +149,8 @@ const theme = {
   config: {
     cssVarPrefix: '',
     initialColorMode: 'dark',
-  },
+    useSystemColorMode: true,
+  } as ThemeConfig,
   fontSizes: {
     lg: '1.25rem',
     md: '1rem',
@@ -185,24 +180,53 @@ const theme = {
   },
   semanticTokens: {
     colors: {
-      bgInput: { default: '#444444' },
-      bgPrimary: { default: '#181818' },
-      bgSecondary: { default: '#222' },
-      fgGhost: { default: 'rgba(255, 255, 255, .4)' },
-      fgPrimary: { default: 'rgba(255, 255, 255, .9)' },
-      fgSecondary: { default: 'rgba(255, 255, 255, .65)' },
+      alpha50: {
+        _light: 'blackAlpha.50',
+        default: 'whiteAlpha.50',
+      },
+      alpha100: {
+        _light: 'blackAlpha.100',
+        default: 'whiteAlpha.100',
+      },
+      bgInput: {
+        _light: '#ccc',
+        default: '#444444',
+      },
+      bgPrimary: {
+        _light: '#e5e5e5',
+        default: '#181818',
+      },
+      bgSecondary: {
+        _light: '#eee',
+        default: '#222',
+      },
+      fgGhost: {
+        _light: 'rgba(0, 0, 0, .4)',
+        default: 'rgba(255, 255, 255, .4)',
+      },
+      fgPrimary: {
+        _light: 'rgba(0, 0, 0, .95)',
+        default: 'rgba(255, 255, 255, .9)',
+      },
+      fgSecondary: {
+        _light: 'rgba(0, 0, 0, .6)',
+        default: 'rgba(255, 255, 255, .65)',
+      },
+      selection: {
+        _light: 'blue.100',
+        default: 'blue.600',
+      },
     },
-  },
-  shadows: {
-    outline: 'inset 0 0 0 3px #6280b6',
+    shadows: {
+      outline: {
+        _light: 'inset 0 0 0 3px #859cc7',
+        default: 'inset 0 0 0 3px #6280b6',
+      },
+    },
   },
   sizes: {
     container: {
-      '2xl': 'calc(96rem - 3rem)',
-      lg: 'calc(62rem - 3rem)',
-      md: 'calc(48rem - 3rem)',
-      sm: 'calc(30rem - 3rem)',
-      xl: 'calc(80rem - 3rem)',
+      app: '26rem',
     },
   },
   styles: {
@@ -212,21 +236,18 @@ const theme = {
         shadow: 'outline',
       },
       '::selection': {
-        background: 'blue.600',
+        background: 'selection',
       },
       body: {
         bg: 'bgPrimary',
         color: 'fgPrimary',
         userSelect: 'none',
       },
-      'body, html': {
-        overscrollBehavior: 'contain',
-      },
       html: {
-        fontSize: '15px',
+        fontSize: '16px',
       },
     },
   },
-};
+});
 
 export default theme;

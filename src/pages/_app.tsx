@@ -3,7 +3,7 @@ import '@fontsource/inter/700.css';
 import 'focus-visible/dist/focus-visible';
 import React, { useEffect, useReducer } from 'react';
 import { AppProps } from 'next/app';
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/provider';
 import { DefaultSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import AccountContext from '../context/account';
@@ -24,7 +24,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   useEffect(() => dispatch({ type: 'DeleteMeta' }), [router.asPath]);
 
   return (
-    <ChakraProvider resetCSS theme={extendTheme(theme)}>
+    <ChakraProvider resetCSS theme={theme}>
       <ApiContext.Provider value={{ dispatch }}>
         <AccountContext.Provider value={{ account }}>
           <ProfilesContext.Provider value={{ profiles }}>

@@ -26,7 +26,7 @@ const ListItem = ({ checklist }: ListItemProps) => {
         subtext={`${checklist.itemsCompletedCount} of ${checklist.itemsCount} completed`}
         subtextOffset="1rem"
       />
-      <IconButtonChevronRight aria-label="foo bar" h="5.25rem" />
+      <IconButtonChevronRight aria-label="select" h="5.25rem" />
     </C.Flex>
   );
 };

@@ -24,39 +24,32 @@ const Checklists = () => {
   const activeProfile = selectActiveProfile({ account, profiles });
 
   return (
-    <C.Box as="section" mt={12}>
-      <C.Heading as="h2" color="fgGhost" px={7} size="lg">
-        checklists
-      </C.Heading>
-      <C.Box layerStyle="card" mt={5}>
-        {!!activeProfile.checklists.length && (
-          <ListItem
-            checklist={selectDenormalizedChecklist(
-              { categories, checklists, items },
-              { id: activeProfile.checklists[0] }
-            )}
-            key={activeProfile.checklists[0]}
-          />
-        )}
-        <C.Collapse in={isOpen}>
-          {activeProfile.checklists.slice(1).map((id) => (
-            <ListItem checklist={selectDenormalizedChecklist({ categories, checklists, items }, { id })} key={id} />
-          ))}
-        </C.Collapse>
-        <C.Flex>
-          <AddButton
-            onClick={() => {
-              onOpen();
-              requestAnimationFrame(() => dispatch({ type: 'CreateChecklist' }));
-            }}
-          >
-            add checklist
-          </AddButton>
-          {activeProfile.checklists.length > 1 && (
-            <IconButtonChevronExpand aria-label="foo bar" isToggled={isOpen} onToggle={onToggle} />
+    <C.Box aria-label="checklists" as="section" layerStyle="card" mt={12}>
+      {!!activeProfile.checklists.length && (
+        <ListItem
+          checklist={selectDenormalizedChecklist(
+            { categories, checklists, items },
+            { id: activeProfile.checklists[0] }
           )}
-        </C.Flex>
-      </C.Box>
+          key={activeProfile.checklists[0]}
+        />
+      )}
+      <C.Collapse in={isOpen}>
+        {activeProfile.checklists.slice(1).map((id) => (
+          <ListItem checklist={selectDenormalizedChecklist({ categories, checklists, items }, { id })} key={id} />
+        ))}
+      </C.Collapse>
+      <C.Flex>
+        <AddButton
+          onClick={() => {
+            onOpen();
+            requestAnimationFrame(() => dispatch({ type: 'CreateChecklist' }));
+          }}
+        >
+          add checklist
+        </AddButton>
+        {activeProfile.checklists.length > 1 && <IconButtonChevronExpand isToggled={isOpen} onToggle={onToggle} />}
+      </C.Flex>
     </C.Box>
   );
 };

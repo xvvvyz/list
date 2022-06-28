@@ -35,28 +35,16 @@ const EditableListItem = ({
 }: EditableListItemProps) => {
   const theme = C.useTheme();
 
-  const hideWrappingLinePseudoStyles = {
-    bg: 'bgSecondary',
-    bottom: 0,
-    content: '" "',
-    h: subtextOffset,
-    left: 0,
-    pos: 'absolute',
-    transitionDuration: 'normal',
-    transitionProperty: 'background',
-    w: 'full',
-  };
-
-  const focusOrHoverStyles = {
-    '.editable-list-item__delete': { opacity: 1, zIndex: 1 },
-    '.editable-list-item__preview': { pr: 16 },
-  };
-
   return (
     <C.Box
-      __css={{ pos: 'relative', w: `calc(100% - ${theme.space['14']})` }}
-      _focusWithin={focusOrHoverStyles}
-      _hover={focusOrHoverStyles}
+      __css={{
+        '&:hover, &:focus-within': {
+          '.editable-list-item__delete': { opacity: 1, zIndex: 1 },
+          '.editable-list-item__preview': { pr: 16 },
+        },
+        pos: 'relative',
+        w: `calc(100% - ${theme.space['14']})`,
+      }}
       {...rest}
     >
       <C.Editable
@@ -68,12 +56,19 @@ const EditableListItem = ({
         w="full"
       >
         <C.EditablePreview
-          _after={subtext ? hideWrappingLinePseudoStyles : undefined}
-          _before={subtext ? hideWrappingLinePseudoStyles : undefined}
-          _hover={{
-            _after: subtext ? { bg: 'whiteAlpha.50' } : undefined,
-            bg: 'whiteAlpha.50',
-          }}
+          _after={
+            subtext
+              ? {
+                  bg: 'bgSecondary',
+                  bottom: 0,
+                  content: '" "',
+                  h: subtextOffset,
+                  left: 0,
+                  pos: 'absolute',
+                  w: 'full',
+                }
+              : undefined
+          }
           borderRadius="md"
           className="editable-list-item__preview"
           h={inputHeight}
@@ -89,7 +84,7 @@ const EditableListItem = ({
         <C.EditableInput _focus={{ boxShadow: 'none' }} borderRadius="md" h={inputHeight} pl={5} pr={16} w="full" />
       </C.Editable>
       <IconButtonX
-        aria-label="foo bar"
+        aria-label="delete"
         className="editable-list-item__delete"
         onClick={onDelete}
         pos="absolute"

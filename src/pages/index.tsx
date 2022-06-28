@@ -5,7 +5,7 @@ import Header from '../features/profile/sections/Header';
 import Items from '../features/profile/sections/Items';
 
 const IndexPage = () => (
-  <C.Container maxW="container.sm" pb={24}>
+  <C.Container as="div" maxW="container.app" pb={24}>
     <Header />
     <Checklists />
     <Items />
