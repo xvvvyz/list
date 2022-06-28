@@ -107,7 +107,7 @@ const ListItem = ({
             onKeyDown={(e) => {
               const target = e.target as HTMLTextAreaElement;
 
-              switch (e.code) {
+              switch (e.key) {
                 case 'Backspace': {
                   if (target.selectionStart + target.selectionEnd > 0) return;
                   e.preventDefault();

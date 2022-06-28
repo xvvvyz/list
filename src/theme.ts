@@ -219,6 +219,9 @@ const theme = {
         color: 'fgPrimary',
         userSelect: 'none',
       },
+      'body, html': {
+        overscrollBehavior: 'contain',
+      },
       html: {
         fontSize: '15px',
       },

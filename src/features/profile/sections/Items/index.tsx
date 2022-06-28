@@ -23,7 +23,7 @@ const Items = () => {
   const [draggingId, setDraggingId] = useState<Id>('');
   const [draggingOverCategoryId, setDraggingOverCategoryId] = useState<Id>('');
   const [isCategoryExpanded, setIsCategoryExpanded] = useState<Record<Id, boolean>>({});
-  const sensors = D.useSensors(D.useSensor(D.PointerSensor));
+  const sensors = D.useSensors(D.useSensor(D.MouseSensor), D.useSensor(D.TouchSensor));
   if (!account.profiles.length) return null;
   const state = { account, categories, items, profiles };
   const activeProfile = selectActiveProfile({ account, profiles });
