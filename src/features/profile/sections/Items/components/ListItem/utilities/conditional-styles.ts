@@ -15,6 +15,7 @@ const conditionalStyles = ({
 
   const containerStyles = {
     bg: 'initial',
+    fontWeight: 'normal',
     opacity: '1',
     py: 0,
     shadow: 'none',
@@ -33,6 +34,7 @@ const conditionalStyles = ({
   }
 
   if (isCategory) {
+    containerStyles.fontWeight = 'bold';
     containerStyles.py = 2;
   }
 
