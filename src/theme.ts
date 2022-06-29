@@ -236,7 +236,7 @@ const theme = extendTheme({
         shadow: 'outline',
       },
       '::selection': {
-        background: 'selection',
+        bg: 'selection',
       },
       body: {
         bg: 'bgPrimary',

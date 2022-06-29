@@ -1,27 +1,15 @@
 import { RefObject, useEffect } from 'react';
+import setCaretPosition from './set-caret-position';
 
-const useAutoFocus = ({
-  focusAtPosition,
-  ref,
-  updateValue,
-}: {
-  focusAtPosition?: number;
-  ref: RefObject<HTMLTextAreaElement | null>;
-  updateValue?: string;
-}) =>
+const useAutoFocus = ({ focusAtPosition, ref }: { focusAtPosition?: number; ref: RefObject<HTMLDivElement | null> }) =>
   useEffect(() => {
     if (!ref.current) {
       return;
     }
 
-    if (typeof updateValue !== 'undefined') {
-      ref.current.value = updateValue;
-    }
-
     if (typeof focusAtPosition !== 'undefined') {
-      ref.current.focus();
-      ref.current.setSelectionRange(focusAtPosition, focusAtPosition);
+      setCaretPosition(ref.current, focusAtPosition);
     }
-  }, [focusAtPosition, updateValue]);
+  }, [focusAtPosition]);
 
 export default useAutoFocus;

@@ -42,7 +42,6 @@ export interface ItemParsed extends Item {
 export interface Meta {
   autoFocus?: boolean;
   focusAtPosition?: number;
-  updateValue?: string;
 }
 
 export interface Profile {

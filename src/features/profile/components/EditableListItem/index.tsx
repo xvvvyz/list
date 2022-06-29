@@ -1,6 +1,7 @@
 import * as C from '@chakra-ui/react';
 import React from 'react';
 import IconButtonX from '../IconButtonX';
+import useDeleteMeta from '../../utilities/use-delete-meta';
 
 const EditableSubtext = (props: C.TextProps) => {
   const { isEditing } = C.useEditableControls();
@@ -34,6 +35,7 @@ const EditableListItem = ({
   ...rest
 }: EditableListItemProps) => {
   const theme = C.useTheme();
+  useDeleteMeta(startWithEditView);
 
   return (
     <C.Box

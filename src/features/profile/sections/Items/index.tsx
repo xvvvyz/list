@@ -140,7 +140,6 @@ const Items = () => {
             return (
               <SortableListItem
                 category={category}
-                defaultValue={category.text}
                 focusAtPosition={category.meta?.focusAtPosition}
                 id={categoryId}
                 index={categoryIndex}
@@ -154,19 +153,18 @@ const Items = () => {
                 toggleExpandCategory={() =>
                   setIsCategoryExpanded((state) => ({ ...state, [categoryId]: !state[categoryId] }))
                 }
-                updateValue={category.meta?.updateValue}
+                value={category.text}
               >
                 <DS.SortableContext items={categories[categoryId].items} strategy={DS.verticalListSortingStrategy}>
                   {categories[categoryId].items.map((itemId, itemIndex) => (
                     <SortableListItem
                       category={category}
-                      defaultValue={items[itemId].text}
                       focusAtPosition={items[itemId].meta?.focusAtPosition}
                       id={itemId}
                       index={itemIndex}
                       key={itemId}
                       previousItem={items[category.items[itemIndex - 1]]}
-                      updateValue={items[itemId].meta?.updateValue}
+                      value={items[itemId].text}
                     />
                   ))}
                 </DS.SortableContext>
@@ -201,22 +199,22 @@ const Items = () => {
             {!!draggingId && (
               <ListItem
                 category={categories[draggingIdCategoryId]}
-                defaultValue={draggingItemOrCategory.text}
                 id={draggingId}
                 index={0}
                 isCategory={isDraggingCategory}
                 isCategoryExpanded={isCategoryExpanded[draggingId]}
                 isOverlay
+                value={draggingItemOrCategory.text}
               >
                 {isDraggingCategory ? (
                   <>
                     {categories[draggingId].items.map((itemId, index) => (
                       <ListItem
                         category={categories[draggingOverCategoryId]}
-                        defaultValue={items[itemId].text}
                         id={itemId}
                         index={index}
                         key={`overlay-${itemId}`}
+                        value={items[itemId].text}
                       />
                     ))}
                     <AddButton h={10}>add item</AddButton>

@@ -84,7 +84,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
       return reorderItem(state, action);
 
     case 'SetActiveProfile':
-      return deleteMeta(setActiveProfile(state, action));
+      return setActiveProfile(state, action);
 
     case 'UpdateCategory':
       return updateCategory(state, action);

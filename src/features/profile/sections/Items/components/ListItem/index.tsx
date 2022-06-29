@@ -1,12 +1,13 @@
 import * as C from '@chakra-ui/react';
-import React, { useRef } from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
+import React, { useContext, useRef } from 'react';
 import ApiContext from '../../../../../../context/api';
 import Grabber from '../../../../../../images/grabber.svg';
 import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
 import IconButtonX from '../../../../components/IconButtonX';
 import conditionalStyles from './utilities/conditional-styles';
+import getSelectionRange from './utilities/get-selection-range';
 import useAutoFocus from './utilities/use-auto-focus';
+import useDeleteMeta from '../../../../utilities/use-delete-meta';
 import { Category, Id, Item } from '../../../../../../types';
 
 interface ListItemProps {
@@ -17,7 +18,6 @@ interface ListItemProps {
     transform: string | undefined;
     transition: string | undefined;
   };
-  defaultValue: string;
   dragHandleProps?: {
     'aria-describedby': string;
     'aria-disabled': boolean;
@@ -41,14 +41,13 @@ interface ListItemProps {
   previousCategoryLastItem?: Item;
   previousItem?: Item;
   toggleExpandCategory?: () => void;
-  updateValue?: string;
+  value: string;
 }
 
 const ListItem = ({
   category,
   children,
   containerProps,
-  defaultValue,
   dragHandleProps,
   focusAtPosition,
   id,
@@ -63,11 +62,12 @@ const ListItem = ({
   previousCategoryLastItem,
   previousItem,
   toggleExpandCategory,
-  updateValue,
+  value,
 }: ListItemProps) => {
-  const { dispatch } = React.useContext(ApiContext);
-  const ref = useRef<HTMLTextAreaElement | null>(null);
-  useAutoFocus({ focusAtPosition, ref, updateValue });
+  const { dispatch } = useContext(ApiContext);
+  const ref = useRef<HTMLDivElement | null>(null);
+  useAutoFocus({ focusAtPosition, ref });
+  useDeleteMeta(typeof focusAtPosition !== 'undefined');
 
   const { containerStyles, focusOrHoverStyles } = conditionalStyles({
     isCategory,
@@ -78,7 +78,7 @@ const ListItem = ({
 
   return (
     <C.Box borderRadius="md" pos="relative" sx={containerStyles} {...containerProps}>
-      <C.HStack pr={2}>
+      <C.HStack alignItems="flex-start" pr={2}>
         <C.IconButton
           aria-label={dragHandleProps?.['aria-label'] || ''}
           borderRadius="md"
@@ -93,25 +93,25 @@ const ListItem = ({
           {...dragHandleProps}
         />
         <C.Flex _focusWithin={focusOrHoverStyles} _hover={focusOrHoverStyles} pos="relative" w="full">
-          <C.Textarea
-            _focus={{ boxShadow: 'none' }}
+          <C.Box
             aria-label={isCategory ? 'category' : 'item'}
-            as={TextareaAutosize}
-            defaultValue={defaultValue}
+            aria-multiline
+            contentEditable
             onBlur={(e) =>
               dispatch({
                 id,
-                text: e.target.value,
+                text: e.target.textContent ?? '',
                 type: isCategory ? 'UpdateCategory' : 'UpdateItem',
               })
             }
             onKeyDown={(e) => {
-              alert(e.key);
-              const target = e.target as HTMLTextAreaElement;
+              const target = e.target as HTMLDivElement;
+              const text = target.textContent ?? '';
+              const [selectionStart, selectionEnd] = getSelectionRange(text.length);
 
               switch (e.key) {
                 case 'Backspace': {
-                  if (target.selectionStart + target.selectionEnd > 0) return;
+                  if (selectionStart + selectionEnd > 0) return;
                   e.preventDefault();
 
                   dispatch({
@@ -123,42 +123,42 @@ const ListItem = ({
                   if (isCategory) {
                     if (previousCategory) {
                       if (isPreviousCategoryExpanded && previousCategoryLastItem) {
-                        const newText = previousCategoryLastItem.text + target.value;
+                        const newText = previousCategoryLastItem.text + text;
 
                         return dispatch({
                           id: previousCategoryLastItem.id,
-                          meta: { focusAtPosition: previousCategoryLastItem.text.length, updateValue: newText },
+                          meta: { focusAtPosition: previousCategoryLastItem.text.length },
                           text: newText,
                           type: 'UpdateItem',
                         });
                       }
 
-                      const newText = previousCategory.text + target.value;
+                      const newText = previousCategory.text + text;
 
                       dispatch({
                         id: previousCategory.id,
-                        meta: { focusAtPosition: previousCategory.text.length, updateValue: newText },
+                        meta: { focusAtPosition: previousCategory.text.length },
                         text: newText,
                         type: 'UpdateCategory',
                       });
                     }
                   } else {
                     if (previousItem) {
-                      const newText = previousItem.text + target.value;
+                      const newText = previousItem.text + text;
 
                       return dispatch({
                         id: previousItem.id,
-                        meta: { focusAtPosition: previousItem.text.length, updateValue: newText },
+                        meta: { focusAtPosition: previousItem.text.length },
                         text: newText,
                         type: 'UpdateItem',
                       });
                     }
 
-                    const newText = category.text + target.value;
+                    const newText = category.text + text;
 
                     dispatch({
                       id: category.id,
-                      meta: { focusAtPosition: category.text.length, updateValue: newText },
+                      meta: { focusAtPosition: category.text.length },
                       text: newText,
                       type: 'UpdateCategory',
                     });
@@ -169,13 +169,12 @@ const ListItem = ({
 
                 case 'Enter': {
                   e.preventDefault();
-                  const carry = target.value.slice(target.selectionEnd);
-                  const newText = target.value.replace(carry, '');
+                  const carry = text.slice(selectionEnd);
+                  const newText = text.replace(carry, '');
 
                   if (isCategory) {
                     dispatch({
                       id,
-                      meta: { updateValue: newText },
                       text: newText,
                       type: 'UpdateCategory',
                     });
@@ -199,7 +198,6 @@ const ListItem = ({
                   } else {
                     dispatch({
                       id,
-                      meta: { updateValue: newText },
                       text: newText,
                       type: 'UpdateItem',
                     });
@@ -222,10 +220,22 @@ const ListItem = ({
               }
             }}
             ref={ref}
-            resize="none"
-            rows={1}
-            variant="unstyled"
-          />
+            spellCheck
+            suppressContentEditableWarning
+            sx={{
+              _focus: { boxShadow: 'none' },
+              lineHeight: 'short',
+              minH: 10,
+              pos: 'relative',
+              py: 2,
+              w: 'full',
+              whiteSpace: 'pre-wrap',
+              wordWrap: 'anywhere',
+            }}
+            tabIndex={0}
+          >
+            {value}
+          </C.Box>
           <IconButtonX
             aria-label="delete"
             className="sortable-item__delete"

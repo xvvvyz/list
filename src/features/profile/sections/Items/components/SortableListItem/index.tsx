@@ -3,7 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import ListItem, { ListItemProps } from '../ListItem';
 
-const SortableListItem = ({ category, id, ...rest }: ListItemProps) => {
+const SortableListItem = ({ id, ...rest }: ListItemProps) => {
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef, transform, transition } = useSortable({
     animateLayoutChanges: defaultAnimateLayoutChanges,
     id,
@@ -11,7 +11,6 @@ const SortableListItem = ({ category, id, ...rest }: ListItemProps) => {
 
   return (
     <ListItem
-      category={category}
       containerProps={{
         ref: setNodeRef,
         transform: CSS.Translate.toString(transform),
