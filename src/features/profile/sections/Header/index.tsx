@@ -9,8 +9,8 @@ import IconButtonChevronRight from '../../components/IconButtonChevronRight';
 import ListItem from './components/ListItem';
 import Logo from '../../../../images/logo.svg';
 import ProfilesContext from '../../../../context/profiles';
-import selectActiveProfile from '../../../../selectors/select-active-profile';
 import ThemeToggle from '../../../../images/theme-toggle.svg';
+import selectActiveProfile from '../../../../selectors/select-active-profile';
 
 const Header = () => {
   const { account } = useContext(AccountContext);

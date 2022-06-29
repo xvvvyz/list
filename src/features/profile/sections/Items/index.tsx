@@ -42,14 +42,19 @@ const Items = () => {
             });
           }
 
-          return D.rectIntersection({
-            ...args,
-            droppableContainers: args.droppableContainers.filter(
-              ({ id }) =>
-                (id in items && isCategoryExpanded[selectCategoryId(state, { id: String(id) })]) ||
-                (id in categories && (!isCategoryExpanded[id] || categories[id].items.length === 0))
-            ),
-          });
+          const overId = D.getFirstCollision(D.rectIntersection(args), 'id');
+          if (!overId) return [];
+
+          if (overId in categories && isCategoryExpanded[overId] && categories[overId].items.length) {
+            return D.closestCenter({
+              ...args,
+              droppableContainers: args.droppableContainers.filter(({ id }) =>
+                categories[overId].items.includes(String(id))
+              ),
+            });
+          }
+
+          return [{ id: overId }];
         }}
         id="items-dnd-context"
         onDragCancel={() => {
@@ -77,15 +82,16 @@ const Items = () => {
             return;
           }
 
-          const activeParentCategoryId = selectCategoryId(state, { id: String(active.id) });
-          const finalOverCategoryId = selectCategoryId(state, { id: String(over.id) });
+          const fromCategoryId = selectCategoryId(state, { id: String(active.id) });
+          const toCategoryId = selectCategoryId(state, { id: String(over.id) });
 
-          if (activeParentCategoryId !== finalOverCategoryId) {
-            if (!isCategoryExpanded[finalOverCategoryId] || categories[finalOverCategoryId].items.length === 0) {
+          if (fromCategoryId !== toCategoryId) {
+            if (!isCategoryExpanded[toCategoryId] || categories[toCategoryId].items.length === 0) {
               dispatch({
-                fromCategoryId: activeParentCategoryId,
+                fromCategoryId,
                 id: String(active.id),
-                toCategoryId: finalOverCategoryId,
+                toCategoryId,
+                toIndex: 0,
                 type: 'MoveItem',
               });
             }
@@ -93,37 +99,52 @@ const Items = () => {
             return;
           }
 
-          const itemIds = categories[activeParentCategoryId].items;
-          const activeItemIndex = itemIds.indexOf(String(active.id));
-          const overItemIndex = itemIds.indexOf(String(over.id));
+          const itemIds = categories[fromCategoryId].items;
+          const fromIndex = itemIds.indexOf(String(active.id));
+          const toIndex = itemIds.indexOf(String(over.id));
 
-          if (activeItemIndex !== overItemIndex) {
-            dispatch({
-              categoryId: finalOverCategoryId,
-              fromIndex: activeItemIndex,
-              toIndex: overItemIndex,
-              type: 'ReorderItem',
-            });
-          }
+          if (fromIndex === toIndex) return;
+
+          dispatch({
+            categoryId: fromCategoryId,
+            fromIndex,
+            toIndex,
+            type: 'ReorderItem',
+          });
         }}
         onDragOver={({ active, over }: D.DragOverEvent) => {
-          if (active.id in categories || !over?.id) return;
-          const activeParentCategoryId = selectCategoryId(state, { id: String(active.id) });
-          const newOverCategoryId = selectCategoryId(state, { id: String(over.id) });
-          setDraggingOverCategoryId(newOverCategoryId);
+          if (active.id in categories || !over?.id) {
+            setDraggingOverCategoryId('');
+            return;
+          }
+
+          const fromCategoryId = selectCategoryId(state, { id: String(active.id) });
+          const toCategoryId = selectCategoryId(state, { id: String(over.id) });
+          setDraggingOverCategoryId(toCategoryId);
 
           if (
-            activeParentCategoryId !== newOverCategoryId &&
-            isCategoryExpanded[newOverCategoryId] &&
-            categories[newOverCategoryId].items.length > 0
+            fromCategoryId === toCategoryId ||
+            !isCategoryExpanded[toCategoryId] ||
+            !categories[toCategoryId].items.length
           ) {
-            dispatch({
-              fromCategoryId: activeParentCategoryId,
-              id: String(active.id),
-              toCategoryId: newOverCategoryId,
-              type: 'MoveItem',
-            });
+            return;
           }
+
+          const fromCategoryIndex = activeProfile.categories.indexOf(fromCategoryId);
+          const toCategoryIndex = activeProfile.categories.indexOf(toCategoryId);
+          const overItems = categories[toCategoryId].items;
+          const overItemIndex = overItems.indexOf(String(over.id));
+
+          const toIndex =
+            overItemIndex || (overItems.length === 1 && fromCategoryIndex > toCategoryIndex) ? 0 : overItems.length;
+
+          dispatch({
+            fromCategoryId,
+            id: String(active.id),
+            toCategoryId,
+            toIndex,
+            type: 'MoveItem',
+          });
         }}
         onDragStart={({ active }: D.DragStartEvent) => {
           setDraggingId(String(active.id));

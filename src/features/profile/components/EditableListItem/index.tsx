@@ -83,7 +83,15 @@ const EditableListItem = ({
           zIndex={1}
         />
         {subtext && <EditableSubtext bottom={subtextOffset}>{subtext}</EditableSubtext>}
-        <C.EditableInput _focus={{ boxShadow: 'none' }} borderRadius="md" h={inputHeight} pl={5} pr={16} w="full" />
+        <C.EditableInput
+          _focus={{ boxShadow: 'none' }}
+          borderRadius="md"
+          h={inputHeight}
+          pl={5}
+          pr={16}
+          type="text"
+          w="full"
+        />
       </C.Editable>
       <IconButtonX
         aria-label="delete"

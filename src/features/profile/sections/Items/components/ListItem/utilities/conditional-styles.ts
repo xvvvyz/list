@@ -20,12 +20,12 @@ const conditionalStyles = ({
     shadow: 'none',
   };
 
-  if (isOverlay || isDragging) {
-    containerStyles.shadow = 'outline';
+  if (isOverlay) {
+    containerStyles.bg = isCategory ? 'hover' : 'active';
   }
 
-  if (isOverlay || isDragging || isDropzone) {
-    containerStyles.bg = 'bgPrimary';
+  if (isDropzone) {
+    containerStyles.bg = 'hover';
   }
 
   if (isDragging) {

@@ -16,7 +16,6 @@ interface ListItemProps {
   containerProps?: {
     ref: React.RefCallback<HTMLElement>;
     transform: string | undefined;
-    transition: string | undefined;
   };
   dragHandleProps?: {
     'aria-describedby': string;
@@ -109,7 +108,7 @@ const ListItem = ({
               const text = target.textContent ?? '';
               const [selectionStart, selectionEnd] = getSelectionRange(text.length);
 
-              switch (e.key) {
+              switch (e.code) {
                 case 'Backspace': {
                   if (selectionStart + selectionEnd > 0) return;
                   e.preventDefault();
@@ -123,48 +122,40 @@ const ListItem = ({
                   if (isCategory) {
                     if (previousCategory) {
                       if (isPreviousCategoryExpanded && previousCategoryLastItem) {
-                        const newText = previousCategoryLastItem.text + text;
-
                         return dispatch({
                           id: previousCategoryLastItem.id,
                           meta: { focusAtPosition: previousCategoryLastItem.text.length },
-                          text: newText,
+                          text: previousCategoryLastItem.text + text,
                           type: 'UpdateItem',
                         });
                       }
 
-                      const newText = previousCategory.text + text;
-
-                      dispatch({
+                      return dispatch({
                         id: previousCategory.id,
                         meta: { focusAtPosition: previousCategory.text.length },
-                        text: newText,
+                        text: previousCategory.text + text,
                         type: 'UpdateCategory',
                       });
                     }
-                  } else {
-                    if (previousItem) {
-                      const newText = previousItem.text + text;
 
-                      return dispatch({
-                        id: previousItem.id,
-                        meta: { focusAtPosition: previousItem.text.length },
-                        text: newText,
-                        type: 'UpdateItem',
-                      });
-                    }
+                    return;
+                  }
 
-                    const newText = category.text + text;
-
-                    dispatch({
-                      id: category.id,
-                      meta: { focusAtPosition: category.text.length },
-                      text: newText,
-                      type: 'UpdateCategory',
+                  if (previousItem) {
+                    return dispatch({
+                      id: previousItem.id,
+                      meta: { focusAtPosition: previousItem.text.length },
+                      text: previousItem.text + text,
+                      type: 'UpdateItem',
                     });
                   }
 
-                  return;
+                  return dispatch({
+                    id: category.id,
+                    meta: { focusAtPosition: category.text.length },
+                    text: category.text + text,
+                    type: 'UpdateCategory',
+                  });
                 }
 
                 case 'Enter': {
@@ -189,29 +180,27 @@ const ListItem = ({
                       });
                     }
 
-                    dispatch({
+                    return dispatch({
                       atIndex: index + 1,
                       meta: { focusAtPosition: 0 },
                       text: carry,
                       type: 'CreateCategory',
                     });
-                  } else {
-                    dispatch({
-                      id,
-                      text: newText,
-                      type: 'UpdateItem',
-                    });
-
-                    dispatch({
-                      atIndex: index + 1,
-                      categoryId: category.id,
-                      meta: { focusAtPosition: 0 },
-                      text: carry,
-                      type: 'CreateItem',
-                    });
                   }
 
-                  return;
+                  dispatch({
+                    id,
+                    text: newText,
+                    type: 'UpdateItem',
+                  });
+
+                  return dispatch({
+                    atIndex: index + 1,
+                    categoryId: category.id,
+                    meta: { focusAtPosition: 0 },
+                    text: carry,
+                    type: 'CreateItem',
+                  });
                 }
 
                 default: {
@@ -223,14 +212,11 @@ const ListItem = ({
             spellCheck
             suppressContentEditableWarning
             sx={{
-              _focus: { boxShadow: 'none' },
               lineHeight: 'short',
               minH: 10,
               pos: 'relative',
               py: 2,
               w: 'full',
-              whiteSpace: 'pre-wrap',
-              wordWrap: 'anywhere',
             }}
             tabIndex={0}
           >

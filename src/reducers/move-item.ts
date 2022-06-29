@@ -5,6 +5,7 @@ interface MoveItemAction {
   fromCategoryId: Id;
   id: Id;
   toCategoryId: Id;
+  toIndex: number;
   type: 'MoveItem';
 }
 
@@ -18,7 +19,11 @@ const moveItem = (state: State, action: MoveItemAction) => ({
     },
     [action.toCategoryId]: {
       ...state.categories[action.toCategoryId],
-      items: [String(action.id), ...state.categories[action.toCategoryId].items],
+      items: [
+        ...state.categories[action.toCategoryId].items.slice(0, action.toIndex),
+        String(action.id),
+        ...state.categories[action.toCategoryId].items.slice(action.toIndex),
+      ],
     },
   },
 });

@@ -19,7 +19,7 @@ const Checklists = () => {
   const { dispatch } = useContext(ApiContext);
   const { items } = useContext(ItemsContext);
   const { profiles } = useContext(ProfilesContext);
-  const { isOpen, onOpen, onToggle } = C.useDisclosure();
+  const { isOpen, onToggle } = C.useDisclosure();
   if (!account.profiles.length) return null;
   const activeProfile = selectActiveProfile({ account, profiles });
 
@@ -40,14 +40,7 @@ const Checklists = () => {
         ))}
       </C.Collapse>
       <C.Flex>
-        <AddButton
-          onClick={() => {
-            onOpen();
-            requestAnimationFrame(() => dispatch({ type: 'CreateChecklist' }));
-          }}
-        >
-          add checklist
-        </AddButton>
+        <AddButton onClick={() => dispatch({ atBeginning: !isOpen, type: 'CreateChecklist' })}>add checklist</AddButton>
         {activeProfile.checklists.length > 1 && <IconButtonChevronExpand isToggled={isOpen} onToggle={onToggle} />}
       </C.Flex>
     </C.Box>

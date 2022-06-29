@@ -4,6 +4,7 @@ const description =
 const url = 'https://lliist.app';
 
 const seo = {
+  additionalMetaTags: [{ content: 'black-translucent', name: 'apple-mobile-web-app-status-bar-style' }],
   canonical: url,
   defaultTitle: 'lliist — dynamic, reusable checklists',
   description: description,

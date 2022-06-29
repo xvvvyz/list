@@ -51,7 +51,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
       return createCategory(state, action);
 
     case 'CreateChecklist':
-      return createChecklist(state);
+      return createChecklist(state, action);
 
     case 'CreateItem':
       return createItem(state, action);

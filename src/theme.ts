@@ -122,8 +122,8 @@ const theme = extendTheme({
       },
       variants: {
         ghost: {
-          _active: { bg: 'alpha100' },
-          _hover: { bg: 'alpha50' },
+          _active: { bg: 'active' },
+          _hover: { bg: 'hover' },
           borderRadius: 'md',
           color: 'fgSecondary',
         },
@@ -180,47 +180,35 @@ const theme = extendTheme({
   },
   semanticTokens: {
     colors: {
-      alpha50: {
-        _light: 'blackAlpha.50',
-        default: 'whiteAlpha.50',
-      },
-      alpha100: {
-        _light: 'blackAlpha.100',
-        default: 'whiteAlpha.100',
-      },
-      bgInput: {
-        _light: '#ccc',
-        default: '#444444',
+      active: {
+        _dark: '#3c3c3c',
+        _light: '#eaeaea',
       },
       bgPrimary: {
-        _light: '#e5e5e5',
-        default: '#181818',
+        _dark: '#1e1e1e',
+        _light: '#f4f4f4',
       },
       bgSecondary: {
-        _light: '#eee',
-        default: '#222',
-      },
-      fgGhost: {
-        _light: 'rgba(0, 0, 0, .4)',
-        default: 'rgba(255, 255, 255, .4)',
+        _dark: '#282828',
+        _light: '#fefefe',
       },
       fgPrimary: {
+        _dark: 'rgba(255, 255, 255, .9)',
         _light: 'rgba(0, 0, 0, .95)',
-        default: 'rgba(255, 255, 255, .9)',
       },
       fgSecondary: {
+        _dark: 'rgba(255, 255, 255, .65)',
         _light: 'rgba(0, 0, 0, .6)',
-        default: 'rgba(255, 255, 255, .65)',
       },
-      selection: {
-        _light: 'blue.100',
-        default: 'blue.600',
+      hover: {
+        _dark: '#323232',
+        _light: '#f4f4f4',
       },
     },
     shadows: {
       outline: {
-        _light: 'inset 0 0 0 3px #859cc7',
-        default: 'inset 0 0 0 3px #6280b6',
+        _dark: 'none',
+        _light: 'none',
       },
     },
   },
@@ -232,13 +220,24 @@ const theme = extendTheme({
   styles: {
     global: {
       '.focus-visible': {
+        bg: 'hover',
         outline: 'none',
         shadow: 'outline',
       },
-      '::selection': {
-        bg: 'selection',
+      '[contenteditable]': {
+        _focus: { bg: 'inherit' },
+        WebkitUserSelect: 'text',
+        userSelect: 'text',
+        whiteSpace: 'pre-wrap',
+        wordWrap: 'anywhere',
+      },
+      _selection: {
+        bg: 'active',
       },
       body: {
+        WebkitTapHighlightColor: 'transparent',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
         bg: 'bgPrimary',
         color: 'fgPrimary',
         userSelect: 'none',

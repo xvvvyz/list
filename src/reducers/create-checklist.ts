@@ -4,10 +4,11 @@ import { IdPrefix } from '../enums';
 import { State } from '../reducer';
 
 interface CreateChecklistAction {
+  atBeginning?: boolean;
   type: 'CreateChecklist';
 }
 
-const createChecklist = (state: State) => {
+const createChecklist = (state: State, action: CreateChecklistAction) => {
   const activeProfile = selectActiveProfile(state);
 
   const newChecklist = {
@@ -19,6 +20,10 @@ const createChecklist = (state: State) => {
     text: '',
   };
 
+  const newChecklists = action.atBeginning
+    ? [newChecklist.id, ...activeProfile.checklists]
+    : [...activeProfile.checklists, newChecklist.id];
+
   return {
     ...state,
     checklists: {
@@ -29,7 +34,7 @@ const createChecklist = (state: State) => {
       ...state.profiles,
       [activeProfile.id]: {
         ...activeProfile,
-        checklists: [...activeProfile.checklists, newChecklist.id],
+        checklists: newChecklists,
       },
     },
   };
