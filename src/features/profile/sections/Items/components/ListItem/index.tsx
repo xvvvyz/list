@@ -5,7 +5,6 @@ import Grabber from '../../../../../../images/grabber.svg';
 import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
 import IconButtonX from '../../../../components/IconButtonX';
 import conditionalStyles from './utilities/conditional-styles';
-import getSelectionRange from './utilities/get-selection-range';
 import useAutoFocus from './utilities/use-auto-focus';
 import useDeleteMeta from '../../../../utilities/use-delete-meta';
 import { Category, Id, Item } from '../../../../../../types';
@@ -103,110 +102,112 @@ const ListItem = ({
                 type: isCategory ? 'UpdateCategory' : 'UpdateItem',
               })
             }
-            onKeyDown={(e) => {
+            onInput={(e) => {
               const target = e.target as HTMLDivElement;
-              const text = target.textContent ?? '';
-              const [selectionStart, selectionEnd] = getSelectionRange(text.length);
+              const text = target.innerText;
+              const [match] = /[\n\r]+/.exec(text) || [];
+              if (!match) return;
+              const [newText, ...carry] = text.split(match);
+              target.innerText = newText;
 
-              switch (e.code) {
-                case 'Backspace': {
-                  if (selectionStart + selectionEnd > 0) return;
-                  e.preventDefault();
+              if (isCategory) {
+                dispatch({
+                  id,
+                  text: newText,
+                  type: 'UpdateCategory',
+                });
 
+                if (isCategoryExpanded) {
+                  return carry.forEach((c) =>
+                    dispatch({
+                      atIndex: 0,
+                      categoryId: id,
+                      meta: { focusAtPosition: 0 },
+                      text: c,
+                      type: 'CreateItem',
+                    })
+                  );
+                }
+
+                return carry.forEach((c) =>
                   dispatch({
-                    categoryId: category.id,
-                    id,
-                    type: isCategory ? 'DeleteCategory' : 'DeleteItem',
-                  });
+                    atIndex: index + 1,
+                    meta: { focusAtPosition: 0 },
+                    text: c,
+                    type: 'CreateCategory',
+                  })
+                );
+              }
 
-                  if (isCategory) {
-                    if (previousCategory) {
-                      if (isPreviousCategoryExpanded && previousCategoryLastItem) {
-                        return dispatch({
-                          id: previousCategoryLastItem.id,
-                          meta: { focusAtPosition: previousCategoryLastItem.text.length },
-                          text: previousCategoryLastItem.text + text,
-                          type: 'UpdateItem',
-                        });
-                      }
+              dispatch({
+                id,
+                text: newText,
+                type: 'UpdateItem',
+              });
 
-                      return dispatch({
-                        id: previousCategory.id,
-                        meta: { focusAtPosition: previousCategory.text.length },
-                        text: previousCategory.text + text,
-                        type: 'UpdateCategory',
-                      });
-                    }
+              carry.forEach((c) =>
+                dispatch({
+                  atIndex: index + 1,
+                  categoryId: category.id,
+                  meta: { focusAtPosition: 0 },
+                  text: c,
+                  type: 'CreateItem',
+                })
+              );
+            }}
+            onKeyDown={(e) => {
+              if (e.key !== 'Backspace') return;
+              const target = e.target as HTMLDivElement;
+              const text = target.innerText ?? '';
+              const selection = window.getSelection();
+              if (!selection) return;
+              const range = selection.getRangeAt(0);
+              if (range?.endOffset + range?.startOffset > 0) return;
+              e.preventDefault();
 
-                    return;
-                  }
+              dispatch({
+                categoryId: category.id,
+                id,
+                type: isCategory ? 'DeleteCategory' : 'DeleteItem',
+              });
 
-                  if (previousItem) {
+              if (isCategory) {
+                if (previousCategory) {
+                  if (isPreviousCategoryExpanded && previousCategoryLastItem) {
                     return dispatch({
-                      id: previousItem.id,
-                      meta: { focusAtPosition: previousItem.text.length },
-                      text: previousItem.text + text,
+                      id: previousCategoryLastItem.id,
+                      meta: { focusAtPosition: previousCategoryLastItem.text.length },
+                      text: previousCategoryLastItem.text + text,
                       type: 'UpdateItem',
                     });
                   }
 
                   return dispatch({
-                    id: category.id,
-                    meta: { focusAtPosition: category.text.length },
-                    text: category.text + text,
+                    id: previousCategory.id,
+                    meta: { focusAtPosition: previousCategory.text.length },
+                    text: previousCategory.text + text,
                     type: 'UpdateCategory',
                   });
                 }
 
-                case 'Enter': {
-                  e.preventDefault();
-                  const carry = text.slice(selectionEnd);
-                  const newText = text.replace(carry, '');
-
-                  if (isCategory) {
-                    dispatch({
-                      id,
-                      text: newText,
-                      type: 'UpdateCategory',
-                    });
-
-                    if (isCategoryExpanded) {
-                      return dispatch({
-                        atIndex: 0,
-                        categoryId: id,
-                        meta: { focusAtPosition: 0 },
-                        text: carry,
-                        type: 'CreateItem',
-                      });
-                    }
-
-                    return dispatch({
-                      atIndex: index + 1,
-                      meta: { focusAtPosition: 0 },
-                      text: carry,
-                      type: 'CreateCategory',
-                    });
-                  }
-
-                  dispatch({
-                    id,
-                    text: newText,
-                    type: 'UpdateItem',
-                  });
-
-                  return dispatch({
-                    atIndex: index + 1,
-                    categoryId: category.id,
-                    meta: { focusAtPosition: 0 },
-                    text: carry,
-                    type: 'CreateItem',
-                  });
-                }
-
-                default: {
-                  // noop
-                }
+                return;
               }
+
+              if (previousItem) {
+                return dispatch({
+                  id: previousItem.id,
+                  meta: { focusAtPosition: previousItem.text.length },
+                  text: previousItem.text + text,
+                  type: 'UpdateItem',
+                });
+              }
+
+              return dispatch({
+                id: category.id,
+                meta: { focusAtPosition: category.text.length },
+                text: category.text + text,
+                type: 'UpdateCategory',
+              });
             }}
             ref={ref}
             spellCheck
