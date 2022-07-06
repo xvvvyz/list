@@ -166,7 +166,7 @@ const theme = extendTheme({
           _active: { bg: 'bgSecondaryActive' },
           _hover: { bg: 'bgSecondaryHover', color: 'fgSecondaryHover' },
           bg: 'bgSecondary',
-          borderRadius: 'full',
+          borderRadius: 'sm',
           color: 'fgSecondary',
           shadow: 'border',
           textDecor: 'none',
