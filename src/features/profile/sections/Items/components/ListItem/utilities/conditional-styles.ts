@@ -22,11 +22,12 @@ const conditionalStyles = ({
   };
 
   if (isOverlay) {
-    containerStyles.bg = isCategory ? 'hover' : 'active';
+    containerStyles.bg = isCategory ? 'bgSecondaryHover' : 'bgSecondaryActive';
+    containerStyles.shadow = 'border';
   }
 
   if (isDropzone) {
-    containerStyles.bg = 'hover';
+    containerStyles.bg = 'bgSecondaryHover';
   }
 
   if (isDragging) {

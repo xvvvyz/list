@@ -2,6 +2,18 @@ import { extendTheme, ThemeConfig } from '@chakra-ui/react';
 
 const theme = extendTheme({
   colors: {
+    blackAlpha: {
+      50: 'rgba(0, 0, 0, 0.04)',
+      100: 'rgba(0, 0, 0, 0.06)',
+      200: 'rgba(0, 0, 0, 0.08)',
+      300: 'rgba(0, 0, 0, 0.16)',
+      400: 'rgba(0, 0, 0, 0.24)',
+      500: 'rgba(0, 0, 0, 0.36)',
+      600: 'rgba(0, 0, 0, 0.48)',
+      700: 'rgba(0, 0, 0, 0.64)',
+      800: 'rgba(0, 0, 0, 0.80)',
+      900: 'rgba(0, 0, 0, 0.88)',
+    },
     blue: {
       50: '#e8f2ff',
       100: '#c8d5ea',
@@ -27,16 +39,16 @@ const theme = extendTheme({
       900: '#180802',
     },
     gray: {
-      50: '#fbf0f2',
-      100: '#dcd8d9',
-      200: '#bfbfbf',
-      300: '#a6a6a6',
+      50: '#f7f7f7',
+      100: '#efefef',
+      200: '#e7e7e7',
+      300: '#dfdfdf',
       400: '#8c8c8c',
       500: '#737373',
-      600: '#595959',
-      700: '#404040',
-      800: '#282626',
-      900: '#150a0d',
+      600: '#3c3c3c',
+      700: '#323232',
+      800: '#282828',
+      900: '#1e1e1e',
     },
     green: {
       50: '#e8f7ed',
@@ -98,6 +110,18 @@ const theme = extendTheme({
       800: '#361b18',
       900: '#190701',
     },
+    whiteAlpha: {
+      50: 'rgba(255, 255, 255, 0.04)',
+      100: 'rgba(255, 255, 255, 0.06)',
+      200: 'rgba(255, 255, 255, 0.08)',
+      300: 'rgba(255, 255, 255, 0.16)',
+      400: 'rgba(255, 255, 255, 0.24)',
+      500: 'rgba(255, 255, 255, 0.36)',
+      600: 'rgba(255, 255, 255, 0.48)',
+      700: 'rgba(255, 255, 255, 0.64)',
+      800: 'rgba(255, 255, 255, 0.80)',
+      900: 'rgba(255, 255, 255, 0.92)',
+    },
     yellow: {
       50: '#fcf4e3',
       100: '#ebddc4',
@@ -112,46 +136,84 @@ const theme = extendTheme({
     },
   },
   components: {
+    Badge: {
+      baseStyle: {
+        fontSize: 'md',
+        fontWeight: 'bold',
+        shadow: 'border',
+        textTransform: 'none',
+      },
+    },
     Button: {
       baseStyle: {
         fontWeight: 'normal',
       },
       defaultProps: {
-        iconSpacing: 6,
         variant: 'ghost',
       },
+      sizes: {
+        md: {
+          h: 14,
+          px: 7,
+        },
+        sm: {
+          h: 8,
+          px: 4,
+        },
+      },
       variants: {
+        cta: {
+          _active: { bg: 'bgSecondaryActive' },
+          _hover: { bg: 'bgSecondaryHover', color: 'fgSecondaryHover' },
+          bg: 'bgSecondary',
+          borderRadius: 'full',
+          color: 'fgSecondary',
+          shadow: 'border',
+          textDecor: 'none',
+        },
         ghost: {
-          _active: { bg: 'active' },
-          _hover: { bg: 'hover' },
+          _active: { bg: 'bgSecondaryActive' },
+          _hover: { bg: 'bgSecondaryHover', color: 'fgSecondaryHover', shadow: 'border' },
           borderRadius: 'md',
           color: 'fgSecondary',
         },
       },
     },
-    Container: {
+    Divider: {
       baseStyle: {
-        p: 0,
+        borderColor: 'borderSecondary',
       },
     },
     Heading: {
-      baseStyle: {
-        fontWeight: 'normal',
+      defaultProps: {
+        size: 'lg',
       },
       sizes: {
         lg: {
-          fontSize: 'xl',
+          fontSize: 'lg',
           lineHeight: 'shorter',
         },
+      },
+    },
+    Link: {
+      baseStyle: {
+        _hover: { color: 'fgSecondaryHover', textDecor: 'none' },
+        color: 'fgSecondary',
+        textDecor: 'underline',
+      },
+    },
+    Text: {
+      baseStyle: {
+        color: 'fgSecondary',
       },
     },
   },
   config: {
     cssVarPrefix: '',
-    initialColorMode: 'dark',
     useSystemColorMode: true,
   } as ThemeConfig,
   fontSizes: {
+    '2xl': '2.75rem',
     lg: '1.25rem',
     md: '1rem',
     xl: '1.75rem',
@@ -161,6 +223,12 @@ const theme = extendTheme({
     heading: 'Inter, sans-serif',
   },
   layerStyles: {
+    app: {
+      WebkitTapHighlightColor: 'transparent',
+      WebkitTouchCallout: 'none',
+      WebkitUserSelect: 'none',
+      userSelect: 'none',
+    },
     card: {
       bg: 'bgSecondary',
       borderRadius: 'lg',
@@ -177,35 +245,52 @@ const theme = extendTheme({
   radii: {
     lg: '1.5rem',
     md: '1.25rem',
+    sm: '0.5rem',
   },
   semanticTokens: {
     colors: {
-      active: {
-        _dark: '#3c3c3c',
-        _light: '#eaeaea',
-      },
       bgPrimary: {
-        _dark: '#1e1e1e',
-        _light: '#f4f4f4',
+        _dark: 'gray.900',
+        _light: 'gray.200',
       },
       bgSecondary: {
-        _dark: '#282828',
-        _light: '#fefefe',
+        _dark: 'gray.800',
+        _light: 'gray.100',
+      },
+      bgSecondaryActive: {
+        _dark: 'gray.600',
+        _light: 'white',
+      },
+      bgSecondaryHover: {
+        _dark: 'gray.700',
+        _light: 'gray.50',
+      },
+      borderPrimary: {
+        _dark: 'whiteAlpha.100',
+        _light: 'blackAlpha.200',
+      },
+      borderSecondary: {
+        _dark: 'whiteAlpha.200',
+        _light: 'blackAlpha.300',
       },
       fgPrimary: {
-        _dark: 'rgba(255, 255, 255, .9)',
-        _light: 'rgba(0, 0, 0, .95)',
+        _dark: 'whiteAlpha.900',
+        _light: 'blackAlpha.900',
       },
       fgSecondary: {
-        _dark: 'rgba(255, 255, 255, .65)',
-        _light: 'rgba(0, 0, 0, .6)',
+        _dark: 'whiteAlpha.700',
+        _light: 'blackAlpha.700',
       },
-      hover: {
-        _dark: '#323232',
-        _light: '#f4f4f4',
+      fgSecondaryHover: {
+        _dark: 'whiteAlpha.800',
+        _light: 'blackAlpha.800',
       },
     },
     shadows: {
+      border: {
+        _dark: 'inset 0 0 0 1px var(--colors-borderPrimary)',
+        _light: 'inset 0 0 0 1px var(--colors-borderPrimary)',
+      },
       outline: {
         _dark: 'none',
         _light: 'none',
@@ -215,12 +300,13 @@ const theme = extendTheme({
   sizes: {
     container: {
       app: '26rem',
+      what: '19rem',
     },
   },
   styles: {
     global: {
       '.focus-visible': {
-        bg: 'hover',
+        bg: 'bgSecondaryHover',
         outline: 'none',
         shadow: 'outline',
       },
@@ -232,15 +318,11 @@ const theme = extendTheme({
         wordWrap: 'anywhere',
       },
       _selection: {
-        bg: 'active',
+        bg: 'bgSecondaryActive',
       },
       body: {
-        WebkitTapHighlightColor: 'transparent',
-        WebkitTouchCallout: 'none',
-        WebkitUserSelect: 'none',
         bg: 'bgPrimary',
         color: 'fgPrimary',
-        userSelect: 'none',
       },
       html: {
         fontSize: '16px',
