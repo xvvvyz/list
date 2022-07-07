@@ -175,6 +175,12 @@ const theme = extendTheme({
       },
       variants: {
         ghost: {
+          '@media (hover: hover)': {
+            _hover: {
+              bg: 'bgSecondaryHover',
+              color: 'fgSecondaryHover',
+            },
+          },
           _active: {
             bg: 'bgSecondaryHover',
           },
@@ -183,8 +189,7 @@ const theme = extendTheme({
             shadow: 'border',
           },
           _hover: {
-            bg: { sm: 'bgSecondaryHover' },
-            color: { sm: 'fgSecondaryHover' },
+            bg: 'inherit',
           },
           borderRadius: 'md',
           color: 'fgSecondary',

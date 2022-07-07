@@ -9,10 +9,6 @@ const conditionalStyles = ({
   isDropzone?: boolean;
   isOverlay?: boolean;
 }) => {
-  const focusOrHoverStyles = {
-    '.sortable-item__delete': { opacity: 1, zIndex: 1 },
-  };
-
   const containerStyles = {
     bg: 'initial',
     fontWeight: 'normal',
@@ -37,7 +33,7 @@ const conditionalStyles = ({
     containerStyles.py = 2;
   }
 
-  return { containerStyles, focusOrHoverStyles };
+  return { containerStyles };
 };
 
 export default conditionalStyles;

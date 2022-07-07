@@ -67,7 +67,7 @@ const ListItem = ({
   useAutoFocus({ focusAtPosition, ref });
   useDeleteMeta(typeof focusAtPosition !== 'undefined');
 
-  const { containerStyles, focusOrHoverStyles } = conditionalStyles({
+  const { containerStyles } = conditionalStyles({
     isCategory,
     isDragging,
     isDropzone,
@@ -78,7 +78,6 @@ const ListItem = ({
     <C.Box borderRadius="md" pos="relative" sx={containerStyles} {...containerProps}>
       <C.HStack alignItems="flex-start" pr={2}>
         <C.IconButton
-          _hover={{ bg: undefined }}
           aria-label={dragHandleProps?.['aria-label'] || ''}
           borderRadius="md"
           color="fgSecondary"
@@ -87,11 +86,26 @@ const ListItem = ({
           flexShrink={0}
           h={10}
           icon={<C.Icon as={Grabber} boxSize={6} />}
-          variant="ghost"
+          variant="unstyled"
           w={14}
           {...dragHandleProps}
         />
-        <C.Flex _focusWithin={focusOrHoverStyles} _hover={focusOrHoverStyles} pos="relative" w="full">
+        <C.Flex
+          pos="relative"
+          sx={{
+            '@media (hover: hover)': {
+              _hover: {
+                '.sortable-item__delete': {
+                  display: 'flex',
+                },
+              },
+            },
+            _focusWithin: {
+              '.sortable-item__delete': { display: 'flex' },
+            },
+          }}
+          w="full"
+        >
           <C.Box
             aria-label={isCategory ? 'category' : 'item'}
             aria-multiline

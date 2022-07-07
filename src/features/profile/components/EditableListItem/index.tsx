@@ -1,16 +1,8 @@
 import * as C from '@chakra-ui/react';
 import React from 'react';
+import EditableSubtext from './components/EditableSubtext';
 import IconButtonX from '../IconButtonX';
 import useDeleteMeta from '../../utilities/use-delete-meta';
-
-const EditableSubtext = (props: C.TextProps) => {
-  const { isEditing } = C.useEditableControls();
-  if (isEditing) return null;
-
-  return (
-    <C.Text color="fgSecondary" fontSize="base" fontWeight="normal" left={5} noOfLines={1} pos="absolute" {...props} />
-  );
-};
 
 interface EditableListItemProps extends Omit<C.BoxProps, 'onSubmit'> {
   defaultValue: string;
@@ -40,9 +32,23 @@ const EditableListItem = ({
   return (
     <C.Box
       __css={{
-        '&:hover, &:focus-within': {
-          '.editable-list-item__delete': { opacity: 1, zIndex: 1 },
-          '.editable-list-item__preview': { pr: 16 },
+        '@media (hover: hover)': {
+          _hover: {
+            '.editable-list-item__delete': {
+              display: 'flex',
+            },
+            '.editable-list-item__preview': {
+              pr: 16,
+            },
+          },
+        },
+        _focusWithin: {
+          '.editable-list-item__delete': {
+            display: 'flex',
+          },
+          '.editable-list-item__preview': {
+            pr: 16,
+          },
         },
         pos: 'relative',
         w: `calc(100% - ${theme.space['14']})`,
@@ -101,7 +107,6 @@ const EditableListItem = ({
         right={2}
         top="50%"
         transform="translateY(-50%)"
-        zIndex="-1"
       />
     </C.Box>
   );
