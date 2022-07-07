@@ -75,7 +75,7 @@ const WhatPage = () => (
           px={{ sm: 10 }}
           py={24}
         >
-          <C.Heading as="h3">{heading}</C.Heading>
+          <C.Heading as="h2">{heading}</C.Heading>
           <C.Text mt={3}>{description}</C.Text>
           {soon && (
             <C.Badge colorScheme="green" mt={4}>

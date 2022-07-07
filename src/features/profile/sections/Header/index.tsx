@@ -39,7 +39,9 @@ const Header = () => {
       </C.HStack>
       <C.Box aria-label="profiles" as="section">
         {!!account.profiles.length && (
-          <ListItem key={activeProfile.id} profile={activeProfile} w={isOpen ? 'full' : undefined} />
+          <C.Box pr={2}>
+            <ListItem key={activeProfile.id} profile={activeProfile} w={isOpen ? 'full' : undefined} />
+          </C.Box>
         )}
         <C.Collapse
           in={isOpen || !account.profiles.length}
@@ -49,7 +51,7 @@ const Header = () => {
             <C.Flex key={id}>
               <ListItem profile={profiles[id]} />
               <IconButtonChevronRight
-                aria-label="select"
+                aria-label="open profile"
                 h="4rem"
                 onClick={() => dispatch({ id, type: 'SetActiveProfile' })}
               />

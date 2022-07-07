@@ -67,7 +67,7 @@ const ListItem = ({
   useAutoFocus({ focusAtPosition, ref });
   useDeleteMeta(typeof focusAtPosition !== 'undefined');
 
-  const { containerStyles } = conditionalStyles({
+  const { containerStyles, focusOrHoverStyles } = conditionalStyles({
     isCategory,
     isDragging,
     isDropzone,
@@ -76,39 +76,44 @@ const ListItem = ({
 
   return (
     <C.Box borderRadius="md" pos="relative" sx={containerStyles} {...containerProps}>
-      <C.HStack alignItems="flex-start" pr={2}>
+      <C.Flex alignItems="flex-start">
         <C.IconButton
           aria-label={dragHandleProps?.['aria-label'] || ''}
-          borderRadius="md"
-          color="fgSecondary"
-          cursor="move"
-          display="inline-flex"
-          flexShrink={0}
-          h={10}
           icon={<C.Icon as={Grabber} boxSize={6} />}
-          variant="unstyled"
-          w={14}
-          {...dragHandleProps}
-        />
-        <C.Flex
-          pos="relative"
           sx={{
             '@media (hover: hover)': {
               _hover: {
-                '.sortable-item__delete': {
-                  display: 'flex',
-                },
+                bg: 'none',
               },
             },
-            _focusWithin: {
-              '.sortable-item__delete': { display: 'flex' },
+            _active: {
+              bg: 'none',
             },
+            borderRadius: 'md',
+            color: 'fgSecondary',
+            cursor: 'move',
+            display: 'inline-flex',
+            flexShrink: 0,
+            h: 10,
+            w: 14,
           }}
-          w="full"
+          variant="ghost"
+          {...dragHandleProps}
+        />
+        <C.Flex
+          sx={{
+            '@media (hover: hover)': {
+              _hover: focusOrHoverStyles,
+            },
+            _focusWithin: focusOrHoverStyles,
+            pos: 'relative',
+            w: 'full',
+          }}
         >
           <C.Box
             aria-label={isCategory ? 'category' : 'item'}
             aria-multiline
+            className="sortable-item__text"
             contentEditable
             onBlur={(e) =>
               dispatch({
@@ -225,6 +230,7 @@ const ListItem = ({
               });
             }}
             ref={ref}
+            role="textbox"
             spellCheck
             suppressContentEditableWarning
             sx={{
@@ -232,8 +238,8 @@ const ListItem = ({
               WebkitUserSelect: 'text',
               lineHeight: 'short',
               minH: 10,
+              p: 2,
               pos: 'relative',
-              py: 2,
               userSelect: 'text',
               w: 'full',
               whiteSpace: 'pre-wrap',
@@ -246,6 +252,7 @@ const ListItem = ({
           <IconButtonX
             aria-label="delete"
             className="sortable-item__delete"
+            mr={isCategory ? 0 : 2}
             onClick={() =>
               dispatch({
                 categoryId: category.id,
@@ -256,14 +263,10 @@ const ListItem = ({
           />
         </C.Flex>
         {isCategory && (
-          <IconButtonChevronExpand boxSize={10} isToggled={isCategoryExpanded} onToggle={toggleExpandCategory} />
+          <IconButtonChevronExpand h={10} isToggled={isCategoryExpanded} onToggle={toggleExpandCategory} w={14} />
         )}
-      </C.HStack>
-      {isCategory && (
-        <C.Collapse in={isCategoryExpanded}>
-          <C.Box pl={5}>{children}</C.Box>
-        </C.Collapse>
-      )}
+      </C.Flex>
+      {isCategory && <C.Collapse in={isCategoryExpanded}>{children}</C.Collapse>}
     </C.Box>
   );
 };

@@ -29,27 +29,23 @@ const EditableListItem = ({
   const theme = C.useTheme();
   useDeleteMeta(startWithEditView);
 
+  const focusOrHoverStyles = {
+    '.editable-list-item__delete': {
+      visibility: 'visible',
+      zIndex: 1,
+    },
+    '.editable-list-item__preview': {
+      pr: 14,
+    },
+  };
+
   return (
     <C.Box
       __css={{
         '@media (hover: hover)': {
-          _hover: {
-            '.editable-list-item__delete': {
-              display: 'flex',
-            },
-            '.editable-list-item__preview': {
-              pr: 16,
-            },
-          },
+          _hover: focusOrHoverStyles,
         },
-        _focusWithin: {
-          '.editable-list-item__delete': {
-            display: 'flex',
-          },
-          '.editable-list-item__preview': {
-            pr: 16,
-          },
-        },
+        _focusWithin: focusOrHoverStyles,
         pos: 'relative',
         w: `calc(100% - ${theme.space['14']})`,
       }}
@@ -58,7 +54,6 @@ const EditableListItem = ({
       <C.Editable
         defaultValue={defaultValue}
         onSubmit={onSubmit}
-        pos="relative"
         startWithEditView={startWithEditView}
         submitOnBlur
         w="full"
@@ -94,7 +89,7 @@ const EditableListItem = ({
           borderRadius="md"
           h={inputHeight}
           pl={5}
-          pr={16}
+          pr={14}
           type="text"
           w="full"
         />
@@ -104,7 +99,7 @@ const EditableListItem = ({
         className="editable-list-item__delete"
         onClick={onDelete}
         pos="absolute"
-        right={2}
+        right={0}
         top="50%"
         transform="translateY(-50%)"
       />

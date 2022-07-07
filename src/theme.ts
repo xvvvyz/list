@@ -14,7 +14,7 @@ const theme = extendTheme({
       600: 'rgba(0, 0, 0, 0.6)',
       700: 'rgba(0, 0, 0, 0.7)',
       800: 'rgba(0, 0, 0, 0.8)',
-      900: 'rgba(0, 0, 0, 0.9)',
+      900: 'rgba(0, 0, 0, 0.92)',
     },
     blue: {
       50: '#e8f2ff',
@@ -122,7 +122,7 @@ const theme = extendTheme({
       600: 'rgba(255, 255, 255, 0.6)',
       700: 'rgba(255, 255, 255, 0.7)',
       800: 'rgba(255, 255, 255, 0.8)',
-      900: 'rgba(255, 255, 255, 0.9)',
+      900: 'rgba(255, 255, 255, 0.92)',
     },
     yellow: {
       50: '#fcf4e3',
@@ -186,10 +186,11 @@ const theme = extendTheme({
           },
           _focusVisible: {
             bg: 'bgSecondaryActive',
+            color: 'fgSecondaryActive',
             shadow: 'border',
           },
           _hover: {
-            bg: 'inherit',
+            bg: 'none',
           },
           borderRadius: 'md',
           color: 'fgSecondary',
@@ -307,6 +308,7 @@ const theme = extendTheme({
       fgAccent: { _dark: 'gray.900', _light: 'gray.100' },
       fgPrimary: { _dark: 'whiteAlpha.900', _light: 'blackAlpha.900' },
       fgSecondary: { _dark: 'whiteAlpha.600', _light: 'blackAlpha.600' },
+      fgSecondaryActive: { _dark: 'whiteAlpha.900', _light: 'blackAlpha.900' },
       fgSecondaryHover: { _dark: 'whiteAlpha.800', _light: 'blackAlpha.800' },
       fgTagBlue: { _dark: 'blue.300', _light: 'blue.600' },
       fgTagGray: { _dark: 'fgSecondary', _light: 'fgSecondary' },
