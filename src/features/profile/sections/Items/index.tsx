@@ -32,7 +32,7 @@ const Items = () => {
   const isDraggingCategory = draggingId === draggingIdCategoryId;
 
   return (
-    <C.Box aria-label="items" as="section" layerStyle="card" mt={12}>
+    <C.Box aria-label="items" as="section" layerStyle="bgCard" mt={12}>
       <D.DndContext
         collisionDetection={(args) => {
           if (args.active.id in categories) {

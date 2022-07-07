@@ -1,18 +1,20 @@
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
+import { StyleFunctionProps } from '@chakra-ui/theme-tools';
+import toTitleCase from './utilities/to-title-case';
 
 const theme = extendTheme({
   colors: {
     blackAlpha: {
-      50: 'rgba(0, 0, 0, 0.04)',
-      100: 'rgba(0, 0, 0, 0.06)',
-      200: 'rgba(0, 0, 0, 0.08)',
-      300: 'rgba(0, 0, 0, 0.16)',
-      400: 'rgba(0, 0, 0, 0.24)',
-      500: 'rgba(0, 0, 0, 0.36)',
-      600: 'rgba(0, 0, 0, 0.48)',
-      700: 'rgba(0, 0, 0, 0.64)',
-      800: 'rgba(0, 0, 0, 0.80)',
-      900: 'rgba(0, 0, 0, 0.88)',
+      50: 'rgba(0, 0, 0, 0.05)',
+      100: 'rgba(0, 0, 0, 0.1)',
+      200: 'rgba(0, 0, 0, 0.2)',
+      300: 'rgba(0, 0, 0, 0.3)',
+      400: 'rgba(0, 0, 0, 0.4)',
+      500: 'rgba(0, 0, 0, 0.5)',
+      600: 'rgba(0, 0, 0, 0.6)',
+      700: 'rgba(0, 0, 0, 0.7)',
+      800: 'rgba(0, 0, 0, 0.8)',
+      900: 'rgba(0, 0, 0, 0.9)',
     },
     blue: {
       50: '#e8f2ff',
@@ -43,12 +45,12 @@ const theme = extendTheme({
       100: '#efefef',
       200: '#e7e7e7',
       300: '#dfdfdf',
-      400: '#8c8c8c',
-      500: '#737373',
-      600: '#3c3c3c',
-      700: '#323232',
-      800: '#282828',
-      900: '#1e1e1e',
+      400: '#d7d7d7',
+      500: '#3c3c3c',
+      600: '#303030',
+      700: '#242424',
+      800: '#181818',
+      900: '#0c0c0c',
     },
     green: {
       50: '#e8f7ed',
@@ -111,16 +113,16 @@ const theme = extendTheme({
       900: '#190701',
     },
     whiteAlpha: {
-      50: 'rgba(255, 255, 255, 0.04)',
-      100: 'rgba(255, 255, 255, 0.06)',
-      200: 'rgba(255, 255, 255, 0.08)',
-      300: 'rgba(255, 255, 255, 0.16)',
-      400: 'rgba(255, 255, 255, 0.24)',
-      500: 'rgba(255, 255, 255, 0.36)',
-      600: 'rgba(255, 255, 255, 0.48)',
-      700: 'rgba(255, 255, 255, 0.64)',
-      800: 'rgba(255, 255, 255, 0.80)',
-      900: 'rgba(255, 255, 255, 0.92)',
+      50: 'rgba(255, 255, 255, 0.05)',
+      100: 'rgba(255, 255, 255, 0.1)',
+      200: 'rgba(255, 255, 255, 0.2)',
+      300: 'rgba(255, 255, 255, 0.3)',
+      400: 'rgba(255, 255, 255, 0.4)',
+      500: 'rgba(255, 255, 255, 0.5)',
+      600: 'rgba(255, 255, 255, 0.6)',
+      700: 'rgba(255, 255, 255, 0.7)',
+      800: 'rgba(255, 255, 255, 0.8)',
+      900: 'rgba(255, 255, 255, 0.9)',
     },
     yellow: {
       50: '#fcf4e3',
@@ -137,16 +139,26 @@ const theme = extendTheme({
   },
   components: {
     Badge: {
-      baseStyle: {
-        fontSize: 'md',
-        fontWeight: 'bold',
-        shadow: 'border',
-        textTransform: 'none',
+      defaultProps: {
+        variant: 'tag',
+      },
+      variants: {
+        tag: ({ colorScheme }: StyleFunctionProps) => ({
+          bg: `bgTag${toTitleCase(colorScheme)}`,
+          borderRadius: 'full',
+          color: `fgTag${toTitleCase(colorScheme)}`,
+          fontSize: 'base',
+          fontWeight: 'normal',
+          px: 2,
+          shadow: 'border',
+          textTransform: 'none',
+        }),
       },
     },
     Button: {
       baseStyle: {
         fontWeight: 'normal',
+        textDecor: 'none',
       },
       defaultProps: {
         variant: 'ghost',
@@ -162,26 +174,44 @@ const theme = extendTheme({
         },
       },
       variants: {
-        cta: {
-          _active: { bg: 'bgSecondaryActive' },
-          _hover: { bg: 'bgSecondaryHover', color: 'fgSecondaryHover' },
-          bg: 'bgSecondary',
-          borderRadius: 'sm',
-          color: 'fgSecondary',
-          shadow: 'border',
-          textDecor: 'none',
-        },
         ghost: {
-          _active: { bg: 'bgSecondaryActive' },
-          _hover: { bg: 'bgSecondaryHover', color: 'fgSecondaryHover', shadow: 'border' },
+          _active: {
+            bg: 'bgSecondaryHover',
+          },
+          _focusVisible: {
+            bg: 'bgSecondaryActive',
+            shadow: 'border',
+          },
+          _hover: {
+            bg: { sm: 'bgSecondaryHover' },
+            color: { sm: 'fgSecondaryHover' },
+          },
           borderRadius: 'md',
           color: 'fgSecondary',
+        },
+        primary: {
+          '.chakra-icon': {
+            transitionDuration: 'normal',
+            transitionProperty: 'transform',
+          },
+          _hover: {
+            '.chakra-icon': {
+              transform: 'translateX(4px)',
+            },
+            bg: 'bgAccentHover',
+            color: 'fgAccent',
+          },
+          bg: 'bgAccent',
+          borderRadius: 'full',
+          color: 'fgAccent',
+          fontWeight: 'bold',
         },
       },
     },
     Divider: {
       baseStyle: {
-        borderColor: 'borderSecondary',
+        borderColor: 'border',
+        opacity: '1',
       },
     },
     Heading: {
@@ -193,11 +223,18 @@ const theme = extendTheme({
           fontSize: 'lg',
           lineHeight: 'shorter',
         },
+        xl: {
+          fontSize: ['lg', 'xl', 'xl'],
+          lineHeight: 'shorter',
+        },
       },
     },
     Link: {
       baseStyle: {
-        _hover: { color: 'fgSecondaryHover', textDecor: 'none' },
+        _hover: {
+          color: 'fgSecondaryHover',
+          textDecor: 'none',
+        },
         color: 'fgSecondary',
         textDecor: 'underline',
       },
@@ -210,12 +247,12 @@ const theme = extendTheme({
   },
   config: {
     cssVarPrefix: '',
+    initialColorMode: 'system',
     useSystemColorMode: true,
   } as ThemeConfig,
   fontSizes: {
-    '2xl': '2.75rem',
+    base: '1rem',
     lg: '1.25rem',
-    md: '1rem',
     xl: '1.75rem',
   },
   fonts: {
@@ -224,103 +261,77 @@ const theme = extendTheme({
   },
   layerStyles: {
     app: {
-      WebkitTapHighlightColor: 'transparent',
       WebkitTouchCallout: 'none',
       WebkitUserSelect: 'none',
       userSelect: 'none',
     },
-    card: {
+    bgCard: {
       bg: 'bgSecondary',
-      borderRadius: 'lg',
+      borderBottomRadius: 'lg',
+      borderTopRadius: 'lg',
       p: 2,
       pos: 'relative',
     },
-    header: {
-      bg: 'bgSecondary',
-      borderBottomRadius: 'lg',
-      p: 2,
-      pos: 'relative',
+    borderCard: {
+      borderColor: 'border',
+      borderRadius: 'lg',
+      borderWidth: { base: '0', sm: '1px' },
     },
   },
   radii: {
     lg: '1.5rem',
     md: '1.25rem',
-    sm: '0.5rem',
   },
   semanticTokens: {
     colors: {
-      bgPrimary: {
-        _dark: 'gray.900',
-        _light: 'gray.200',
-      },
-      bgSecondary: {
-        _dark: 'gray.800',
-        _light: 'gray.100',
-      },
-      bgSecondaryActive: {
-        _dark: 'gray.600',
-        _light: 'white',
-      },
-      bgSecondaryHover: {
-        _dark: 'gray.700',
-        _light: 'gray.50',
-      },
-      borderPrimary: {
-        _dark: 'whiteAlpha.100',
-        _light: 'blackAlpha.200',
-      },
-      borderSecondary: {
-        _dark: 'whiteAlpha.200',
-        _light: 'blackAlpha.300',
-      },
-      fgPrimary: {
-        _dark: 'whiteAlpha.900',
-        _light: 'blackAlpha.900',
-      },
-      fgSecondary: {
-        _dark: 'whiteAlpha.700',
-        _light: 'blackAlpha.700',
-      },
-      fgSecondaryHover: {
-        _dark: 'whiteAlpha.800',
-        _light: 'blackAlpha.800',
-      },
+      bgAccent: { _dark: 'gray.50', _light: 'gray.900' },
+      bgAccentHover: { _dark: 'gray.300', _light: 'gray.600' },
+      bgPrimary: { _dark: 'gray.900', _light: 'gray.100' },
+      bgSecondary: { _dark: 'gray.800', _light: 'gray.50' },
+      bgSecondaryActive: { _dark: 'gray.600', _light: 'gray.200' },
+      bgSecondaryHover: { _dark: 'gray.700', _light: 'gray.100' },
+      bgTagBlue: { _dark: 'blue.800', _light: 'blue.100' },
+      bgTagGray: { _dark: 'bgSecondaryHover', _light: 'bgSecondaryHover' },
+      bgTagGreen: { _dark: 'green.800', _light: 'green.100' },
+      bgTagOrange: { _dark: 'orange.800', _light: 'orange.100' },
+      bgTagPink: { _dark: 'pink.800', _light: 'pink.100' },
+      bgTagPurple: { _dark: 'purple.800', _light: 'purple.100' },
+      bgTagRed: { _dark: 'red.800', _light: 'red.100' },
+      bgTagYellow: { _dark: 'yellow.800', _light: 'yellow.100' },
+      border: { _dark: 'whiteAlpha.100', _light: 'blackAlpha.100' },
+      fgAccent: { _dark: 'gray.900', _light: 'gray.100' },
+      fgPrimary: { _dark: 'whiteAlpha.900', _light: 'blackAlpha.900' },
+      fgSecondary: { _dark: 'whiteAlpha.600', _light: 'blackAlpha.600' },
+      fgSecondaryHover: { _dark: 'whiteAlpha.800', _light: 'blackAlpha.800' },
+      fgTagBlue: { _dark: 'blue.300', _light: 'blue.600' },
+      fgTagGray: { _dark: 'fgSecondary', _light: 'fgSecondary' },
+      fgTagGreen: { _dark: 'green.300', _light: 'green.600' },
+      fgTagOrange: { _dark: 'orange.300', _light: 'orange.600' },
+      fgTagPink: { _dark: 'pink.300', _light: 'pink.600' },
+      fgTagPurple: { _dark: 'purple.300', _light: 'purple.600' },
+      fgTagRed: { _dark: 'red.300', _light: 'red.600' },
+      fgTagYellow: { _dark: 'yellow.300', _light: 'yellow.600' },
+      selection: { _dark: 'whiteAlpha.100', _light: 'blackAlpha.100' },
     },
     shadows: {
-      border: {
-        _dark: 'inset 0 0 0 1px var(--colors-borderPrimary)',
-        _light: 'inset 0 0 0 1px var(--colors-borderPrimary)',
-      },
-      outline: {
-        _dark: 'none',
-        _light: 'none',
-      },
+      border: { _dark: 'inset 0 0 0 1px var(--colors-border)', _light: 'inset 0 0 0 1px var(--colors-border)' },
+      outline: { _dark: 'none', _light: 'none' },
     },
   },
   sizes: {
     container: {
-      app: '26rem',
-      what: '19rem',
+      lg: '26rem',
+      md: '24rem',
+      sm: '19rem',
     },
   },
   styles: {
     global: {
-      '.focus-visible': {
-        bg: 'bgSecondaryHover',
-        outline: 'none',
-        shadow: 'outline',
-      },
-      '[contenteditable]': {
-        _focus: { bg: 'inherit' },
-        WebkitUserSelect: 'text',
-        userSelect: 'text',
-        whiteSpace: 'pre-wrap',
-        wordWrap: 'anywhere',
-      },
       _selection: {
-        bg: 'bgSecondaryActive',
+        bg: 'selection',
       },
       body: {
+        WebkitTapHighlightColor: 'transparent',
         bg: 'bgPrimary',
         color: 'fgPrimary',
       },

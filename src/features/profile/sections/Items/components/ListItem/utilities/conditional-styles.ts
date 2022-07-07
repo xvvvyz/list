@@ -18,12 +18,10 @@ const conditionalStyles = ({
     fontWeight: 'normal',
     opacity: '1',
     py: 0,
-    shadow: 'none',
   };
 
   if (isOverlay) {
     containerStyles.bg = isCategory ? 'bgSecondaryHover' : 'bgSecondaryActive';
-    containerStyles.shadow = 'border';
   }
 
   if (isDropzone) {

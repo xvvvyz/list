@@ -78,6 +78,7 @@ const ListItem = ({
     <C.Box borderRadius="md" pos="relative" sx={containerStyles} {...containerProps}>
       <C.HStack alignItems="flex-start" pr={2}>
         <C.IconButton
+          _hover={{ bg: undefined }}
           aria-label={dragHandleProps?.['aria-label'] || ''}
           borderRadius="md"
           color="fgSecondary"
@@ -86,7 +87,7 @@ const ListItem = ({
           flexShrink={0}
           h={10}
           icon={<C.Icon as={Grabber} boxSize={6} />}
-          variant="unstyled"
+          variant="ghost"
           w={14}
           {...dragHandleProps}
         />
@@ -213,11 +214,16 @@ const ListItem = ({
             spellCheck
             suppressContentEditableWarning
             sx={{
+              _focus: { outline: 'none' },
+              WebkitUserSelect: 'text',
               lineHeight: 'short',
               minH: 10,
               pos: 'relative',
               py: 2,
+              userSelect: 'text',
               w: 'full',
+              whiteSpace: 'pre-wrap',
+              wordWrap: 'anywhere',
             }}
             tabIndex={0}
           >

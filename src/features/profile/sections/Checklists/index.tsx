@@ -24,7 +24,7 @@ const Checklists = () => {
   const activeProfile = selectActiveProfile({ account, profiles });
 
   return (
-    <C.Box aria-label="checklists" as="section" layerStyle="card" mt={12}>
+    <C.Box aria-label="checklists" as="section" layerStyle="bgCard" mt={12}>
       {!!activeProfile.checklists.length && (
         <ListItem
           checklist={selectDenormalizedChecklist(

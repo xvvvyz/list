@@ -6,7 +6,7 @@ import Header from '../features/profile/sections/Header';
 import Items from '../features/profile/sections/Items';
 
 const IndexPage = () => (
-  <C.Container as="div" layerStyle="app" maxW="container.app" pb={24} px={0}>
+  <C.Container as="div" layerStyle="app" maxW="container.lg" pb={24} px={0}>
     <NextSeo nofollow noindex />
     <Header />
     <Checklists />

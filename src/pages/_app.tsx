@@ -1,6 +1,5 @@
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/700.css';
-import 'focus-visible/dist/focus-visible';
 import React, { useReducer } from 'react';
 import { AppProps } from 'next/app';
 import { ChakraProvider } from '@chakra-ui/provider';

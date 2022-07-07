@@ -8,7 +8,7 @@ const EditableSubtext = (props: C.TextProps) => {
   if (isEditing) return null;
 
   return (
-    <C.Text color="fgSecondary" fontSize="md" fontWeight="normal" left={5} noOfLines={1} pos="absolute" {...props} />
+    <C.Text color="fgSecondary" fontSize="base" fontWeight="normal" left={5} noOfLines={1} pos="absolute" {...props} />
   );
 };
 

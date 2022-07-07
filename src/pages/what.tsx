@@ -1,58 +1,80 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
 import Link from 'next/link';
+import React from 'react';
 import Check from '../images/check.svg';
 import ChevronRight from '../images/chevron-right.svg';
 import Logo from '../images/logo.svg';
 
 const WhatPage = () => (
-  <C.Container maxW="container.what" pb={24} textAlign="center">
+  <C.Container maxW={{ base: 'container.sm', sm: 'container.md' }} pb={24} textAlign="center">
     <C.Box as="header">
       <C.HStack justify="space-between" pt={8}>
         <C.Heading as="h1">
           <C.VisuallyHidden>lliist — dynamic, reusable checklists</C.VisuallyHidden>
-          <C.Icon aria-hidden as={Logo} h="auto" w="6rem" />
+          <C.Icon aria-hidden as={Logo} h={9} w="auto" />
         </C.Heading>
         <Link href="/" passHref>
-          <C.Button as={C.Link} size="sm" variant="cta">
+          <C.Button as={C.Link} size="sm" tabIndex={-1} variant="primary">
             sign in
           </C.Button>
         </Link>
       </C.HStack>
-      <C.VStack mt={24} spacing={12}>
-        <C.Heading as="p">conquer the chaos with dynamic, reusable checklists</C.Heading>
-        <Link href="/" passHref>
-          <C.Button
-            as={C.Link}
-            iconSpacing={6}
-            rightIcon={<C.Icon as={ChevronRight} boxSize={6} />}
-            variant="cta"
-            w="full"
-          >
-            launch the app
-          </C.Button>
-        </Link>
+      <C.Heading as="p" mt={24} size="xl">
+        <C.Box
+          as="span"
+          bgClip="text"
+          bgGradient="linear(to-r, green.400, blue.400, purple.400, pink.400, red.400, orange.400, yellow.400)"
+        >
+          conquer the chaos with
+        </C.Box>{' '}
+        dynamic, reusable checklists
+      </C.Heading>
+      <Link href="/" passHref>
+        <C.Button
+          as={C.Link}
+          iconSpacing={6}
+          mt={24}
+          rightIcon={<C.Icon as={ChevronRight} boxSize={6} />}
+          variant="primary"
+          w="full"
+        >
+          give it a whirl
+        </C.Button>
+      </Link>
+      <C.Center>
+        <C.Divider display={{ base: 'none', sm: 'block' }} h={24} orientation="vertical" />
+      </C.Center>
+      <C.Center bg="inherit" layerStyle="borderCard" py={24}>
         <C.List color="fgSecondary" spacing={2} textAlign="left">
-          {['no ads/tracking', 'open source', '100% free'].map((item) => (
+          {['no sign up required', 'free & open source', 'no ads or tracking'].map((item) => (
             <C.ListItem alignItems="center" display="flex" key={item}>
               <C.ListIcon as={Check} boxSize={6} color="fgPrimary" me={6} />
               {item}
             </C.ListItem>
           ))}
         </C.List>
-      </C.VStack>
+      </C.Center>
     </C.Box>
-    <C.Center py={12}>
-      <C.Divider h="100px" orientation="vertical" />
+    <C.Center>
+      <C.Divider h={24} orientation="vertical" />
     </C.Center>
-    <C.VStack as="main" spacing={24}>
+    <C.Box as="main" bg="inherit" layerStyle="borderCard">
       {[
         ['streamlined design', 'outdated, clunky checklist apps never stood a chance'],
         ['categories & tags', 'create unique checklists from a base set of list items'],
         ['cross-device sync', 'manage and utilize your checklists from any device with ease', true],
-        ['collaborate & share', 'collaborate on and share checklists with friends and family', true],
+        ['collaborate & share', 'collaborate on and share checklists with anyone in the world', true],
       ].map(([heading, description, soon]) => (
-        <C.Box as="section" key={heading as string}>
+        <C.Box
+          _first={{ borderStyle: 'none' }}
+          as="section"
+          borderColor="border"
+          borderStyle="solid none none"
+          borderWidth="1px"
+          key={heading as string}
+          px={{ sm: 10 }}
+          py={24}
+        >
           <C.Heading as="h3">{heading}</C.Heading>
           <C.Text mt={3}>{description}</C.Text>
           {soon && (
@@ -62,20 +84,20 @@ const WhatPage = () => (
           )}
         </C.Box>
       ))}
-    </C.VStack>
-    <C.Center py={12}>
-      <C.Divider h="100px" orientation="vertical" />
+    </C.Box>
+    <C.Center>
+      <C.Divider h={24} orientation="vertical" />
     </C.Center>
-    <C.Box as="footer">
+    <C.Box as="footer" mt={{ base: 24, sm: 0 }}>
       <Link href="/" passHref>
         <C.Button
           as={C.Link}
           iconSpacing={6}
           rightIcon={<C.Icon as={ChevronRight} boxSize={6} />}
-          variant="cta"
+          variant="primary"
           w="full"
         >
-          give it a whirl
+          create a lliist
         </C.Button>
       </Link>
       <C.List mt={24} spacing={6}>

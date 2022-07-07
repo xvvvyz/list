@@ -7,7 +7,6 @@ import CloudOffline from '../../../../images/cloud-offline.svg';
 import IconButtonChevronExpand from '../../components/IconButtonChevronExpand';
 import IconButtonChevronRight from '../../components/IconButtonChevronRight';
 import ListItem from './components/ListItem';
-import Logo from '../../../../images/logo.svg';
 import ProfilesContext from '../../../../context/profiles';
 import ThemeToggle from '../../../../images/theme-toggle.svg';
 import selectActiveProfile from '../../../../selectors/select-active-profile';
@@ -21,8 +20,8 @@ const Header = () => {
   const activeProfile = selectActiveProfile({ account, profiles });
 
   return (
-    <C.Box aria-label="header" as="header" layerStyle="header">
-      <C.Flex align="center" justify="space-between" pb={2} pt={5}>
+    <C.Box aria-label="header" as="header" borderTopRadius="none" layerStyle="bgCard">
+      <C.HStack justify="space-between" pb={2} pt={5}>
         <C.IconButton
           aria-label="toggle theme"
           boxSize={14}
@@ -30,17 +29,14 @@ const Header = () => {
           onClick={toggleColorMode}
           variant="ghost"
         />
-        <C.Heading as="h1" lineHeight={1} px={5}>
-          <C.VisuallyHidden>lliist</C.VisuallyHidden>
-          <C.Icon aria-hidden as={Logo} w="3.8125rem" />
-        </C.Heading>
+        <C.Badge>offline</C.Badge>
         <C.IconButton
           aria-label="backup settings"
           boxSize={14}
           icon={<C.Icon as={CloudOffline} boxSize={6} />}
           variant="ghost"
         />
-      </C.Flex>
+      </C.HStack>
       <C.Box aria-label="profiles" as="section">
         {!!account.profiles.length && (
           <ListItem key={activeProfile.id} profile={activeProfile} w={isOpen ? 'full' : undefined} />
