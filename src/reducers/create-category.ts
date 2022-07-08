@@ -1,6 +1,5 @@
 import generateId from '../utilities/generate-id';
 import selectActiveProfile from '../selectors/select-active-profile';
-import { IdPrefix } from '../enums';
 import { State } from '../reducer';
 import { Meta } from '../types';
 
@@ -15,7 +14,7 @@ const createCategory = (state: State, action: CreateCategoryAction) => {
   const activeProfile = selectActiveProfile(state);
 
   const newCategory = {
-    id: generateId(IdPrefix.Category),
+    id: generateId(),
     items: [],
     meta: action.meta ?? { focusAtPosition: 0 },
     text: action.text ?? '',

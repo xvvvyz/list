@@ -1,6 +1,6 @@
 import * as C from '@chakra-ui/react';
 import React, { useContext } from 'react';
-import ApiContext from '../../../../../../context/api';
+import DispatchContext from '../../../../../../context/dispatch';
 import EditableListItem from '../../../../components/EditableListItem';
 import IconButtonChevronRight from '../../../../components/IconButtonChevronRight';
 import { ChecklistDenormalized } from '../../../../../../types';
@@ -10,7 +10,7 @@ interface ListItemProps {
 }
 
 const ListItem = ({ checklist }: ListItemProps) => {
-  const { dispatch } = useContext(ApiContext);
+  const dispatch = useContext(DispatchContext);
 
   return (
     <C.Flex>

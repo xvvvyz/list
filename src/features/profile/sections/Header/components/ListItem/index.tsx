@@ -1,5 +1,5 @@
 import React from 'react';
-import ApiContext from '../../../../../../context/api';
+import DispatchContext from '../../../../../../context/dispatch';
 import EditableListItem, { EditableListItemProps } from '../../../../components/EditableListItem';
 import { Profile } from '../../../../../../types';
 
@@ -9,7 +9,7 @@ interface ListItemProps
 }
 
 const ListItem = ({ profile, ...rest }: ListItemProps) => {
-  const { dispatch } = React.useContext(ApiContext);
+  const dispatch = React.useContext(DispatchContext);
 
   return (
     <EditableListItem

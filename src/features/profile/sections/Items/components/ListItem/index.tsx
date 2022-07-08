@@ -1,10 +1,9 @@
 import * as C from '@chakra-ui/react';
 import React, { useContext, useRef } from 'react';
-import ApiContext from '../../../../../../context/api';
+import DispatchContext from '../../../../../../context/dispatch';
 import Grabber from '../../../../../../images/grabber.svg';
 import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
 import IconButtonX from '../../../../components/IconButtonX';
-import conditionalStyles from './utilities/conditional-styles';
 import useAutoFocus from './utilities/use-auto-focus';
 import useDeleteMeta from '../../../../utilities/use-delete-meta';
 import { Category, Id, Item } from '../../../../../../types';
@@ -62,17 +61,30 @@ const ListItem = ({
   toggleExpandCategory,
   value,
 }: ListItemProps) => {
-  const { dispatch } = useContext(ApiContext);
+  const dispatch = useContext(DispatchContext);
   const ref = useRef<HTMLDivElement | null>(null);
   useAutoFocus({ focusAtPosition, ref });
   useDeleteMeta(typeof focusAtPosition !== 'undefined');
 
-  const { containerStyles, focusOrHoverStyles } = conditionalStyles({
-    isCategory,
-    isDragging,
-    isDropzone,
-    isOverlay,
-  });
+  const focusOrHoverStyles = {
+    '.sortable-item__delete': {
+      visibility: 'visible',
+    },
+  };
+
+  const containerStyles = {
+    bg: 'initial',
+    fontWeight: isCategory ? 'bold' : 'normal',
+    opacity: isDragging ? '0' : '1',
+  };
+
+  if (isOverlay) {
+    containerStyles.bg = isCategory ? 'bgSecondaryHover' : 'bgSecondaryActive';
+  }
+
+  if (isDropzone) {
+    containerStyles.bg = 'bgSecondaryHover';
+  }
 
   return (
     <C.Box borderRadius="md" pos="relative" sx={containerStyles} {...containerProps}>
@@ -94,7 +106,7 @@ const ListItem = ({
             cursor: 'move',
             display: 'inline-flex',
             flexShrink: 0,
-            h: 10,
+            h: isCategory ? 14 : 10,
             w: 14,
           }}
           variant="ghost"
@@ -231,15 +243,15 @@ const ListItem = ({
             }}
             ref={ref}
             role="textbox"
-            spellCheck
             suppressContentEditableWarning
             sx={{
               _focus: { outline: 'none' },
               WebkitUserSelect: 'text',
               lineHeight: 'short',
-              minH: 10,
-              p: 2,
+              minH: isCategory ? 14 : 10,
               pos: 'relative',
+              px: 2,
+              py: isCategory ? 4 : 2,
               userSelect: 'text',
               w: 'full',
               whiteSpace: 'pre-wrap',
@@ -253,6 +265,7 @@ const ListItem = ({
             aria-label="delete"
             className="sortable-item__delete"
             mr={isCategory ? 0 : 2}
+            mt={isCategory ? 2 : 0}
             onClick={() =>
               dispatch({
                 categoryId: category.id,
@@ -263,10 +276,14 @@ const ListItem = ({
           />
         </C.Flex>
         {isCategory && (
-          <IconButtonChevronExpand h={10} isToggled={isCategoryExpanded} onToggle={toggleExpandCategory} w={14} />
+          <IconButtonChevronExpand boxSize={14} isToggled={isCategoryExpanded} onToggle={toggleExpandCategory} />
         )}
       </C.Flex>
-      {isCategory && <C.Collapse in={isCategoryExpanded}>{children}</C.Collapse>}
+      {isCategory && (
+        <C.Collapse in={isCategoryExpanded}>
+          <C.Box pl={5}>{children}</C.Box>
+        </C.Collapse>
+      )}
     </C.Box>
   );
 };

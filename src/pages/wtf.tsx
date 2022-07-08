@@ -5,7 +5,7 @@ import Check from '../images/check.svg';
 import ChevronRight from '../images/chevron-right.svg';
 import Logo from '../images/logo.svg';
 
-const WhatPage = () => (
+const WtfPage = () => (
   <C.Container maxW={{ base: 'container.sm', sm: 'container.md' }} pb={24} textAlign="center">
     <C.Box as="header">
       <C.HStack justify="space-between" pt={8}>
@@ -46,7 +46,7 @@ const WhatPage = () => (
       </C.Center>
       <C.Center bg="inherit" layerStyle="borderCard" py={24}>
         <C.List color="fgSecondary" spacing={2} textAlign="left">
-          {['no sign up required', 'free & open source', 'no ads or tracking'].map((item) => (
+          {['no sign up required', 'no analytics or ads', 'free & open source'].map((item) => (
             <C.ListItem alignItems="center" display="flex" key={item}>
               <C.ListIcon as={Check} boxSize={6} color="fgPrimary" me={6} />
               {item}
@@ -63,7 +63,6 @@ const WhatPage = () => (
         ['streamlined design', 'outdated, clunky checklist apps never stood a chance'],
         ['categories & tags', 'create unique checklists from a base set of list items'],
         ['cross-device sync', 'manage and utilize your checklists from any device with ease', true],
-        ['collaborate & share', 'collaborate on and share checklists with anyone in the world', true],
       ].map(([heading, description, soon]) => (
         <C.Box
           _first={{ borderStyle: 'none' }}
@@ -119,4 +118,4 @@ const WhatPage = () => (
   </C.Container>
 );
 
-export default WhatPage;
+export default WtfPage;

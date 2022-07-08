@@ -1,6 +1,5 @@
 import generateId from '../utilities/generate-id';
 import selectActiveProfile from '../selectors/select-active-profile';
-import { IdPrefix } from '../enums';
 import { State } from '../reducer';
 
 interface CreateChecklistAction {
@@ -14,7 +13,7 @@ const createChecklist = (state: State, action: CreateChecklistAction) => {
   const newChecklist = {
     categories: [],
     completed: [],
-    id: generateId(IdPrefix.Checklist),
+    id: generateId(),
     meta: { autoFocus: true },
     tags: [],
     text: '',

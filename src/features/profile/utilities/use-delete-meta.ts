@@ -1,8 +1,8 @@
 import { useContext, useEffect } from 'react';
-import ApiContext from '../../../context/api';
+import DispatchContext from '../../../context/dispatch';
 
 const useDeleteMeta = (when = false) => {
-  const { dispatch } = useContext(ApiContext);
+  const dispatch = useContext(DispatchContext);
 
   useEffect(() => {
     if (!when) return;

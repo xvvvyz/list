@@ -1,10 +1,6 @@
 import { createContext } from 'react';
 import { Items } from '../types';
 
-const ItemsContext = createContext<{
-  items: Items;
-}>({
-  items: {},
-});
+const ItemsContext = createContext<Items>({});
 
 export default ItemsContext;

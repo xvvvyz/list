@@ -1,5 +1,5 @@
 const description =
-  'Easily create checklists that vary depending on the circumstance. Travel/packing lists, recipes and other SOPs are all great use-cases for lliist.';
+  'The free and open source reusable checklist web app that nobody asked for. Dynamically create and share checklists by categorizing and tagging list items.';
 
 const url = 'https://lliist.app';
 

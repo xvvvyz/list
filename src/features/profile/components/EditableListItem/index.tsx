@@ -32,7 +32,6 @@ const EditableListItem = ({
   const focusOrHoverStyles = {
     '.editable-list-item__delete': {
       visibility: 'visible',
-      zIndex: 1,
     },
     '.editable-list-item__preview': {
       pr: 14,

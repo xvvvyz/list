@@ -4,8 +4,8 @@ import * as DS from '@dnd-kit/sortable';
 import React, { useContext, useState } from 'react';
 import AccountContext from '../../../../context/account';
 import AddButton from '../../components/AddButton';
-import ApiContext from '../../../../context/api';
 import CategoriesContext from '../../../../context/categories';
+import DispatchContext from '../../../../context/dispatch';
 import ItemsContext from '../../../../context/items';
 import ListItem from './components/ListItem';
 import ProfilesContext from '../../../../context/profiles';
@@ -15,11 +15,11 @@ import selectCategoryId from '../../../../selectors/select-category-id';
 import { Id } from '../../../../types';
 
 const Items = () => {
-  const { account } = useContext(AccountContext);
-  const { categories } = useContext(CategoriesContext);
-  const { dispatch } = useContext(ApiContext);
-  const { items } = useContext(ItemsContext);
-  const { profiles } = useContext(ProfilesContext);
+  const account = useContext(AccountContext);
+  const categories = useContext(CategoriesContext);
+  const dispatch = useContext(DispatchContext);
+  const items = useContext(ItemsContext);
+  const profiles = useContext(ProfilesContext);
   const [draggingId, setDraggingId] = useState<Id>('');
   const [draggingOverCategoryId, setDraggingOverCategoryId] = useState<Id>('');
   const [isCategoryExpanded, setIsCategoryExpanded] = useState<Record<Id, boolean>>({});
@@ -190,7 +190,6 @@ const Items = () => {
                   ))}
                 </DS.SortableContext>
                 <AddButton
-                  h={10}
                   onClick={() =>
                     dispatch({
                       atIndex: categories[categoryId].items.length,
@@ -238,7 +237,7 @@ const Items = () => {
                         value={items[itemId].text}
                       />
                     ))}
-                    <AddButton h={10}>add item</AddButton>
+                    <AddButton>add item</AddButton>
                   </>
                 ) : null}
               </ListItem>

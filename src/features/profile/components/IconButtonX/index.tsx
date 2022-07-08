@@ -8,7 +8,7 @@ const IconButtonX = (props: C.IconButtonProps) => (
     flexShrink={0}
     icon={<C.Icon as={X} boxSize={6} />}
     visibility="hidden"
-    zIndex={-1}
+    zIndex={1}
     {...props}
   />
 );

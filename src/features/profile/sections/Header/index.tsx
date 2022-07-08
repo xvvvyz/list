@@ -2,8 +2,8 @@ import * as C from '@chakra-ui/react';
 import React, { useContext } from 'react';
 import AccountContext from '../../../../context/account';
 import AddButton from '../../components/AddButton';
-import ApiContext from '../../../../context/api';
 import CloudOffline from '../../../../images/cloud-offline.svg';
+import DispatchContext from '../../../../context/dispatch';
 import IconButtonChevronExpand from '../../components/IconButtonChevronExpand';
 import IconButtonChevronRight from '../../components/IconButtonChevronRight';
 import ListItem from './components/ListItem';
@@ -12,9 +12,9 @@ import ThemeToggle from '../../../../images/theme-toggle.svg';
 import selectActiveProfile from '../../../../selectors/select-active-profile';
 
 const Header = () => {
-  const { account } = useContext(AccountContext);
-  const { dispatch } = useContext(ApiContext);
-  const { profiles } = useContext(ProfilesContext);
+  const account = useContext(AccountContext);
+  const dispatch = useContext(DispatchContext);
+  const profiles = useContext(ProfilesContext);
   const { isOpen, onOpen, onToggle } = C.useDisclosure();
   const { toggleColorMode } = C.useColorMode();
   const activeProfile = selectActiveProfile({ account, profiles });
@@ -39,7 +39,7 @@ const Header = () => {
       </C.HStack>
       <C.Box aria-label="profiles" as="section">
         {!!account.profiles.length && (
-          <C.Box pr={2}>
+          <C.Box pr={isOpen ? 2 : undefined}>
             <ListItem key={activeProfile.id} profile={activeProfile} w={isOpen ? 'full' : undefined} />
           </C.Box>
         )}

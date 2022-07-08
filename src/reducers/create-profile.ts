@@ -1,5 +1,4 @@
 import generateId from '../utilities/generate-id';
-import { IdPrefix } from '../enums';
 import { State } from '../reducer';
 
 interface CreateProfileAction {
@@ -10,7 +9,7 @@ const createProfile = (state: State) => {
   const newProfile = {
     categories: [],
     checklists: [],
-    id: generateId(IdPrefix.Profile),
+    id: generateId(),
     meta: { autoFocus: true },
     tags: {},
     text: '',
