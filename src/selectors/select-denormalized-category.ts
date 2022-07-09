@@ -1,5 +1,4 @@
-import { Id } from '../types';
-import { State } from '../reducer';
+import { Id, State } from '../types';
 
 const selectDenormalizedCategory = (state: Pick<State, 'categories' | 'items'>, { id }: { id: Id }) => ({
   ...state.categories[id],

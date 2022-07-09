@@ -1,48 +1,37 @@
 import * as C from '@chakra-ui/react';
-import React, { useContext, useRef } from 'react';
+import React, { HTMLProps, useContext, useRef } from 'react';
+import { BoxProps, ButtonProps } from '@chakra-ui/react';
 import DispatchContext from '../../../../../../context/dispatch';
 import Grabber from '../../../../../../images/grabber.svg';
 import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
 import IconButtonX from '../../../../components/IconButtonX';
-import useAutoFocus from './utilities/use-auto-focus';
-import useDeleteMeta from '../../../../utilities/use-delete-meta';
-import { Category, Id, Item } from '../../../../../../types';
+import generateId from '../../../../../../utilities/generate-id';
+import useAutoFocus from '../../../../../../utilities/use-auto-focus';
+import { Id } from '../../../../../../types';
 
 interface ListItemProps {
-  category: Category;
+  categoryId: Id;
   children?: React.ReactNode;
-  containerProps?: {
-    ref: React.RefCallback<HTMLElement>;
-    transform: string | undefined;
-  };
-  dragHandleProps?: {
-    'aria-describedby': string;
-    'aria-disabled': boolean;
-    'aria-label': string;
-    'aria-pressed': boolean | undefined;
-    'aria-roledescription': string;
-    ref: React.RefCallback<HTMLElement>;
-    role: string;
-    tabIndex: number;
-  };
+  containerProps?: BoxProps & HTMLProps<HTMLDivElement>;
+  dragHandleProps?: ButtonProps & HTMLProps<HTMLButtonElement>;
   focusAtPosition?: number;
   id: Id;
   index: number;
   isCategory?: boolean;
+  isCategoryExpanded?: boolean;
   isDragging?: boolean;
   isDropzone?: boolean;
-  isCategoryExpanded?: boolean;
   isOverlay?: boolean;
-  isPreviousCategoryExpanded?: boolean;
-  previousCategory?: Category;
-  previousCategoryLastItem?: Item;
-  previousItem?: Item;
+  previousId?: Id;
+  previousIsCategory?: boolean;
+  previousText?: string;
+  setFocusAtPosition: ([id, number]: [Id, number]) => void;
   toggleExpandCategory?: () => void;
   value: string;
 }
 
 const ListItem = ({
-  category,
+  categoryId,
   children,
   containerProps,
   dragHandleProps,
@@ -54,53 +43,39 @@ const ListItem = ({
   isDragging,
   isDropzone,
   isOverlay,
-  isPreviousCategoryExpanded,
-  previousCategory,
-  previousCategoryLastItem,
-  previousItem,
+  previousId,
+  previousIsCategory,
+  previousText,
+  setFocusAtPosition,
   toggleExpandCategory,
   value,
 }: ListItemProps) => {
   const dispatch = useContext(DispatchContext);
   const ref = useRef<HTMLDivElement | null>(null);
   useAutoFocus({ focusAtPosition, ref });
-  useDeleteMeta(typeof focusAtPosition !== 'undefined');
 
-  const focusOrHoverStyles = {
-    '.sortable-item__delete': {
-      visibility: 'visible',
-    },
-  };
-
-  const containerStyles = {
-    bg: 'initial',
-    fontWeight: isCategory ? 'bold' : 'normal',
-    opacity: isDragging ? '0' : '1',
-  };
-
-  if (isOverlay) {
-    containerStyles.bg = isCategory ? 'bgSecondaryHover' : 'bgSecondaryActive';
-  }
-
-  if (isDropzone) {
-    containerStyles.bg = 'bgSecondaryHover';
-  }
+  let bg = 'initial';
+  if (isOverlay || isDropzone) bg = 'bgSecondaryHover';
+  if (isOverlay && !isCategory) bg = 'bgSecondaryActive';
 
   return (
-    <C.Box borderRadius="md" pos="relative" sx={containerStyles} {...containerProps}>
+    <C.Box
+      borderRadius="md"
+      pos="relative"
+      sx={{
+        bg,
+        fontWeight: isCategory ? 'bold' : 'normal',
+        opacity: isDragging ? '0' : '1',
+      }}
+      {...containerProps}
+    >
       <C.Flex alignItems="flex-start">
         <C.IconButton
           aria-label={dragHandleProps?.['aria-label'] || ''}
           icon={<C.Icon as={Grabber} boxSize={6} />}
           sx={{
-            '@media (hover: hover)': {
-              _hover: {
-                bg: 'none',
-              },
-            },
-            _active: {
-              bg: 'none',
-            },
+            '@media (hover: hover)': { _hover: { bg: 'none' } },
+            _active: { bg: 'none' },
             borderRadius: 'md',
             color: 'fgSecondary',
             cursor: 'move',
@@ -114,10 +89,8 @@ const ListItem = ({
         />
         <C.Flex
           sx={{
-            '@media (hover: hover)': {
-              _hover: focusOrHoverStyles,
-            },
-            _focusWithin: focusOrHoverStyles,
+            '@media (hover: hover)': { _hover: { '.sortable-item__delete': { visibility: 'visible' } } },
+            _focusWithin: { '.sortable-item__delete': { visibility: 'visible' } },
             pos: 'relative',
             w: 'full',
           }}
@@ -137,109 +110,67 @@ const ListItem = ({
             onInput={(e) => {
               const target = e.target as HTMLDivElement;
               const text = target.innerText;
-              const [match] = /[\n\r]+/.exec(text) || [];
-              if (!match) return;
-              const [newText, ...carry] = text.split(match);
+              if (text === '\n') return;
+              const parsedText = text.replace(/[\n\r]+/g, '\n');
+              if (!/\n/.test(parsedText)) return;
+              const [newText, ...carry] = parsedText.split('\n');
               target.innerText = newText;
-
-              if (isCategory) {
-                dispatch({
-                  id,
-                  text: newText,
-                  type: 'UpdateCategory',
-                });
-
-                if (isCategoryExpanded) {
-                  return carry.forEach((c) =>
-                    dispatch({
-                      atIndex: 0,
-                      categoryId: id,
-                      meta: { focusAtPosition: 0 },
-                      text: c,
-                      type: 'CreateItem',
-                    })
-                  );
-                }
-
-                return carry.forEach((c) =>
-                  dispatch({
-                    atIndex: index + 1,
-                    meta: { focusAtPosition: 0 },
-                    text: c,
-                    type: 'CreateCategory',
-                  })
-                );
-              }
+              let focusId = '';
 
               dispatch({
                 id,
                 text: newText,
-                type: 'UpdateItem',
+                type: isCategory ? 'UpdateCategory' : 'UpdateItem',
               });
 
-              carry.forEach((c) =>
-                dispatch({
-                  atIndex: index + 1,
-                  categoryId: category.id,
-                  meta: { focusAtPosition: 0 },
-                  text: c,
-                  type: 'CreateItem',
-                })
-              );
+              carry.forEach((carryText, carryIndex) => {
+                focusId = generateId();
+
+                if (isCategory && !isCategoryExpanded) {
+                  dispatch({
+                    atIndex: index + 1 + carryIndex,
+                    id: focusId,
+                    text: carryText,
+                    type: 'CreateCategory',
+                  });
+                } else {
+                  dispatch({
+                    atIndex: isCategoryExpanded ? carryIndex : index + 1 + carryIndex,
+                    categoryId,
+                    id: focusId,
+                    text: carryText,
+                    type: 'CreateItem',
+                  });
+                }
+              });
+
+              setFocusAtPosition([focusId, carry.length === 1 ? 0 : carry[carry.length - 1].length]);
             }}
             onKeyDown={(e) => {
               if (e.key !== 'Backspace') return;
-              const target = e.target as HTMLDivElement;
-              const text = target.innerText ?? '';
               const selection = window.getSelection();
               if (!selection) return;
               const range = selection.getRangeAt(0);
               if (range?.endOffset + range?.startOffset > 0) return;
               e.preventDefault();
+              const target = e.target as HTMLDivElement;
+              const carry = target.innerText ?? '';
 
               dispatch({
-                categoryId: category.id,
+                categoryId,
                 id,
                 type: isCategory ? 'DeleteCategory' : 'DeleteItem',
               });
 
-              if (isCategory) {
-                if (previousCategory) {
-                  if (isPreviousCategoryExpanded && previousCategoryLastItem) {
-                    return dispatch({
-                      id: previousCategoryLastItem.id,
-                      meta: { focusAtPosition: previousCategoryLastItem.text.length },
-                      text: previousCategoryLastItem.text + text,
-                      type: 'UpdateItem',
-                    });
-                  }
+              if (!previousId || typeof previousText !== 'string') return;
 
-                  return dispatch({
-                    id: previousCategory.id,
-                    meta: { focusAtPosition: previousCategory.text.length },
-                    text: previousCategory.text + text,
-                    type: 'UpdateCategory',
-                  });
-                }
-
-                return;
-              }
-
-              if (previousItem) {
-                return dispatch({
-                  id: previousItem.id,
-                  meta: { focusAtPosition: previousItem.text.length },
-                  text: previousItem.text + text,
-                  type: 'UpdateItem',
-                });
-              }
-
-              return dispatch({
-                id: category.id,
-                meta: { focusAtPosition: category.text.length },
-                text: category.text + text,
-                type: 'UpdateCategory',
+              dispatch({
+                id: previousId,
+                text: previousText + carry,
+                type: previousIsCategory ? 'UpdateCategory' : 'UpdateItem',
               });
+
+              setFocusAtPosition([previousId, previousText.length]);
             }}
             ref={ref}
             role="textbox"
@@ -268,7 +199,7 @@ const ListItem = ({
             mt={isCategory ? 2 : 0}
             onClick={() =>
               dispatch({
-                categoryId: category.id,
+                categoryId,
                 id,
                 type: isCategory ? 'DeleteCategory' : 'DeleteItem',
               })

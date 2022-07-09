@@ -2,6 +2,7 @@ import * as C from '@chakra-ui/react';
 import * as D from '@dnd-kit/core';
 import * as DS from '@dnd-kit/sortable';
 import React, { useContext, useState } from 'react';
+import { noop } from '@chakra-ui/utils';
 import AccountContext from '../../../../context/account';
 import AddButton from '../../components/AddButton';
 import CategoriesContext from '../../../../context/categories';
@@ -10,9 +11,11 @@ import ItemsContext from '../../../../context/items';
 import ListItem from './components/ListItem';
 import ProfilesContext from '../../../../context/profiles';
 import SortableListItem from './components/SortableListItem';
+import generateId from '../../../../utilities/generate-id';
 import selectActiveProfile from '../../../../selectors/select-active-profile';
 import selectCategoryId from '../../../../selectors/select-category-id';
-import { Id } from '../../../../types';
+import useAutoResetState from '../../../../utilities/use-auto-reset-state';
+import { Category, Id, Item } from '../../../../types';
 
 const Items = () => {
   const account = useContext(AccountContext);
@@ -22,6 +25,7 @@ const Items = () => {
   const profiles = useContext(ProfilesContext);
   const [draggingId, setDraggingId] = useState<Id>('');
   const [draggingOverCategoryId, setDraggingOverCategoryId] = useState<Id>('');
+  const [focusAtPosition, setFocusAtPosition] = useAutoResetState<[Id, number]>(['', 0]);
   const [isCategoryExpanded, setIsCategoryExpanded] = useState<Record<Id, boolean>>({});
   const sensors = D.useSensors(D.useSensor(D.MouseSensor), D.useSensor(D.TouchSensor));
   if (!account.profiles.length) return null;
@@ -156,47 +160,64 @@ const Items = () => {
         <DS.SortableContext items={activeProfile.categories} strategy={DS.verticalListSortingStrategy}>
           {activeProfile.categories.map((categoryId, categoryIndex) => {
             const category = categories[categoryId];
-            const previousCategory = categories[activeProfile.categories[categoryIndex - 1]];
+            let previous: Category | Item | undefined = categories[activeProfile.categories[categoryIndex - 1]];
+
+            if (previous && isCategoryExpanded[previous.id] && (previous as Category).items.length) {
+              previous = items[(previous as Category).items[(previous as Category).items.length - 1]];
+            }
 
             return (
               <SortableListItem
-                category={category}
-                focusAtPosition={category.meta?.focusAtPosition}
+                categoryId={categoryId}
+                focusAtPosition={focusAtPosition[0] === categoryId ? focusAtPosition[1] : undefined}
                 id={categoryId}
                 index={categoryIndex}
                 isCategory
                 isCategoryExpanded={isCategoryExpanded[categoryId]}
                 isDropzone={draggingOverCategoryId === categoryId}
-                isPreviousCategoryExpanded={isCategoryExpanded[previousCategory?.id]}
                 key={categoryId}
-                previousCategory={previousCategory}
-                previousCategoryLastItem={items[previousCategory?.items[previousCategory.items.length - 1]]}
+                previousId={previous?.id}
+                previousIsCategory={!!(previous as Category)?.items}
+                previousText={previous?.text}
+                setFocusAtPosition={setFocusAtPosition}
                 toggleExpandCategory={() =>
                   setIsCategoryExpanded((state) => ({ ...state, [categoryId]: !state[categoryId] }))
                 }
                 value={category.text}
               >
                 <DS.SortableContext items={categories[categoryId].items} strategy={DS.verticalListSortingStrategy}>
-                  {categories[categoryId].items.map((itemId, itemIndex) => (
-                    <SortableListItem
-                      category={category}
-                      focusAtPosition={items[itemId].meta?.focusAtPosition}
-                      id={itemId}
-                      index={itemIndex}
-                      key={itemId}
-                      previousItem={items[category.items[itemIndex - 1]]}
-                      value={items[itemId].text}
-                    />
-                  ))}
+                  {categories[categoryId].items.map((itemId, itemIndex) => {
+                    previous = items[category.items[itemIndex - 1]] || category;
+
+                    return (
+                      <SortableListItem
+                        categoryId={categoryId}
+                        focusAtPosition={focusAtPosition[0] === itemId ? focusAtPosition[1] : undefined}
+                        id={itemId}
+                        index={itemIndex}
+                        key={itemId}
+                        previousId={previous.id}
+                        previousIsCategory={!!(previous as Category).items}
+                        previousText={previous.text}
+                        setFocusAtPosition={setFocusAtPosition}
+                        value={items[itemId].text}
+                      />
+                    );
+                  })}
                 </DS.SortableContext>
                 <AddButton
-                  onClick={() =>
+                  onClick={() => {
+                    const id = generateId();
+
                     dispatch({
                       atIndex: categories[categoryId].items.length,
                       categoryId,
+                      id,
                       type: 'CreateItem',
-                    })
-                  }
+                    });
+
+                    setFocusAtPosition([id, 0]);
+                  }}
                 >
                   add item
                 </AddButton>
@@ -205,12 +226,18 @@ const Items = () => {
           })}
         </DS.SortableContext>
         <AddButton
-          onClick={() =>
+          onClick={() => {
+            const id = generateId();
+
             dispatch({
               atIndex: activeProfile.categories.length,
+              id,
               type: 'CreateCategory',
-            })
-          }
+            });
+
+            setIsCategoryExpanded((state) => ({ ...state, [id]: true }));
+            setFocusAtPosition([id, 0]);
+          }}
         >
           add category
         </AddButton>
@@ -218,22 +245,24 @@ const Items = () => {
           <D.DragOverlay dropAnimation={null}>
             {!!draggingId && (
               <ListItem
-                category={categories[draggingIdCategoryId]}
+                categoryId={draggingIdCategoryId}
                 id={draggingId}
                 index={0}
                 isCategory={isDraggingCategory}
                 isCategoryExpanded={isCategoryExpanded[draggingId]}
                 isOverlay
+                setFocusAtPosition={noop}
                 value={draggingItemOrCategory.text}
               >
                 {isDraggingCategory ? (
                   <>
                     {categories[draggingId].items.map((itemId, index) => (
                       <ListItem
-                        category={categories[draggingOverCategoryId]}
+                        categoryId={draggingOverCategoryId}
                         id={itemId}
                         index={index}
                         key={`overlay-${itemId}`}
+                        setFocusAtPosition={noop}
                         value={items[itemId].text}
                       />
                     ))}

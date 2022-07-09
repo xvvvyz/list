@@ -1,19 +1,16 @@
-import generateId from '../utilities/generate-id';
-import { Id, Meta } from '../types';
-import { State } from '../reducer';
+import { Id, State } from '../types';
 
 interface CreateItemAction {
   atIndex: number;
   categoryId: Id;
-  meta?: Meta;
+  id: Id;
   text?: string;
   type: 'CreateItem';
 }
 
 const createItem = (state: State, action: CreateItemAction) => {
   const newItem = {
-    id: generateId(),
-    meta: action.meta ?? { focusAtPosition: 0 },
+    id: action.id,
     text: action.text ?? '',
   };
 

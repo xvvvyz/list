@@ -8,14 +8,20 @@ import IconButtonChevronExpand from '../../components/IconButtonChevronExpand';
 import IconButtonChevronRight from '../../components/IconButtonChevronRight';
 import ListItem from './components/ListItem';
 import ProfilesContext from '../../../../context/profiles';
+import StatusContext from '../../../../context/status';
 import ThemeToggle from '../../../../images/theme-toggle.svg';
+import generateId from '../../../../utilities/generate-id';
 import selectActiveProfile from '../../../../selectors/select-active-profile';
+import useAutoResetState from '../../../../utilities/use-auto-reset-state';
+import { Id } from '../../../../types';
 
 const Header = () => {
   const account = useContext(AccountContext);
   const dispatch = useContext(DispatchContext);
   const profiles = useContext(ProfilesContext);
-  const { isOpen, onOpen, onToggle } = C.useDisclosure();
+  const status = useContext(StatusContext);
+  const [autoFocusId, setAutoFocusId] = useAutoResetState<Id>('');
+  const { isOpen, onClose, onOpen, onToggle } = C.useDisclosure();
   const { toggleColorMode } = C.useColorMode();
   const activeProfile = selectActiveProfile({ account, profiles });
 
@@ -40,20 +46,28 @@ const Header = () => {
       <C.Box aria-label="profiles" as="section">
         {!!account.profiles.length && (
           <C.Box pr={isOpen ? 2 : undefined}>
-            <ListItem key={activeProfile.id} profile={activeProfile} w={isOpen ? 'full' : undefined} />
+            <ListItem
+              autoFocus={autoFocusId === activeProfile.id}
+              key={activeProfile.id}
+              profile={activeProfile}
+              w={isOpen ? 'full' : undefined}
+            />
           </C.Box>
         )}
         <C.Collapse
-          in={isOpen || !account.profiles.length}
+          in={isOpen || (!status.isLoading && !account.profiles.length)}
           transition={account.profiles.length ? undefined : { enter: { duration: 0 } }}
         >
           {account.profiles.slice(1).map((id) => (
             <C.Flex key={id}>
-              <ListItem profile={profiles[id]} />
+              <ListItem autoFocus={autoFocusId === id} profile={profiles[id]} />
               <IconButtonChevronRight
                 aria-label="open profile"
                 h="4rem"
-                onClick={() => dispatch({ id, type: 'SetActiveProfile' })}
+                onClick={() => {
+                  dispatch({ id, type: 'SetActiveProfile' });
+                  onClose();
+                }}
               />
             </C.Flex>
           ))}
@@ -61,7 +75,9 @@ const Header = () => {
             <AddButton
               onClick={() => {
                 onOpen();
-                dispatch({ type: 'CreateProfile' });
+                const id = generateId();
+                dispatch({ id, type: 'CreateProfile' });
+                setAutoFocusId(id);
               }}
             >
               add profile

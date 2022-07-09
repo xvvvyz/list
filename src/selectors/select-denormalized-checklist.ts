@@ -1,6 +1,5 @@
 import selectDenormalizedCategory from './select-denormalized-category';
-import { Id } from '../types';
-import { State } from '../reducer';
+import { Id, State } from '../types';
 
 const selectDenormalizedChecklist = (state: Pick<State, 'categories' | 'checklists' | 'items'>, { id }: { id: Id }) => {
   let itemsCount = 0;
@@ -36,7 +35,6 @@ const selectDenormalizedChecklist = (state: Pick<State, 'categories' | 'checklis
     id,
     itemsCompletedCount,
     itemsCount,
-    meta: state.checklists[id].meta,
     text: state.checklists[id].text,
   };
 };

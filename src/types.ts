@@ -6,7 +6,6 @@ export interface Account {
 export interface Category {
   id: Id;
   items: Id[];
-  meta?: Meta;
   text: string;
 }
 
@@ -18,7 +17,6 @@ export interface Checklist {
   categories: Id[];
   completed: string[];
   id: Id;
-  meta?: Meta;
   tags: Id[];
   text: string;
 }
@@ -31,7 +29,6 @@ export interface ChecklistDenormalized extends Omit<Checklist, 'categories' | 'c
 
 export interface Item {
   id: Id;
-  meta?: Meta;
   text: string;
 }
 
@@ -39,23 +36,30 @@ export interface ItemParsed extends Item {
   completed?: boolean;
 }
 
-export interface Meta {
-  autoFocus?: boolean;
-  focusAtPosition?: number;
-}
-
 export interface Profile {
   categories: Id[];
   checklists: Id[];
   id: string;
-  meta?: Meta;
   tags?: TagsMap;
   text: string;
 }
 
+export interface State {
+  account: Account;
+  categories: Categories;
+  checklists: Checklists;
+  items: Items;
+  profiles: Profiles;
+  status: Status;
+}
+
+export interface Status {
+  isLoading: boolean;
+}
+
 export type Categories = Record<Id, Category>;
-export type GenericObject = Record<string, unknown>;
 export type Checklists = Record<Id, Checklist>;
+export type GenericObject = Record<string, unknown>;
 export type Id = string;
 export type Items = Record<Id, Item>;
 export type Profiles = Record<Id, Profile>;

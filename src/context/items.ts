@@ -1,6 +1,8 @@
 import { createContext } from 'react';
 import { Items } from '../types';
 
-const ItemsContext = createContext<Items>({});
+const itemsInitialState = {};
+const ItemsContext = createContext<Items>(itemsInitialState);
 
 export default ItemsContext;
+export { itemsInitialState };

@@ -1,6 +1,6 @@
 import { arrayMove } from '@dnd-kit/sortable';
 import selectActiveProfile from '../selectors/select-active-profile';
-import { State } from '../reducer';
+import { State } from '../types';
 
 interface ReorderCategoryAction {
   fromIndex: number;

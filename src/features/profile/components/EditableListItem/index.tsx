@@ -2,7 +2,6 @@ import * as C from '@chakra-ui/react';
 import React from 'react';
 import EditableSubtext from './components/EditableSubtext';
 import IconButtonX from '../IconButtonX';
-import useDeleteMeta from '../../utilities/use-delete-meta';
 
 interface EditableListItemProps extends Omit<C.BoxProps, 'onSubmit'> {
   defaultValue: string;
@@ -27,7 +26,6 @@ const EditableListItem = ({
   ...rest
 }: EditableListItemProps) => {
   const theme = C.useTheme();
-  useDeleteMeta(startWithEditView);
 
   const focusOrHoverStyles = {
     '.editable-list-item__delete': {

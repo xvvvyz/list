@@ -1,4 +1,4 @@
-const setCaretPosition = (el: HTMLDivElement, offset: number) => {
+const setCaretPosition = (el: HTMLElement, offset: number) => {
   const range = document.createRange();
   const selection = window.getSelection();
   if (!selection) return;

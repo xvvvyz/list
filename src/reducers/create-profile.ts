@@ -1,16 +1,15 @@
-import generateId from '../utilities/generate-id';
-import { State } from '../reducer';
+import { Id, State } from '../types';
 
 interface CreateProfileAction {
+  id: Id;
   type: 'CreateProfile';
 }
 
-const createProfile = (state: State) => {
+const createProfile = (state: State, action: CreateProfileAction) => {
   const newProfile = {
     categories: [],
     checklists: [],
-    id: generateId(),
-    meta: { autoFocus: true },
+    id: action.id,
     tags: {},
     text: '',
   };

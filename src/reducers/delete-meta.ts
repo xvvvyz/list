@@ -1,6 +1,5 @@
 import removeKey from '../utilities/remove-key';
-import { GenericObject } from '../types';
-import { State } from '../reducer';
+import { GenericObject, State } from '../types';
 
 interface DeleteMetaAction {
   type: 'DeleteMeta';

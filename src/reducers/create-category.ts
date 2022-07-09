@@ -1,11 +1,9 @@
-import generateId from '../utilities/generate-id';
 import selectActiveProfile from '../selectors/select-active-profile';
-import { State } from '../reducer';
-import { Meta } from '../types';
+import { Id, State } from '../types';
 
 interface CreateCategoryAction {
   atIndex: number;
-  meta?: Meta;
+  id: Id;
   text?: string;
   type: 'CreateCategory';
 }
@@ -14,9 +12,8 @@ const createCategory = (state: State, action: CreateCategoryAction) => {
   const activeProfile = selectActiveProfile(state);
 
   const newCategory = {
-    id: generateId(),
+    id: action.id,
     items: [],
-    meta: action.meta ?? { focusAtPosition: 0 },
     text: action.text ?? '',
   };
 

@@ -1,6 +1,5 @@
 import { arrayMove } from '@dnd-kit/sortable';
-import { Id } from '../types';
-import { State } from '../reducer';
+import { Id, State } from '../types';
 
 interface ReorderItemAction {
   categoryId: Id;

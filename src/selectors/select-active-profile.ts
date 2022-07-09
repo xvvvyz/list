@@ -1,4 +1,4 @@
-import { State } from '../reducer';
+import { State } from '../types';
 
 const selectActiveProfile = (state: Pick<State, 'account' | 'profiles'>) => state.profiles[state.account.profiles[0]];
 

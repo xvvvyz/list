@@ -8,6 +8,7 @@ import deleteChecklist, { DeleteChecklistAction } from './reducers/delete-checkl
 import deleteItem, { DeleteItemAction } from './reducers/delete-item';
 import deleteMeta, { DeleteMetaAction } from './reducers/delete-meta';
 import deleteProfile, { DeleteProfileAction } from './reducers/delete-profile';
+import initialize, { InitializeAction } from './reducers/initialize';
 import moveItem, { MoveItemAction } from './reducers/move-item';
 import reorderCategory, { ReorderCategoryAction } from './reducers/reorder-category';
 import reorderItem, { ReorderItemAction } from './reducers/reorder-item';
@@ -16,15 +17,8 @@ import updateCategory, { UpdateCategoryAction } from './reducers/update-category
 import updateChecklist, { UpdateChecklistAction } from './reducers/update-checklist';
 import updateItem, { UpdateItemAction } from './reducers/update-item';
 import updateProfile, { UpdateProfileAction } from './reducers/update-profile';
-import { Account, Categories, Checklists, Items, Profiles } from './types';
-
-interface State {
-  account: Account;
-  categories: Categories;
-  checklists: Checklists;
-  items: Items;
-  profiles: Profiles;
-}
+import updateStatus, { UpdateStatusAction } from './reducers/update-status';
+import { State } from './types';
 
 type Action =
   | CreateCategoryAction
@@ -36,6 +30,7 @@ type Action =
   | DeleteItemAction
   | DeleteMetaAction
   | DeleteProfileAction
+  | InitializeAction
   | MoveItemAction
   | ReorderCategoryAction
   | ReorderItemAction
@@ -43,7 +38,8 @@ type Action =
   | UpdateCategoryAction
   | UpdateChecklistAction
   | UpdateItemAction
-  | UpdateProfileAction;
+  | UpdateProfileAction
+  | UpdateStatusAction;
 
 const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
@@ -57,7 +53,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
       return createItem(state, action);
 
     case 'CreateProfile':
-      return createProfile(state);
+      return createProfile(state, action);
 
     case 'DeleteCategory':
       return deleteCategory(state, action);
@@ -73,6 +69,9 @@ const reducer: Reducer<State, Action> = (state, action) => {
 
     case 'DeleteProfile':
       return deleteProfile(state, action);
+
+    case 'Initialize':
+      return initialize(state, action);
 
     case 'MoveItem':
       return moveItem(state, action);
@@ -97,6 +96,9 @@ const reducer: Reducer<State, Action> = (state, action) => {
 
     case 'UpdateProfile':
       return updateProfile(state, action);
+
+    case 'UpdateStatus':
+      return updateStatus(state, action);
 
     default:
       return state;

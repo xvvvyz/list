@@ -1,6 +1,5 @@
 import selectActiveProfile from '../selectors/select-active-profile';
-import { Id } from '../types';
-import { State } from '../reducer';
+import { Id, State } from '../types';
 
 interface DeleteChecklistAction {
   id: Id;

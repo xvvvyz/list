@@ -1,5 +1,4 @@
-import { Id } from '../types';
-import { State } from '../reducer';
+import { Id, State } from '../types';
 
 interface DeleteItemAction {
   categoryId: Id;

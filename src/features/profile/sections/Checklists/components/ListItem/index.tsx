@@ -6,10 +6,11 @@ import IconButtonChevronRight from '../../../../components/IconButtonChevronRigh
 import { ChecklistDenormalized } from '../../../../../../types';
 
 interface ListItemProps {
+  autoFocus: boolean;
   checklist: ChecklistDenormalized;
 }
 
-const ListItem = ({ checklist }: ListItemProps) => {
+const ListItem = ({ autoFocus, checklist }: ListItemProps) => {
   const dispatch = useContext(DispatchContext);
 
   return (
@@ -22,7 +23,7 @@ const ListItem = ({ checklist }: ListItemProps) => {
         onDelete={() => dispatch({ id: checklist.id, type: 'DeleteChecklist' })}
         onSubmit={(value) => dispatch({ id: checklist.id, text: value, type: 'UpdateChecklist' })}
         previewTextHeight="3.6rem"
-        startWithEditView={checklist.meta?.autoFocus}
+        startWithEditView={autoFocus}
         subtext={`${checklist.itemsCompletedCount} of ${checklist.itemsCount} completed`}
         subtextOffset="1rem"
       />

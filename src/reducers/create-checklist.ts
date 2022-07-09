@@ -1,9 +1,9 @@
-import generateId from '../utilities/generate-id';
 import selectActiveProfile from '../selectors/select-active-profile';
-import { State } from '../reducer';
+import { Id, State } from '../types';
 
 interface CreateChecklistAction {
   atBeginning?: boolean;
+  id: Id;
   type: 'CreateChecklist';
 }
 
@@ -13,8 +13,7 @@ const createChecklist = (state: State, action: CreateChecklistAction) => {
   const newChecklist = {
     categories: [],
     completed: [],
-    id: generateId(),
-    meta: { autoFocus: true },
+    id: action.id,
     tags: [],
     text: '',
   };

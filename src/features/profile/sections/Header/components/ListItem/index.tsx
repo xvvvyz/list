@@ -5,10 +5,11 @@ import { Profile } from '../../../../../../types';
 
 interface ListItemProps
   extends Omit<EditableListItemProps, 'defaultValue' | 'inputHeight' | 'onDelete' | 'onSubmit' | 'previewTextHeight'> {
+  autoFocus: boolean;
   profile: Profile;
 }
 
-const ListItem = ({ profile, ...rest }: ListItemProps) => {
+const ListItem = ({ autoFocus, profile, ...rest }: ListItemProps) => {
   const dispatch = React.useContext(DispatchContext);
 
   return (
@@ -19,7 +20,7 @@ const ListItem = ({ profile, ...rest }: ListItemProps) => {
       onDelete={() => dispatch({ id: profile.id, type: 'DeleteProfile' })}
       onSubmit={(value) => dispatch({ id: profile.id, text: value, type: 'UpdateProfile' })}
       previewTextHeight="4rem"
-      startWithEditView={profile.meta?.autoFocus}
+      startWithEditView={autoFocus}
       {...rest}
     />
   );
