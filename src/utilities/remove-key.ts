@@ -1,6 +1,4 @@
-import { GenericObject } from '../types';
-
-const removeKey = ({ key, obj }: { key: string; obj: GenericObject }): GenericObject =>
+const removeKey = ({ key, obj }: { key: string; obj: Record<string, unknown> }): Record<string, unknown> =>
   Object.keys(obj).reduce((acc, k) => {
     if (k === key) return acc;
 
@@ -10,7 +8,7 @@ const removeKey = ({ key, obj }: { key: string; obj: GenericObject }): GenericOb
         typeof obj[k] === 'object' && !Array.isArray(obj[k])
           ? removeKey({
               key,
-              obj: obj[k] as GenericObject,
+              obj: obj[k] as Record<string, unknown>,
             })
           : obj[k],
     };

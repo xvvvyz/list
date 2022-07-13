@@ -1,5 +1,7 @@
+.env
 .next/
 .swc/
+.vercel
 build/
 coverage/
 next-env.d.ts

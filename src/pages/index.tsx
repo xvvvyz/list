@@ -1,10 +1,10 @@
 import * as C from '@chakra-ui/react';
 import React from 'react';
 import { NextSeo } from 'next-seo';
-import Checklists from '../features/profile/sections/Checklists';
-import Header from '../features/profile/sections/Header';
-import Items from '../features/profile/sections/Items';
-import withData from '../layouts/with-data';
+import Checklists from '../modules/profile/sections/Checklists';
+import Header from '../modules/profile/sections/Header';
+import Items from '../modules/profile/sections/Items';
+import withReplicache from '../layouts/with-replicache';
 
 const IndexPage = () => (
   <>
@@ -17,4 +17,4 @@ const IndexPage = () => (
   </>
 );
 
-export default withData(IndexPage);
+export default withReplicache(IndexPage);
