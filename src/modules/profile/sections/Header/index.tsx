@@ -8,12 +8,12 @@ import ListItem from './components/ListItem';
 import ThemeToggle from '../../../../images/theme-toggle.svg';
 import generateId from '../../../../utilities/generate-id';
 import useAccount from '../../../../hooks/use-account';
-import useAutoResetState from '../../../../hooks/use-auto-reset-state';
 import useAllProfile from '../../../../hooks/use-all-profile';
+import useEphemeralState from '../../../../hooks/use-ephemeral-state';
 import useReplicache from '../../../../hooks/use-replicache';
 
 const Header = () => {
-  const [autoFocusId, setAutoFocusId] = useAutoResetState('');
+  const [autoFocusId, setAutoFocusId] = useEphemeralState('');
   const account = useAccount();
   const profiles = useAllProfile();
   const replicache = useReplicache();
@@ -53,7 +53,7 @@ const Header = () => {
           in={isOpen || (!!account && !profiles[0])}
           transition={profiles[0] ? undefined : { enter: { duration: 0 } }}
         >
-          {profiles.slice(1).map((profile, i) => (
+          {profiles.slice(1).map((profile) => (
             <C.Flex key={profile.id}>
               <ListItem autoFocus={autoFocusId === profile.id} profile={profile} />
               <IconButtonChevronRight
@@ -61,14 +61,13 @@ const Header = () => {
                 h="4rem"
                 onClick={async () => {
                   if (!replicache) return;
+                  onClose();
 
                   await replicache.mutate.reorderProfile({
                     accountId: replicache.name,
                     id: profile.id,
                     toIndex: 0,
                   });
-
-                  onClose();
                 }}
               />
             </C.Flex>
@@ -78,14 +77,13 @@ const Header = () => {
               onClick={async () => {
                 if (!replicache) return;
                 const id = generateId();
+                setAutoFocusId(id);
+                onOpen();
 
                 await replicache.mutate.createProfile({
                   accountId: replicache.name,
                   id,
                 });
-
-                onOpen();
-                setAutoFocusId(id);
               }}
             >
               add profile

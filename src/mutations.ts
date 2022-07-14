@@ -79,42 +79,46 @@ const mutations = {
   deleteCategory: async (tx: WriteTransaction, { accountId, id }: { accountId: string; id: string }) => {
     const activeProfile = await queries.activeProfile(tx, { accountId });
     if (!activeProfile) return;
-    await category.delete(tx, id);
 
     await profile.update(tx, {
       categoryIds: activeProfile.categoryIds.filter((categoryId) => categoryId !== id),
       id: activeProfile.id,
     });
+
+    await category.delete(tx, id);
   },
   deleteChecklist: async (tx: WriteTransaction, { accountId, id }: { accountId: string; id: string }) => {
     const activeProfile = await queries.activeProfile(tx, { accountId });
     if (!activeProfile) return;
-    await checklist.delete(tx, id);
 
     await profile.update(tx, {
       checklistIds: activeProfile.checklistIds.filter((checklistId) => checklistId !== id),
       id: activeProfile.id,
     });
+
+    await checklist.delete(tx, id);
   },
   deleteItem: async (tx: WriteTransaction, { categoryId, id }: { categoryId: string; id: string }) => {
     const cat = await category.get(tx, categoryId);
     if (!cat) return;
-    await item.delete(tx, id);
 
     await category.update(tx, {
       id: cat.id,
       itemIds: cat.itemIds.filter((itemId) => itemId !== id),
     });
+
+    await item.delete(tx, id);
   },
   deleteProfile: async (tx: WriteTransaction, { accountId, id }: { accountId: string; id: string }) => {
     const acc = await account.get(tx, accountId);
     if (!acc) return;
-    await profile.delete(tx, id);
 
     await account.update(tx, {
       id: acc.id,
       profileIds: acc.profileIds.filter((profileId) => profileId !== id),
     });
+
+    await profile.delete(tx, id);
   },
   moveItem: async (
     tx: WriteTransaction,
@@ -149,7 +153,7 @@ const mutations = {
 
     await profile.update(tx, {
       categoryIds: arrayMove(activeProfile.categoryIds, fromIndex, toIndex),
-      id: accountId,
+      id: activeProfile.id,
     });
   },
   reorderItem: async (

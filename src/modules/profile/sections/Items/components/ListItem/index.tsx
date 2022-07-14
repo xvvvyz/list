@@ -1,18 +1,17 @@
 import * as C from '@chakra-ui/react';
-import React, { HTMLProps, useRef } from 'react';
-import { BoxProps, ButtonProps } from '@chakra-ui/react';
+import React, { HTMLProps, useEffect, useRef } from 'react';
 import Grabber from '../../../../../../images/grabber.svg';
 import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
 import IconButtonX from '../../../../components/IconButtonX';
 import generateId from '../../../../../../utilities/generate-id';
-import useAutoFocus from '../../../../../../hooks/use-auto-focus';
+import setCaretPosition from '../../../../../../utilities/set-caret-position';
 import useReplicache from '../../../../../../hooks/use-replicache';
 
 interface ListItemProps {
   categoryId: string;
   children?: React.ReactNode;
-  containerProps?: BoxProps & HTMLProps<HTMLDivElement>;
-  dragHandleProps?: ButtonProps & HTMLProps<HTMLButtonElement>;
+  containerProps?: C.BoxProps & HTMLProps<HTMLDivElement>;
+  dragHandleProps?: C.ButtonProps & HTMLProps<HTMLButtonElement>;
   focusAtPosition?: number;
   id: string;
   index: number;
@@ -51,7 +50,12 @@ const ListItem = ({
 }: ListItemProps) => {
   const replicache = useReplicache();
   const ref = useRef<HTMLDivElement | null>(null);
-  useAutoFocus({ focusAtPosition, ref });
+
+  useEffect(() => {
+    if (!ref.current || typeof focusAtPosition === 'undefined') return;
+    setCaretPosition(ref.current, focusAtPosition);
+    setFocusAtPosition(['', 0]);
+  }, [focusAtPosition]);
 
   let bg = 'initial';
   if (isOverlay || isDropzone) bg = 'bgSecondaryHover';
@@ -110,13 +114,10 @@ const ListItem = ({
             onInput={async (e) => {
               if (!replicache) return;
               const target = e.target as HTMLDivElement;
-              const text = target.innerText;
-              if (text === '\n') return;
-              const parsedText = text.replace(/[\n\r]+/g, '\n');
-              if (!/\n/.test(parsedText)) return;
-              const [newText, ...carry] = parsedText.split('\n');
+              const text = target.innerText.replace(/\n$/, '');
+              if (!/\n/.test(text)) return;
+              const [newText, ...carry] = text.split(/\n+/g);
               target.innerText = newText;
-              let focusId = '';
 
               await replicache.mutate[isCategory ? 'updateCategory' : 'updateItem']({
                 id,
@@ -125,7 +126,8 @@ const ListItem = ({
 
               await Promise.all(
                 carry.map((carryText, carryIndex) => {
-                  focusId = generateId();
+                  const focusId = generateId();
+                  setFocusAtPosition([focusId, carry.length === 1 ? 0 : carry[carry.length - 1].length]);
 
                   if (isCategory && !isCategoryExpanded) {
                     return replicache.mutate.createCategory({
@@ -144,18 +146,26 @@ const ListItem = ({
                   }
                 })
               );
-
-              setFocusAtPosition([focusId, carry.length === 1 ? 0 : carry[carry.length - 1].length]);
             }}
             onKeyDown={async (e) => {
               if (!replicache || e.key !== 'Backspace') return;
               const selection = window.getSelection();
               if (!selection) return;
               const range = selection.getRangeAt(0);
-              if (range?.endOffset + range?.startOffset > 0) return;
+              if (range.endOffset + range.startOffset > 0) return;
               e.preventDefault();
               const target = e.target as HTMLDivElement;
               const carry = target.innerText ?? '';
+              target.remove();
+
+              if (previousId && typeof previousText === 'string') {
+                await replicache.mutate[previousIsCategory ? 'updateCategory' : 'updateItem']({
+                  id: previousId,
+                  text: previousText + carry,
+                });
+
+                setFocusAtPosition([previousId, previousText.length]);
+              }
 
               if (isCategory) {
                 await replicache.mutate.deleteCategory({
@@ -168,15 +178,6 @@ const ListItem = ({
                   id,
                 });
               }
-
-              if (!previousId || typeof previousText !== 'string') return;
-
-              await replicache.mutate[previousIsCategory ? 'updateCategory' : 'updateItem']({
-                id: previousId,
-                text: previousText + carry,
-              });
-
-              setFocusAtPosition([previousId, previousText.length]);
             }}
             ref={ref}
             role="textbox"

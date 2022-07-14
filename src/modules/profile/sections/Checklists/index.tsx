@@ -5,12 +5,12 @@ import IconButtonChevronExpand from '../../components/IconButtonChevronExpand';
 import ListItem from './components/ListItem';
 import generateId from '../../../../utilities/generate-id';
 import useActiveProfile from '../../../../hooks/use-active-profile';
-import useAutoResetState from '../../../../hooks/use-auto-reset-state';
 import useAllChecklistDenormalized from '../../../../hooks/use-all-checklist-denormalized';
+import useEphemeralState from '../../../../hooks/use-ephemeral-state';
 import useReplicache from '../../../../hooks/use-replicache';
 
 const Checklists = () => {
-  const [autoFocusId, setAutoFocusId] = useAutoResetState('');
+  const [autoFocusId, setAutoFocusId] = useEphemeralState('');
   const activeProfile = useActiveProfile();
   const checklists = useAllChecklistDenormalized();
   const replicache = useReplicache();
@@ -32,14 +32,13 @@ const Checklists = () => {
           onClick={async () => {
             if (!replicache) return;
             const id = generateId();
+            setAutoFocusId(id);
 
             await replicache.mutate.createChecklist({
               accountId: replicache.name,
               atBeginning: !isOpen,
               id,
             });
-
-            setAutoFocusId(id);
           }}
         >
           add checklist

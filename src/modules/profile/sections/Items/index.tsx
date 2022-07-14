@@ -10,7 +10,7 @@ import generateId from '../../../../utilities/generate-id';
 import getCategoryId from './utilities/get-category-id';
 import useActiveProfile from '../../../../hooks/use-active-profile';
 import useAllCategoryAndItemMap from '../../../../hooks/use-all-category-and-item-map';
-import useAutoResetState from '../../../../hooks/use-auto-reset-state';
+import useEphemeralState from '../../../../hooks/use-ephemeral-state';
 import useReplicache from '../../../../hooks/use-replicache';
 import { Category } from '../../../../models/category';
 import { Item } from '../../../../models/item';
@@ -18,7 +18,7 @@ import { Item } from '../../../../models/item';
 const Items = () => {
   const [draggingId, setDraggingId] = useState('');
   const [draggingOverCategoryId, setDraggingOverCategoryId] = useState('');
-  const [focusAtPosition, setFocusAtPosition] = useAutoResetState<[string, number]>(['', 0]);
+  const [focusAtPosition, setFocusAtPosition] = useEphemeralState<[string, number]>(['', 0]);
   const [isCategoryExpanded, setIsCategoryExpanded] = useState<Record<string, boolean>>({});
   const activeProfile = useActiveProfile();
   const replicache = useReplicache();
@@ -150,7 +150,8 @@ const Items = () => {
       >
         <DS.SortableContext items={activeProfile.categoryIds} strategy={DS.verticalListSortingStrategy}>
           {activeProfile.categoryIds.map((categoryId, categoryIndex) => {
-            let previous: Category | Item | undefined = categoryMap[categoryIndex - 1];
+            if (!categoryMap[categoryId]) return null;
+            let previous: Category | Item | undefined = categoryMap[activeProfile.categoryIds[categoryIndex - 1]];
 
             if (previous && isCategoryExpanded[previous.id] && (previous as Category).itemIds.length) {
               const previousItemIds = (previous as Category).itemIds;
@@ -178,6 +179,7 @@ const Items = () => {
               >
                 <DS.SortableContext items={categoryMap[categoryId].itemIds} strategy={DS.verticalListSortingStrategy}>
                   {categoryMap[categoryId].itemIds.map((itemId, itemIndex) => {
+                    if (!itemMap[itemId]) return null;
                     previous = itemMap[categoryMap[categoryId].itemIds[itemIndex - 1]] || categoryMap[categoryId];
 
                     return (
