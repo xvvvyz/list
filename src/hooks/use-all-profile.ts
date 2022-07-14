@@ -1,6 +1,6 @@
 import { useSubscribe } from 'replicache-react';
+import queries from '../queries';
 import useReplicache from './use-replicache';
-import { profileQueries } from '../models/profile';
 
 const useAllProfile = () => {
   const replicache = useReplicache();
@@ -9,7 +9,7 @@ const useAllProfile = () => {
     replicache,
     async (tx) => {
       if (!replicache) return [];
-      return profileQueries.allProfile(tx, { accountId: replicache.name });
+      return queries.allProfile(tx, { accountId: replicache.name });
     },
     [],
     [replicache]

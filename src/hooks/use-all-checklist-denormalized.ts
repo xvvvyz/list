@@ -1,6 +1,6 @@
 import { useSubscribe } from 'replicache-react';
+import queries from '../queries';
 import useReplicache from './use-replicache';
-import { checklistQueries } from '../models/checklist';
 
 const useAllChecklistDenormalized = () => {
   const replicache = useReplicache();
@@ -9,7 +9,7 @@ const useAllChecklistDenormalized = () => {
     replicache,
     async (tx) => {
       if (!replicache) return [];
-      return checklistQueries.allChecklistDenormalized(tx, { accountId: replicache.name });
+      return queries.allChecklistDenormalized(tx, { accountId: replicache.name });
     },
     [],
     [replicache]

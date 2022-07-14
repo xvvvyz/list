@@ -9,8 +9,7 @@ import SortableListItem from './components/SortableListItem';
 import generateId from '../../../../utilities/generate-id';
 import getCategoryId from './utilities/get-category-id';
 import useActiveProfile from '../../../../hooks/use-active-profile';
-import useAllCategoryMap from '../../../../hooks/use-all-category-map';
-import useAllItemMap from '../../../../hooks/use-all-item-map';
+import useAllCategoryAndItemMap from '../../../../hooks/use-all-category-and-item-map';
 import useAutoResetState from '../../../../hooks/use-auto-reset-state';
 import useReplicache from '../../../../hooks/use-replicache';
 import { Category } from '../../../../models/category';
@@ -22,33 +21,32 @@ const Items = () => {
   const [focusAtPosition, setFocusAtPosition] = useAutoResetState<[string, number]>(['', 0]);
   const [isCategoryExpanded, setIsCategoryExpanded] = useState<Record<string, boolean>>({});
   const activeProfile = useActiveProfile();
-  const categoriesMap = useAllCategoryMap();
-  const itemsMap = useAllItemMap();
   const replicache = useReplicache();
   const sensors = D.useSensors(D.useSensor(D.MouseSensor), D.useSensor(D.TouchSensor));
+  const { categoryMap, itemMap } = useAllCategoryAndItemMap();
   if (!activeProfile) return null;
-  const draggingIdCategoryId = getCategoryId(categoriesMap, draggingId);
-  const draggingItemOrCategory = itemsMap[draggingId] || categoriesMap[draggingId];
+  const draggingIdCategoryId = getCategoryId(categoryMap, draggingId);
+  const draggingItemOrCategory = itemMap[draggingId] || categoryMap[draggingId];
 
   return (
     <C.Box aria-label="items" as="section" layerStyle="bgCard" mt={12}>
       <D.DndContext
         collisionDetection={(args) => {
-          if (args.active.id in categoriesMap) {
+          if (args.active.id in categoryMap) {
             return D.closestCenter({
               ...args,
-              droppableContainers: args.droppableContainers.filter(({ id }) => id in categoriesMap),
+              droppableContainers: args.droppableContainers.filter(({ id }) => id in categoryMap),
             });
           }
 
           const overId = D.getFirstCollision(D.rectIntersection(args), 'id');
           if (!overId) return [];
 
-          if (overId in categoriesMap && isCategoryExpanded[overId] && categoriesMap[overId].itemIds.length) {
+          if (overId in categoryMap && isCategoryExpanded[overId] && categoryMap[overId].itemIds.length) {
             return D.closestCenter({
               ...args,
               droppableContainers: args.droppableContainers.filter(({ id }) =>
-                categoriesMap[overId].itemIds.includes(String(id))
+                categoryMap[overId].itemIds.includes(String(id))
               ),
             });
           }
@@ -62,20 +60,18 @@ const Items = () => {
         }}
         onDragEnd={async ({ active, over }: D.DragEndEvent) => {
           if (!replicache) return;
-
           setDraggingId('');
           setDraggingOverCategoryId('');
+          if (!over?.id) return;
 
-          if (!activeProfile || !over?.id) return;
-
-          if (active.id in categoriesMap) {
+          if (active.id in categoryMap) {
             const activeCategoryIndex = activeProfile.categoryIds.findIndex((id) => id === active.id);
             const overCategoryIndex = activeProfile.categoryIds.findIndex((id) => id === over.id);
 
             if (activeCategoryIndex !== overCategoryIndex) {
               await replicache.mutate.reorderCategory({
                 accountId: replicache.name,
-                fromIndex: activeCategoryIndex,
+                id: String(active.id),
                 toIndex: overCategoryIndex,
               });
             }
@@ -83,11 +79,11 @@ const Items = () => {
             return;
           }
 
-          const fromCategoryId = getCategoryId(categoriesMap, String(active.id));
-          const toCategoryId = getCategoryId(categoriesMap, String(over.id));
+          const fromCategoryId = getCategoryId(categoryMap, String(active.id));
+          const toCategoryId = getCategoryId(categoryMap, String(over.id));
 
           if (fromCategoryId !== toCategoryId) {
-            if (!isCategoryExpanded[toCategoryId] || categoriesMap[toCategoryId].itemIds.length === 0) {
+            if (!isCategoryExpanded[toCategoryId] || categoryMap[toCategoryId].itemIds.length === 0) {
               await replicache.mutate.moveItem({
                 fromCategoryId,
                 id: String(active.id),
@@ -99,41 +95,40 @@ const Items = () => {
             return;
           }
 
-          const itemIds = categoriesMap[fromCategoryId].itemIds;
+          const itemIds = categoryMap[fromCategoryId].itemIds;
           const fromIndex = itemIds.indexOf(String(active.id));
           const toIndex = itemIds.indexOf(String(over.id));
-
           if (fromIndex === toIndex) return;
 
           await replicache.mutate.reorderItem({
             categoryId: fromCategoryId,
-            fromIndex,
+            id: String(active.id),
             toIndex,
           });
         }}
         onDragOver={async ({ active, over }: D.DragOverEvent) => {
           if (!replicache) return;
 
-          if (active.id in categoriesMap || !over?.id) {
+          if (active.id in categoryMap || !over?.id) {
             setDraggingOverCategoryId('');
             return;
           }
 
-          const fromCategoryId = getCategoryId(categoriesMap, String(active.id));
-          const toCategoryId = getCategoryId(categoriesMap, String(over.id));
+          const fromCategoryId = getCategoryId(categoryMap, String(active.id));
+          const toCategoryId = getCategoryId(categoryMap, String(over.id));
           setDraggingOverCategoryId(toCategoryId);
 
           if (
             fromCategoryId === toCategoryId ||
             !isCategoryExpanded[toCategoryId] ||
-            !categoriesMap[toCategoryId].itemIds.length
+            !categoryMap[toCategoryId].itemIds.length
           ) {
             return;
           }
 
           const fromCategoryIndex = activeProfile.categoryIds.indexOf(fromCategoryId);
           const toCategoryIndex = activeProfile.categoryIds.indexOf(toCategoryId);
-          const overItems = categoriesMap[toCategoryId].itemIds;
+          const overItems = categoryMap[toCategoryId].itemIds;
           const overItemIndex = overItems.indexOf(String(over.id));
 
           const toIndex =
@@ -148,18 +143,18 @@ const Items = () => {
         }}
         onDragStart={({ active }: D.DragStartEvent) => {
           setDraggingId(String(active.id));
-          if (active.id in categoriesMap) return;
-          setDraggingOverCategoryId(getCategoryId(categoriesMap, String(active.id)));
+          if (active.id in categoryMap) return;
+          setDraggingOverCategoryId(getCategoryId(categoryMap, String(active.id)));
         }}
         sensors={sensors}
       >
         <DS.SortableContext items={activeProfile.categoryIds} strategy={DS.verticalListSortingStrategy}>
           {activeProfile.categoryIds.map((categoryId, categoryIndex) => {
-            let previous: Category | Item | undefined = categoriesMap[categoryIndex - 1];
+            let previous: Category | Item | undefined = categoryMap[categoryIndex - 1];
 
             if (previous && isCategoryExpanded[previous.id] && (previous as Category).itemIds.length) {
               const previousItemIds = (previous as Category).itemIds;
-              previous = itemsMap[previousItemIds[previousItemIds.length - 1]];
+              previous = itemMap[previousItemIds[previousItemIds.length - 1]];
             }
 
             return (
@@ -179,11 +174,11 @@ const Items = () => {
                 toggleExpandCategory={() =>
                   setIsCategoryExpanded((state) => ({ ...state, [categoryId]: !state[categoryId] }))
                 }
-                value={categoriesMap[categoryId].text}
+                value={categoryMap[categoryId].text}
               >
-                <DS.SortableContext items={categoriesMap[categoryId].itemIds} strategy={DS.verticalListSortingStrategy}>
-                  {categoriesMap[categoryId].itemIds.map((itemId, itemIndex) => {
-                    previous = itemsMap[categoriesMap[categoryId].itemIds[itemIndex - 1]] || categoriesMap[categoryId];
+                <DS.SortableContext items={categoryMap[categoryId].itemIds} strategy={DS.verticalListSortingStrategy}>
+                  {categoryMap[categoryId].itemIds.map((itemId, itemIndex) => {
+                    previous = itemMap[categoryMap[categoryId].itemIds[itemIndex - 1]] || categoryMap[categoryId];
 
                     return (
                       <SortableListItem
@@ -196,7 +191,7 @@ const Items = () => {
                         previousIsCategory={!!(previous as Category).itemIds}
                         previousText={previous.text}
                         setFocusAtPosition={setFocusAtPosition}
-                        value={itemsMap[itemId].text}
+                        value={itemMap[itemId].text}
                       />
                     );
                   })}
@@ -207,7 +202,7 @@ const Items = () => {
                     const id = generateId();
 
                     await replicache.mutate.createItem({
-                      atIndex: categoriesMap[categoryId].itemIds.length,
+                      atIndex: categoryMap[categoryId].itemIds.length,
                       categoryId,
                       id,
                     });
@@ -253,14 +248,14 @@ const Items = () => {
               >
                 {draggingId === draggingIdCategoryId ? (
                   <>
-                    {categoriesMap[draggingId].itemIds.map((itemId, index) => (
+                    {categoryMap[draggingId].itemIds.map((itemId, index) => (
                       <ListItem
                         categoryId={draggingOverCategoryId}
                         id={itemId}
                         index={index}
                         key={`overlay-${itemId}`}
                         setFocusAtPosition={noop}
-                        value={itemsMap[itemId].text}
+                        value={itemMap[itemId].text}
                       />
                     ))}
                     <AddButton>add item</AddButton>

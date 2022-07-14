@@ -1,6 +1,6 @@
 import { useSubscribe } from 'replicache-react';
+import queries from '../queries';
 import useReplicache from './use-replicache';
-import { accountQueries } from '../models/account';
 
 const useAccount = () => {
   const replicache = useReplicache();
@@ -9,7 +9,7 @@ const useAccount = () => {
     replicache,
     async (tx) => {
       if (!replicache) return null;
-      return (await accountQueries.account(tx, replicache.name)) ?? null;
+      return (await queries.account(tx, replicache.name)) ?? null;
     },
     null,
     [replicache]

@@ -64,7 +64,7 @@ const Header = () => {
 
                   await replicache.mutate.reorderProfile({
                     accountId: replicache.name,
-                    fromIndex: i + 1,
+                    id: profile.id,
                     toIndex: 0,
                   });
 

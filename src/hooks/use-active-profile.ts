@@ -1,6 +1,6 @@
 import { useSubscribe } from 'replicache-react';
+import queries from '../queries';
 import useReplicache from './use-replicache';
-import { profileQueries } from '../models/profile';
 
 const useActiveProfile = () => {
   const replicache = useReplicache();
@@ -9,7 +9,7 @@ const useActiveProfile = () => {
     replicache,
     async (tx) => {
       if (!replicache) return null;
-      return (await profileQueries.activeProfile(tx, { accountId: replicache.name })) ?? null;
+      return (await queries.activeProfile(tx, { accountId: replicache.name })) ?? null;
     },
     null,
     [replicache]
