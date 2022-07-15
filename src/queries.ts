@@ -2,7 +2,7 @@ import keyBy from 'lodash/keyBy';
 import { ReadonlyJSONValue, ReadTransaction } from 'replicache';
 import account from './models/account';
 import category, { CategoryDenormalized, CategoryMap } from './models/category';
-import checklist, { ChecklistDenormalized, ChecklistItem } from './models/checklist';
+import checklist, { Checklist, ChecklistDenormalized, ChecklistItem } from './models/checklist';
 import item, { Item, ItemMap } from './models/item';
 import profile, { Profile } from './models/profile';
 

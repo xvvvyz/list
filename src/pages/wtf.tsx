@@ -6,7 +6,7 @@ import ChevronRight from '../images/chevron-right.svg';
 import Logo from '../images/logo.svg';
 
 const WtfPage = () => (
-  <C.Container maxW={{ base: 'container.sm', sm: 'container.md' }} pb={24} textAlign="center">
+  <C.Container maxW={{ base: 'container.xs', sm: 'container.md' }} pb={24} textAlign="center">
     <C.Box as="header">
       <C.HStack justify="space-between" pt={8}>
         <C.Heading as="h1">
@@ -27,7 +27,7 @@ const WtfPage = () => (
         >
           conquer the chaos with
         </C.Box>{' '}
-        dynamic, reusable checklists
+        reusable checklists
       </C.Heading>
       <Link href="/" passHref>
         <C.Button

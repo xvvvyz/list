@@ -21,8 +21,8 @@ const Header = () => {
   const { toggleColorMode } = C.useColorMode();
 
   return (
-    <C.Box aria-label="header" as="header" borderTopRadius="none" layerStyle="bgCard">
-      <C.HStack justify="space-between" pb={2} pt={5}>
+    <C.Box as="header" borderTopRadius="none" layerStyle="bgCard">
+      <C.HStack aria-label="settings" as="section" justify="space-between" pb={2} pt={5}>
         <C.IconButton
           aria-label="toggle theme"
           boxSize={14}
@@ -30,7 +30,7 @@ const Header = () => {
           onClick={toggleColorMode}
           variant="ghost"
         />
-        <C.Badge>offline</C.Badge>
+        <C.Badge>public</C.Badge>
         <C.IconButton
           aria-label="backup settings"
           boxSize={14}

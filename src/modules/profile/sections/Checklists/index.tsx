@@ -18,7 +18,7 @@ const Checklists = () => {
   if (!activeProfile) return null;
 
   return (
-    <C.Box aria-label="checklistIds" as="section" layerStyle="bgCard" mt={12}>
+    <C.Box aria-label="checklists" as="section" layerStyle="bgCard" mt={12}>
       {!!checklists[0] && (
         <ListItem autoFocus={autoFocusId === checklists[0].id} checklist={checklists[0]} key={checklists[0].id} />
       )}

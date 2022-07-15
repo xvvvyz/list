@@ -304,7 +304,7 @@ const theme = extendTheme({
       bgTagPurple: { _dark: 'purple.800', _light: 'purple.100' },
       bgTagRed: { _dark: 'red.800', _light: 'red.100' },
       bgTagYellow: { _dark: 'yellow.800', _light: 'yellow.100' },
-      border: { _dark: 'whiteAlpha.100', _light: 'blackAlpha.100' },
+      border: { _dark: 'whiteAlpha.200', _light: 'blackAlpha.200' },
       fgAccent: { _dark: 'gray.900', _light: 'gray.100' },
       fgPrimary: { _dark: 'whiteAlpha.900', _light: 'blackAlpha.900' },
       fgSecondary: { _dark: 'whiteAlpha.600', _light: 'blackAlpha.600' },
@@ -329,7 +329,8 @@ const theme = extendTheme({
     container: {
       lg: '26rem',
       md: '24rem',
-      sm: '19rem',
+      sm: '21rem',
+      xs: '19rem',
     },
   },
   styles: {
