@@ -1,3 +1,4 @@
+import { Update } from '@rocicorp/rails';
 import { WriteTransaction } from 'replicache';
 import { arrayMove } from '@dnd-kit/sortable';
 import account from './models/account';
@@ -6,6 +7,7 @@ import checklist from './models/checklist';
 import item, { Item } from './models/item';
 import profile from './models/profile';
 import queries from './queries';
+import trimWhitespace from './utilities/trim-whitespace';
 
 type Mutations = typeof mutations;
 
@@ -67,7 +69,6 @@ const mutations = {
       categoryIds: [],
       checklistIds: [],
       id,
-      tags: {},
       text: '',
     });
 
@@ -183,9 +184,15 @@ const mutations = {
     });
   },
   updateAccount: account.update,
-  updateCategory: category.update,
+  updateCategory: async (tx: WriteTransaction, data: Update<Item>) => {
+    if (data.text) data.text = trimWhitespace(data.text);
+    return category.update(tx, data);
+  },
   updateChecklist: checklist.update,
-  updateItem: item.update,
+  updateItem: async (tx: WriteTransaction, data: Update<Item>) => {
+    if (data.text) data.text = trimWhitespace(data.text);
+    return item.update(tx, data);
+  },
   updateProfile: profile.update,
 };
 

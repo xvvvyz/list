@@ -27,7 +27,7 @@ const WtfPage = () => (
         >
           conquer the chaos with
         </C.Box>{' '}
-        reusable checklists
+        dynamic, reusable checklists
       </C.Heading>
       <Link href="/" passHref>
         <C.Button

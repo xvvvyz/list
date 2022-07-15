@@ -39,7 +39,7 @@ const Header = () => {
         />
       </C.HStack>
       <C.Box aria-label="profiles" as="section">
-        {!!profiles[0] && (
+        {!!profiles.length && (
           <C.Box pr={isOpen ? 2 : undefined}>
             <ListItem
               autoFocus={autoFocusId === profiles[0].id}
@@ -51,7 +51,7 @@ const Header = () => {
         )}
         <C.Collapse
           in={isOpen || (!!account && !profiles[0])}
-          transition={profiles[0] ? undefined : { enter: { duration: 0 } }}
+          transition={profiles.length ? undefined : { enter: { duration: 0 } }}
         >
           {profiles.slice(1).map((profile) => (
             <C.Flex key={profile.id}>
@@ -72,7 +72,7 @@ const Header = () => {
               />
             </C.Flex>
           ))}
-          <C.Box pr={profiles[0] ? 14 : undefined}>
+          <C.Box pr={profiles.length ? 14 : undefined}>
             <AddButton
               onClick={async () => {
                 if (!replicache) return;
@@ -90,7 +90,7 @@ const Header = () => {
             </AddButton>
           </C.Box>
         </C.Collapse>
-        {!!profiles[0] && (
+        {!!profiles.length && (
           <IconButtonChevronExpand
             bottom={2}
             h={isOpen ? 14 : '4rem'}

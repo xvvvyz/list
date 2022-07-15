@@ -62,16 +62,7 @@ const ListItem = ({
   if (isOverlay && !isCategory) bg = 'bgSecondaryActive';
 
   return (
-    <C.Box
-      borderRadius="md"
-      pos="relative"
-      sx={{
-        bg,
-        fontWeight: isCategory ? 'bold' : 'normal',
-        opacity: isDragging ? '0' : '1',
-      }}
-      {...containerProps}
-    >
+    <C.Box borderRadius="md" pos="relative" sx={{ bg, opacity: isDragging ? '0' : '1' }} {...containerProps}>
       <C.Flex alignItems="flex-start">
         <C.IconButton
           aria-label={dragHandleProps?.['aria-label'] || ''}
@@ -85,6 +76,7 @@ const ListItem = ({
             display: 'inline-flex',
             flexShrink: 0,
             h: isCategory ? 14 : 10,
+            pos: 'relative',
             w: 14,
           }}
           variant="ghost"
@@ -92,8 +84,21 @@ const ListItem = ({
         />
         <C.Flex
           sx={{
-            '@media (hover: hover)': { _hover: { '.sortable-item__delete': { visibility: 'visible' } } },
-            _focusWithin: { '.sortable-item__delete': { visibility: 'visible' } },
+            '.item__content, .item__tag-underlay': {
+              _focus: { outline: 'none' },
+              WebkitUserSelect: 'text',
+              fontWeight: isCategory ? 'bold' : 'normal',
+              lineHeight: 'short',
+              minH: isCategory ? 14 : 10,
+              px: 2,
+              py: isCategory ? 4 : 2,
+              userSelect: 'text',
+              w: 'full',
+              whiteSpace: 'pre-wrap',
+              wordWrap: 'anywhere',
+            },
+            '@media (hover: hover)': { _hover: { '.item__delete': { visibility: 'visible' } } },
+            _focusWithin: { '.item__delete': { visibility: 'visible' }, '.item__tag-underlay': { display: 'none' } },
             pos: 'relative',
             w: 'full',
           }}
@@ -101,7 +106,7 @@ const ListItem = ({
           <C.Box
             aria-label={isCategory ? 'category' : 'item'}
             aria-multiline
-            className="sortable-item__text"
+            className="item__content"
             contentEditable
             onBlur={async (e) => {
               if (!replicache) return;
@@ -117,7 +122,7 @@ const ListItem = ({
               const text = target.innerText.replace(/\n$/, '');
               if (!/\n/.test(text)) return;
               const [newText, ...carry] = text.split(/\n+/g);
-              target.innerText = newText;
+              target.innerHTML = newText;
 
               await replicache.mutate[isCategory ? 'updateCategory' : 'updateItem']({
                 id,
@@ -181,27 +186,34 @@ const ListItem = ({
             }}
             ref={ref}
             role="textbox"
+            spellCheck={false}
             suppressContentEditableWarning
-            sx={{
-              _focus: { outline: 'none' },
-              WebkitUserSelect: 'text',
-              lineHeight: 'short',
-              minH: isCategory ? 14 : 10,
-              pos: 'relative',
-              px: 2,
-              py: isCategory ? 4 : 2,
-              userSelect: 'text',
-              w: 'full',
-              whiteSpace: 'pre-wrap',
-              wordWrap: 'anywhere',
-            }}
+            sx={{ pos: 'relative', zIndex: 1 }}
             tabIndex={0}
           >
             {value}
           </C.Box>
+          <C.Box
+            aria-hidden
+            className="item__tag-underlay"
+            sx={{ color: 'transparent', left: 0, pos: 'absolute', top: 0 }}
+          >
+            {value.split('  ').map((text, i) => (
+              <span key={`${id}-${i}`}>
+                {i ? (
+                  <>
+                    {'  '}
+                    <C.Badge variant="tag">{text}</C.Badge>
+                  </>
+                ) : (
+                  text
+                )}
+              </span>
+            ))}
+          </C.Box>
           <IconButtonX
             aria-label="delete"
-            className="sortable-item__delete"
+            className="item__delete"
             mr={isCategory ? 0 : 2}
             mt={isCategory ? 2 : 0}
             onClick={async () => {

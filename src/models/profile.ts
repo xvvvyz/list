@@ -7,7 +7,6 @@ const profileSchema = entitySchema.extend({
   categoryIds: z.string().array(),
   checklistIds: z.string().array(),
   id: z.string(),
-  tags: z.object({}).optional(),
   text: z.string(),
 });
 

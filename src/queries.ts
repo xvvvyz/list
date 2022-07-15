@@ -2,7 +2,7 @@ import keyBy from 'lodash/keyBy';
 import { ReadonlyJSONValue, ReadTransaction } from 'replicache';
 import account from './models/account';
 import category, { CategoryDenormalized, CategoryMap } from './models/category';
-import checklist, { Checklist, ChecklistDenormalized, ChecklistItem } from './models/checklist';
+import checklist, { ChecklistDenormalized, ChecklistItem } from './models/checklist';
 import item, { Item, ItemMap } from './models/item';
 import profile, { Profile } from './models/profile';
 
@@ -91,11 +91,9 @@ const queries = {
         return {
           items: category.items
             .filter((item) => {
-              const include =
-                !/ {2}.+/.test(item.text) ||
-                che.includeTagIds.some((tag) => new RegExp(`${tag}($| {2})`).test(item.text));
+              const split = item.text.split('  ');
 
-              if (include) {
+              if (split.length < 2 || che.includeTagIds.some((tag) => split.splice(1).includes(tag))) {
                 itemsCount++;
                 return true;
               }

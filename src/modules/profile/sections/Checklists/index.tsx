@@ -19,7 +19,7 @@ const Checklists = () => {
 
   return (
     <C.Box aria-label="checklists" as="section" layerStyle="bgCard" mt={12}>
-      {!!checklists[0] && (
+      {!!checklists.length && (
         <ListItem autoFocus={autoFocusId === checklists[0].id} checklist={checklists[0]} key={checklists[0].id} />
       )}
       <C.Collapse in={isOpen}>

@@ -139,20 +139,40 @@ const theme = extendTheme({
   },
   components: {
     Badge: {
+      baseStyle: {
+        fontSize: 'base',
+        fontWeight: 'normal',
+        textTransform: 'none',
+      },
       defaultProps: {
-        variant: 'tag',
+        variant: 'pill',
       },
       variants: {
-        tag: ({ colorScheme }: StyleFunctionProps) => ({
+        pill: ({ colorScheme }: StyleFunctionProps) => ({
           bg: `bgTag${toTitleCase(colorScheme)}`,
           borderRadius: 'full',
           color: `fgTag${toTitleCase(colorScheme)}`,
-          fontSize: 'base',
-          fontWeight: 'normal',
           px: 2,
           shadow: 'border',
-          textTransform: 'none',
         }),
+        tag: {
+          _before: {
+            bg: 'bgTagGray',
+            borderColor: 'border',
+            borderRadius: '2px',
+            borderWidth: '1px',
+            bottom: 0,
+            content: '" "',
+            left: '-2px',
+            pos: 'absolute',
+            right: '-2px',
+            top: 0,
+          },
+          display: 'inline',
+          p: 0,
+          pos: 'relative',
+          verticalAlign: 'inherit',
+        },
       },
     },
     Button: {
