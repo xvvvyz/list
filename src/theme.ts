@@ -1,6 +1,4 @@
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
-import { StyleFunctionProps } from '@chakra-ui/theme-tools';
-import toTitleCase from './utilities/to-title-case';
 
 const theme = extendTheme({
   colors: {
@@ -138,43 +136,6 @@ const theme = extendTheme({
     },
   },
   components: {
-    Badge: {
-      baseStyle: {
-        fontSize: 'base',
-        fontWeight: 'normal',
-        textTransform: 'none',
-      },
-      defaultProps: {
-        variant: 'pill',
-      },
-      variants: {
-        pill: ({ colorScheme }: StyleFunctionProps) => ({
-          bg: `bgTag${toTitleCase(colorScheme)}`,
-          borderRadius: 'full',
-          color: `fgTag${toTitleCase(colorScheme)}`,
-          px: 2,
-          shadow: 'border',
-        }),
-        tag: {
-          _before: {
-            bg: 'bgTagGray',
-            borderColor: 'border',
-            borderRadius: '2px',
-            borderWidth: '1px',
-            bottom: 0,
-            content: '" "',
-            left: '-2px',
-            pos: 'absolute',
-            right: '-2px',
-            top: 0,
-          },
-          display: 'inline',
-          p: 0,
-          pos: 'relative',
-          verticalAlign: 'inherit',
-        },
-      },
-    },
     Button: {
       baseStyle: {
         fontWeight: 'normal',
@@ -207,7 +168,7 @@ const theme = extendTheme({
           _focusVisible: {
             bg: 'bgSecondaryActive',
             color: 'fgSecondaryActive',
-            shadow: 'border',
+            shadow: 'borderSecondary',
           },
           _hover: {
             bg: 'none',
@@ -236,7 +197,7 @@ const theme = extendTheme({
     },
     Divider: {
       baseStyle: {
-        borderColor: 'border',
+        borderColor: 'borderPrimary',
         opacity: '1',
       },
     },
@@ -263,6 +224,43 @@ const theme = extendTheme({
         },
         color: 'fgSecondary',
         textDecor: 'underline',
+      },
+    },
+    Menu: {
+      baseStyle: {
+        item: {
+          '.chakra-menu__icon': {
+            boxSize: 5,
+          },
+          '.chakra-menu__icon-wrapper': {
+            me: 5,
+          },
+          _active: {
+            bg: 'bgSecondaryHover',
+          },
+          _focusVisible: {
+            bg: 'bgSecondaryActive',
+            color: 'fgSecondaryActive',
+            shadow: 'borderSecondary',
+          },
+          _hover: {
+            bg: 'bgSecondaryHover',
+            color: 'fgSecondaryHover',
+          },
+          borderRadius: 'md',
+          color: 'fgSecondary',
+          h: 12,
+          lineHeight: 0,
+          px: 5,
+          transitionProperty: 'background-color, color',
+        },
+        list: {
+          bg: 'bgSecondary',
+          borderColor: 'borderPrimary',
+          borderRadius: 'lg',
+          p: 2,
+          shadow: 'none',
+        },
       },
     },
     Text: {
@@ -299,7 +297,7 @@ const theme = extendTheme({
       pos: 'relative',
     },
     borderCard: {
-      borderColor: 'border',
+      borderColor: 'borderPrimary',
       borderRadius: 'lg',
       borderWidth: { base: '0', sm: '1px' },
     },
@@ -307,6 +305,7 @@ const theme = extendTheme({
   radii: {
     lg: '1.5rem',
     md: '1.25rem',
+    sm: '0.25rem',
   },
   semanticTokens: {
     colors: {
@@ -316,33 +315,29 @@ const theme = extendTheme({
       bgSecondary: { _dark: 'gray.800', _light: 'gray.50' },
       bgSecondaryActive: { _dark: 'gray.600', _light: 'gray.200' },
       bgSecondaryHover: { _dark: 'gray.700', _light: 'gray.100' },
-      bgTagBlue: { _dark: 'blue.800', _light: 'blue.100' },
-      bgTagGray: { _dark: 'bgSecondaryHover', _light: 'bgSecondaryHover' },
-      bgTagGreen: { _dark: 'green.800', _light: 'green.100' },
-      bgTagOrange: { _dark: 'orange.800', _light: 'orange.100' },
-      bgTagPink: { _dark: 'pink.800', _light: 'pink.100' },
-      bgTagPurple: { _dark: 'purple.800', _light: 'purple.100' },
-      bgTagRed: { _dark: 'red.800', _light: 'red.100' },
-      bgTagYellow: { _dark: 'yellow.800', _light: 'yellow.100' },
-      border: { _dark: 'whiteAlpha.200', _light: 'blackAlpha.200' },
+      bgTag: { _dark: 'bgSecondaryHover', _light: 'bgSecondaryHover' },
+      borderPrimary: { _dark: 'whiteAlpha.100', _light: 'blackAlpha.100' },
+      borderSecondary: { _dark: 'whiteAlpha.200', _light: 'blackAlpha.200' },
       fgAccent: { _dark: 'gray.900', _light: 'gray.100' },
       fgPrimary: { _dark: 'whiteAlpha.900', _light: 'blackAlpha.900' },
       fgSecondary: { _dark: 'whiteAlpha.600', _light: 'blackAlpha.600' },
       fgSecondaryActive: { _dark: 'whiteAlpha.900', _light: 'blackAlpha.900' },
       fgSecondaryHover: { _dark: 'whiteAlpha.800', _light: 'blackAlpha.800' },
-      fgTagBlue: { _dark: 'blue.300', _light: 'blue.600' },
-      fgTagGray: { _dark: 'fgSecondary', _light: 'fgSecondary' },
-      fgTagGreen: { _dark: 'green.300', _light: 'green.600' },
-      fgTagOrange: { _dark: 'orange.300', _light: 'orange.600' },
-      fgTagPink: { _dark: 'pink.300', _light: 'pink.600' },
-      fgTagPurple: { _dark: 'purple.300', _light: 'purple.600' },
-      fgTagRed: { _dark: 'red.300', _light: 'red.600' },
-      fgTagYellow: { _dark: 'yellow.300', _light: 'yellow.600' },
-      selection: { _dark: 'whiteAlpha.100', _light: 'blackAlpha.100' },
+      fgTag: { _dark: 'fgSecondary', _light: 'fgSecondary' },
     },
     shadows: {
-      border: { _dark: 'inset 0 0 0 1px var(--colors-border)', _light: 'inset 0 0 0 1px var(--colors-border)' },
-      outline: { _dark: 'none', _light: 'none' },
+      borderPrimary: {
+        _dark: 'inset 0 0 0 1px var(--colors-borderPrimary)',
+        _light: 'inset 0 0 0 1px var(--colors-borderPrimary)',
+      },
+      borderSecondary: {
+        _dark: 'inset 0 0 0 1px var(--colors-borderSecondary)',
+        _light: 'inset 0 0 0 1px var(--colors-borderSecondary)',
+      },
+      outline: {
+        _dark: 'none',
+        _light: 'none',
+      },
     },
   },
   sizes: {

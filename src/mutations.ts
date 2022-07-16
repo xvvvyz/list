@@ -12,9 +12,6 @@ import trimWhitespace from './utilities/trim-whitespace';
 type Mutations = typeof mutations;
 
 const mutations = {
-  createAccount: async (tx: WriteTransaction, { id }: { id: string }) => {
-    await account.put(tx, { id, profileIds: [] });
-  },
   createCategory: async (
     tx: WriteTransaction,
     { accountId, atIndex, id, text }: { accountId: string; atIndex: number; id: string; text?: Category['text'] }
@@ -61,9 +58,16 @@ const mutations = {
       itemIds: [...cat.itemIds.slice(0, atIndex), id, ...cat.itemIds.slice(atIndex)],
     });
   },
-  createProfile: async (tx: WriteTransaction, { accountId, id }: { accountId: string; id: string }) => {
-    const acc = await account.get(tx, accountId);
-    if (!acc) return;
+  createProfile: async (
+    tx: WriteTransaction,
+    { accountId, atBeginning, id }: { accountId: string; atBeginning: boolean; id: string }
+  ) => {
+    let acc = await account.get(tx, accountId);
+
+    if (!acc) {
+      acc = { id: accountId, profileIds: [] };
+      await account.put(tx, acc);
+    }
 
     await profile.put(tx, {
       categoryIds: [],
@@ -74,7 +78,7 @@ const mutations = {
 
     await account.update(tx, {
       id: acc.id,
-      profileIds: [...acc.profileIds, id],
+      profileIds: atBeginning ? [id, ...acc.profileIds] : [...acc.profileIds, id],
     });
   },
   deleteCategory: async (tx: WriteTransaction, { accountId, id }: { accountId: string; id: string }) => {

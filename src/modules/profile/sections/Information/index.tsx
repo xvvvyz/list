@@ -10,9 +10,12 @@ const Information = () => {
   const checklists = useAllChecklistDenormalized();
   const profiles = useAllProfile();
   const { categoryMap, itemMap } = useAllCategoryAndItemMap();
-  if (!account || profiles.length > 1) return null;
 
-  if (!profiles.length) {
+  if (profiles.length > 1) {
+    return null;
+  }
+
+  if (!account || !profiles.length) {
     return (
       <Tip>
         add a profile to get started. profiles are containers for related checklists. for&nbsp;example:
@@ -34,18 +37,18 @@ const Information = () => {
     );
   }
 
-  if (!checklists.length) {
-    return (
-      <Tip>
-        add a checklist when you are done adding categories and items. for example: &ldquo;trip to mexico&rdquo;
-      </Tip>
-    );
-  }
-
   if (!Object.values(itemMap).some(({ text }) => text.includes('  '))) {
     return (
       <Tip>
         type two spaces at the end of an item to create a tag. use categories and tags to augment your checklists
+      </Tip>
+    );
+  }
+
+  if (!checklists.length) {
+    return (
+      <Tip>
+        add a checklist when you are done adding categories and items. for example: &ldquo;trip to mexico&rdquo;
       </Tip>
     );
   }

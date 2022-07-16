@@ -10,7 +10,6 @@ const createSchemaVersion1 = async (executor: Executor) => {
   await executor(`
     create table spaces (
       id text primary key not null,
-      owner_id uuid references auth.users,
       updated_at timestamp(6) not null,
       version integer not null
     );
@@ -23,7 +22,6 @@ const createSchemaVersion1 = async (executor: Executor) => {
     create table clients (
       id text primary key not null,
       last_mutation_id integer not null,
-      owner_id uuid references auth.users,
       updated_at timestamp(6) not null
     );
   `);
@@ -32,7 +30,6 @@ const createSchemaVersion1 = async (executor: Executor) => {
     create table entries (
       deleted boolean not null,
       key text not null,
-      owner_id uuid references auth.users,
       space_id text not null,
       updated_at timestamp(6) not null,
       value text not null,

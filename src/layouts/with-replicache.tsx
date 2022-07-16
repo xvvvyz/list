@@ -4,7 +4,6 @@ import { createClient } from '@supabase/supabase-js';
 import { useLocalStorage } from 'react-use';
 import ReplicacheContext from '../context/replicache';
 import mutations, { Mutations } from '../mutations';
-import queries from '../queries';
 import { NextPageWithLayout } from '../pages/_app';
 
 interface ReplicacheProviderProps {
@@ -44,22 +43,7 @@ const ReplicacheProvider = ({ children }: ReplicacheProviderProps) => {
       .subscribe();
 
     setReplicache(newReplicache);
-
-    return () => {
-      (async () => {
-        await newReplicache.close();
-      })();
-    };
   }, [spaceId]);
-
-  useEffect(() => {
-    (async () => {
-      if (!replicache) return;
-      const account = await replicache.query((tx) => queries.account(tx, replicache.name));
-      if (account) return;
-      await replicache.mutate.createAccount({ id: replicache.name });
-    })();
-  }, [replicache]);
 
   return <ReplicacheContext.Provider value={replicache}>{children}</ReplicacheContext.Provider>;
 };

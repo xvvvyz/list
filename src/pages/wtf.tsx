@@ -62,12 +62,12 @@ const WtfPage = () => (
       {[
         ['streamlined design', 'outdated, clunky checklist apps never stood a chance'],
         ['categories & tags', 'create unique checklists from a base set of list items'],
-        ['cross-device sync', 'manage and utilize your checklists from any device with ease', true],
-      ].map(([heading, description, soon]) => (
+        ['cross-device sync', 'manage and utilize your checklists from any device with ease'],
+      ].map(([heading, description]) => (
         <C.Box
           _first={{ borderStyle: 'none' }}
           as="section"
-          borderColor="border"
+          borderColor="borderPrimary"
           borderStyle="solid none none"
           borderWidth="1px"
           key={heading as string}
@@ -76,11 +76,6 @@ const WtfPage = () => (
         >
           <C.Heading as="h2">{heading}</C.Heading>
           <C.Text mt={3}>{description}</C.Text>
-          {soon && (
-            <C.Badge colorScheme="green" mt={4}>
-              coming soon
-            </C.Badge>
-          )}
         </C.Box>
       ))}
     </C.Box>
