@@ -55,7 +55,7 @@ const ListItem = ({
     if (!ref.current || typeof focusAtPosition === 'undefined') return;
     setCaretPosition(ref.current, focusAtPosition);
     setFocusAtPosition(['', 0]);
-  }, [focusAtPosition]);
+  }, [focusAtPosition, setFocusAtPosition]);
 
   let bg = 'initial';
   if (isOverlay || isDropzone) bg = 'bgSecondaryHover';

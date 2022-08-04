@@ -1,9 +1,9 @@
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react';
-import { Replicache } from 'replicache';
-import { createClient } from '@supabase/supabase-js';
+import React, { ReactElement, ReactNode, useEffect } from 'react';
 import { useLocalStorage } from 'react-use';
+import { useReplicache } from 'replicache-nextjs/lib/frontend';
 import ReplicacheContext from '../context/replicache';
-import mutations, { Mutations } from '../mutations';
+import mutations from '../mutations';
+import { LOCALSTORAGE_KEY } from '../enums';
 import { NextPageWithLayout } from '../pages/_app';
 
 interface ReplicacheProviderProps {
@@ -11,38 +11,14 @@ interface ReplicacheProviderProps {
 }
 
 const ReplicacheProvider = ({ children }: ReplicacheProviderProps) => {
-  const [replicache, setReplicache] = useState<Replicache<Mutations> | null>(null);
-  const [spaceId, setSpaceId] = useLocalStorage('space-id', '');
+  const [spaceId] = useLocalStorage<string>(LOCALSTORAGE_KEY.SPACE_ID);
+  const replicache = useReplicache(spaceId, mutations);
 
   useEffect(() => {
     (async () => {
       if (spaceId) return;
-      const req = await fetch('/api/create-space', { method: 'POST' });
-      const res = await req.json();
-      setSpaceId(res.spaceId);
+      location.replace('/');
     })();
-  }, []);
-
-  useEffect(() => {
-    if (replicache || !spaceId) return;
-
-    const newReplicache = new Replicache({
-      licenseKey: process.env.NEXT_PUBLIC_REPLICACHE_LICENSE_KEY ?? '',
-      logLevel: 'error',
-      mutators: mutations,
-      name: spaceId,
-      pullInterval: null,
-      pullURL: `/api/pull?spaceId=${spaceId}`,
-      pushURL: `/api/push?spaceId=${spaceId}`,
-      schemaVersion: '1',
-    });
-
-    createClient(process.env.NEXT_PUBLIC_SUPABASE_URL as string, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string)
-      .from(`spaces:id=eq.${spaceId}`)
-      .on('*', () => newReplicache.pull())
-      .subscribe();
-
-    setReplicache(newReplicache);
   }, [spaceId]);
 
   return <ReplicacheContext.Provider value={replicache}>{children}</ReplicacheContext.Provider>;

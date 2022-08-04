@@ -131,14 +131,12 @@ const Items = () => {
           const overItems = categoryMap[toCategoryId].itemIds;
           const overItemIndex = overItems.indexOf(String(over.id));
 
-          const toIndex =
-            overItemIndex || (overItems.length === 1 && fromCategoryIndex > toCategoryIndex) ? 0 : overItems.length;
-
           await replicache.mutate.moveItem({
             fromCategoryId,
             id: String(active.id),
             toCategoryId,
-            toIndex,
+            toIndex:
+              overItemIndex || (overItems.length === 1 && fromCategoryIndex > toCategoryIndex) ? 0 : overItems.length,
           });
         }}
         onDragStart={({ active }: D.DragStartEvent) => {

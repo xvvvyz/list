@@ -6,7 +6,7 @@ const useEphemeralState = <T>(defaultValue: T, duration = 100): [T, React.Dispat
   useEffect(() => {
     if (JSON.stringify(defaultValue) === JSON.stringify(state)) return;
     setTimeout(() => setState(defaultValue), duration);
-  }, [state]);
+  }, [defaultValue, duration, state]);
 
   return [state, setState];
 };

@@ -146,10 +146,12 @@ const theme = extendTheme({
       },
       sizes: {
         md: {
+          fontSize: 'base',
           h: 14,
           px: 7,
         },
         sm: {
+          fontSize: 'base',
           h: 8,
           px: 4,
         },
@@ -263,6 +265,38 @@ const theme = extendTheme({
         },
       },
     },
+    Modal: {
+      baseStyle: {
+        body: {
+          color: 'fgSecondary',
+          mt: 5,
+          p: 0,
+        },
+        dialog: {
+          bg: 'bgSecondary',
+          borderRadius: 'lg',
+          p: 7,
+          shadow: 'none',
+        },
+        footer: {
+          mt: 7,
+          p: 0,
+        },
+        header: {
+          p: 0,
+        },
+        overlay: {
+          backdropFilter: 'blur(4px)',
+        },
+      },
+      sizes: {
+        md: {
+          dialog: {
+            maxW: 'container.md',
+          },
+        },
+      },
+    },
     Text: {
       baseStyle: {
         color: 'fgSecondary',
@@ -324,6 +358,7 @@ const theme = extendTheme({
       fgSecondaryActive: { _dark: 'whiteAlpha.900', _light: 'blackAlpha.900' },
       fgSecondaryHover: { _dark: 'whiteAlpha.800', _light: 'blackAlpha.800' },
       fgTag: { _dark: 'fgSecondary', _light: 'fgSecondary' },
+      selection: { _dark: 'whiteAlpha.200', _light: 'blackAlpha.200' },
     },
     shadows: {
       borderPrimary: {

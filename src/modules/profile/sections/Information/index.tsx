@@ -1,12 +1,10 @@
 import React from 'react';
 import Tip from '../../../../components/Tip';
-import useAccount from '../../../../hooks/use-account';
 import useAllCategoryAndItemMap from '../../../../hooks/use-all-category-and-item-map';
 import useAllChecklistDenormalized from '../../../../hooks/use-all-checklist-denormalized';
 import useAllProfile from '../../../../hooks/use-all-profile';
 
 const Information = () => {
-  const account = useAccount();
   const checklists = useAllChecklistDenormalized();
   const profiles = useAllProfile();
   const { categoryMap, itemMap } = useAllCategoryAndItemMap();
@@ -15,7 +13,7 @@ const Information = () => {
     return null;
   }
 
-  if (!account || !profiles.length) {
+  if (!profiles.length) {
     return (
       <Tip>
         add a profile to get started. profiles are containers for related checklists. for&nbsp;example:

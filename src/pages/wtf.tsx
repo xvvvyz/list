@@ -14,8 +14,8 @@ const WtfPage = () => (
           <C.Icon aria-hidden as={Logo} h={9} w="auto" />
         </C.Heading>
         <Link href="/" passHref>
-          <C.Button as={C.Link} size="sm" tabIndex={-1} variant="primary">
-            sign in
+          <C.Button as={C.Link} size="sm" variant="primary">
+            launch app
           </C.Button>
         </Link>
       </C.HStack>
@@ -91,7 +91,7 @@ const WtfPage = () => (
           variant="primary"
           w="full"
         >
-          create a lliist
+          launch app
         </C.Button>
       </Link>
       <C.List mt={24} spacing={6}>
