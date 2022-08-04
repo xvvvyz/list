@@ -11,7 +11,7 @@ interface ListItemProps {
 }
 
 const ListItem = ({ autoFocus, checklist }: ListItemProps) => {
-  const replicache = useReplicache();
+  const { replicache } = useReplicache();
 
   return (
     <C.Flex>

@@ -48,8 +48,8 @@ const ListItem = ({
   toggleExpandCategory,
   value,
 }: ListItemProps) => {
-  const replicache = useReplicache();
   const ref = useRef<HTMLDivElement | null>(null);
+  const { replicache } = useReplicache();
 
   useEffect(() => {
     if (!ref.current || typeof focusAtPosition === 'undefined') return;

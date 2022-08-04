@@ -3,7 +3,6 @@ import { createSpace, spaceExists } from 'replicache-nextjs/lib/backend';
 import { deleteAllReplicacheData } from 'replicache';
 import { useEffect } from 'react';
 import { useLocalStorage } from 'react-use';
-import { useRouter } from 'next/router';
 import generateId from '../../utilities/generate-id';
 import { LOCALSTORAGE_KEY } from '../../enums';
 
@@ -13,15 +12,14 @@ interface OpenIdPageProps {
 
 const OpenIdPage = ({ spaceId }: OpenIdPageProps) => {
   const [, setSpaceId] = useLocalStorage<string>(LOCALSTORAGE_KEY.SPACE_ID);
-  const router = useRouter();
 
   useEffect(() => {
     (async () => {
       await deleteAllReplicacheData();
       setSpaceId(spaceId);
-      await router.replace('/');
+      location.replace('/');
     })();
-  }, [router, setSpaceId, spaceId]);
+  }, [setSpaceId, spaceId]);
 
   return null;
 };

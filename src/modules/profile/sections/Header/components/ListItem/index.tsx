@@ -10,7 +10,7 @@ interface ListItemProps
 }
 
 const ListItem = ({ autoFocus, profile, ...rest }: ListItemProps) => {
-  const replicache = useReplicache();
+  const { replicache } = useReplicache();
 
   return (
     <EditableListItem

@@ -23,7 +23,7 @@ const WtfPage = () => (
         <C.Box
           as="span"
           bgClip="text"
-          bgGradient="linear(to-r, green.400, blue.400, purple.400, pink.400, red.400, orange.400, yellow.400)"
+          bgGradient="linear(to-r, green.500, blue.500, purple.500, pink.500, red.500, orange.500, yellow.500)"
         >
           conquer the chaos with
         </C.Box>{' '}

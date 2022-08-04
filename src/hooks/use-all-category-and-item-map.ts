@@ -3,7 +3,7 @@ import queries from '../queries';
 import useReplicache from './use-replicache';
 
 const useAllCategoryAndItemMap = () => {
-  const replicache = useReplicache();
+  const { replicache } = useReplicache();
 
   return useSubscribe(
     replicache,

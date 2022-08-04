@@ -13,8 +13,8 @@ const Checklists = () => {
   const [autoFocusId, setAutoFocusId] = useEphemeralState('');
   const activeProfile = useActiveProfile();
   const checklists = useAllChecklistDenormalized();
-  const replicache = useReplicache();
   const { isOpen, onToggle } = C.useDisclosure();
+  const { replicache } = useReplicache();
   if (!activeProfile) return null;
 
   return (

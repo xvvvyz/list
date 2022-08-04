@@ -262,6 +262,7 @@ const theme = extendTheme({
           borderRadius: 'lg',
           p: 2,
           shadow: 'none',
+          zIndex: 2,
         },
       },
     },
