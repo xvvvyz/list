@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { useRouter } from 'next/router';
 import AddButton from '../../components/AddButton';
 import Copy from '../../../../images/copy.svg';
+import CheckCircle from '../../../../images/check-circle.svg';
 import IconButtonChevronExpand from '../../components/IconButtonChevronExpand';
 import IconButtonChevronRight from '../../components/IconButtonChevronRight';
 import ListItem from './components/ListItem';
@@ -47,8 +48,8 @@ const Header = () => {
                   <C.MenuItem icon={<C.Icon as={ThemeToggle} />} onClick={toggleColorMode}>
                     {colorMode === 'dark' ? 'show me the light' : 'join the dark side'}
                   </C.MenuItem>
-                  <C.MenuItem icon={<C.Icon as={Copy} />} onClick={onCopy}>
-                    {hasCopied ? 'link copied' : 'copy backup link'}
+                  <C.MenuItem icon={<C.Icon as={hasCopied ? CheckCircle : Copy} />} onClick={onCopy}>
+                    {hasCopied ? 'the link is yours!' : 'copy backup link'}
                   </C.MenuItem>
                   <C.MenuItem icon={<C.Icon as={Trash} />} onClick={clearDataDisclosure.onOpen}>
                     clear local data
