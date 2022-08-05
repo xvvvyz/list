@@ -13,7 +13,13 @@ const ClearDataAlert = ({ isOpen, onClose }: ClearDataAlertProps) => {
   const router = useRouter();
 
   return (
-    <C.AlertDialog isCentered isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+    <C.AlertDialog
+      isCentered
+      isOpen={isOpen}
+      leastDestructiveRef={cancelRef}
+      motionPreset="slideInBottom"
+      onClose={onClose}
+    >
       <C.AlertDialogOverlay>
         <C.AlertDialogContent>
           <C.Heading as={C.AlertDialogHeader} fontWeight="bold" size="lg">
