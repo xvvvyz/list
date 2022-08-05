@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import debounce from 'lodash/debounce';
-import { useLocalStorage } from 'react-use';
+import useLocalStorage from 'react-use/lib/useLocalStorage';
 import { useReplicache } from 'replicache-nextjs/lib/frontend';
 import { useRouter } from 'next/router';
 import ReplicacheContext from '../../../../context/replicache';

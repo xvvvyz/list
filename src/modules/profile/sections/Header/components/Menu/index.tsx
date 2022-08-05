@@ -1,9 +1,9 @@
 import * as C from '@chakra-ui/react';
+import React from 'react';
 import CheckCircle from '../../../../../../images/check-circle.svg';
 import ClearDataAlert from '../ClearDataAlert';
 import Copy from '../../../../../../images/copy.svg';
 import Navigation from '../../../../../../images/navigation.svg';
-import React from 'react';
 import ThemeToggle from '../../../../../../images/theme-toggle.svg';
 import Trash from '../../../../../../images/trash.svg';
 import useActiveProfile from '../../../../../../hooks/use-active-profile';

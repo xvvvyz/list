@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next';
 import { createSpace, spaceExists } from 'replicache-nextjs/lib/backend';
 import { deleteAllReplicacheData } from 'replicache';
 import { useEffect } from 'react';
-import { useLocalStorage } from 'react-use';
+import useLocalStorage from 'react-use/lib/useLocalStorage';
 import generateId from '../../utilities/generate-id';
 import { LOCALSTORAGE_KEY } from '../../enums';
 
