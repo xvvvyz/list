@@ -3,7 +3,7 @@ import queries from '../queries';
 import useReplicache from './use-replicache';
 
 const useAllProfile = () => {
-  const { replicache } = useReplicache();
+  const replicache = useReplicache();
 
   return useSubscribe(
     replicache,

@@ -1,22 +1,22 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
+import React, { memo, useRef } from 'react';
+import { useRouter } from 'next/router';
 import CheckCircle from '../../../../../../images/check-circle.svg';
-import ClearDataAlert from '../ClearDataAlert';
 import Copy from '../../../../../../images/copy.svg';
 import Navigation from '../../../../../../images/navigation.svg';
 import ThemeToggle from '../../../../../../images/theme-toggle.svg';
 import Trash from '../../../../../../images/trash.svg';
-import useActiveProfile from '../../../../../../hooks/use-active-profile';
 import useReplicache from '../../../../../../hooks/use-replicache';
 
 const Menu = () => {
+  const [isClearingData, setIsClearingData] = C.useBoolean();
+  const clearDataCancelRef = useRef<HTMLButtonElement>(null);
   const clearDataDisclosure = C.useDisclosure();
-  const origin = typeof window === 'undefined' ? '' : window.location.origin;
-  const activeProfile = useActiveProfile();
+  const origin = typeof location === 'undefined' ? '' : location.origin;
+  const replicache = useReplicache();
   const { colorMode, toggleColorMode } = C.useColorMode();
-  const { replicache } = useReplicache();
   const { hasCopied, onCopy } = C.useClipboard(`${origin}/open/${replicache?.name}`);
-  if (!activeProfile) return null;
+  const { replace } = useRouter();
 
   return (
     <>
@@ -45,9 +45,50 @@ const Menu = () => {
           </C.MenuItem>
         </C.MenuList>
       </C.Menu>
-      <ClearDataAlert isOpen={clearDataDisclosure.isOpen} onClose={clearDataDisclosure.onClose} />
+      <C.AlertDialog
+        isCentered
+        isOpen={clearDataDisclosure.isOpen}
+        leastDestructiveRef={clearDataCancelRef}
+        motionPreset="slideInBottom"
+        onClose={clearDataDisclosure.onClose}
+      >
+        <C.AlertDialogOverlay>
+          <C.AlertDialogContent>
+            <C.Heading as={C.AlertDialogHeader} fontWeight="bold" size="lg">
+              clear local data
+            </C.Heading>
+            <C.AlertDialogBody>
+              copy and save your backup link before continuing. any local changes that have not been synced will be
+              permanently lost.
+            </C.AlertDialogBody>
+            <C.AlertDialogFooter>
+              <C.Button
+                fontWeight="bold"
+                onClick={clearDataDisclosure.onClose}
+                ref={clearDataCancelRef}
+                size="sm"
+                variant="ghost"
+              >
+                cancel
+              </C.Button>
+              <C.Button
+                isLoading={isClearingData}
+                ml={4}
+                onClick={async () => {
+                  setIsClearingData.on();
+                  await replace('/open/new-space');
+                }}
+                size="sm"
+                variant="primary"
+              >
+                clear data
+              </C.Button>
+            </C.AlertDialogFooter>
+          </C.AlertDialogContent>
+        </C.AlertDialogOverlay>
+      </C.AlertDialog>
     </>
   );
 };
 
-export default Menu;
+export default memo(Menu);

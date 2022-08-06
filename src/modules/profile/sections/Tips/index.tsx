@@ -1,11 +1,11 @@
 import React from 'react';
 import Tip from './components/Tip';
 import useAllCategoryAndItemMap from '../../../../hooks/use-all-category-and-item-map';
-import useAllChecklistDenormalized from '../../../../hooks/use-all-checklist-denormalized';
+import useAllChecklist from '../../../../hooks/use-all-checklist';
 import useAllProfile from '../../../../hooks/use-all-profile';
 
 const Tips = () => {
-  const checklists = useAllChecklistDenormalized();
+  const checklists = useAllChecklist();
   const profiles = useAllProfile();
   const { categoryMap, itemMap } = useAllCategoryAndItemMap();
 

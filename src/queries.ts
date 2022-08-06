@@ -2,9 +2,9 @@ import keyBy from 'lodash/keyBy';
 import { ReadonlyJSONValue, ReadTransaction } from 'replicache';
 import account from './models/account';
 import category, { CategoryDenormalized, CategoryMap } from './models/category';
-import checklist, { ChecklistDenormalized, ChecklistItem } from './models/checklist';
+import checklist, * as checklistTypes from './models/checklist';
 import item, { Item, ItemMap } from './models/item';
-import profile, { Profile } from './models/profile';
+import profile, { Profile, ProfileWithIdAndText } from './models/profile';
 
 type CategoryAndItemMap = ReadonlyJSONValue & {
   categoryMap: CategoryMap;
@@ -12,7 +12,6 @@ type CategoryAndItemMap = ReadonlyJSONValue & {
 };
 
 const queries = {
-  account: account.get,
   activeProfile: async (tx: ReadTransaction, { accountId }: { accountId: string }): Promise<Profile | undefined> => {
     const acc = await account.get(tx, accountId);
     if (!acc) return;
@@ -46,27 +45,43 @@ const queries = {
 
     return maps;
   },
-  allChecklistDenormalized: async (
+  allChecklist: async (
     tx: ReadTransaction,
     { accountId }: { accountId: string }
-  ): Promise<ChecklistDenormalized[]> => {
+  ): Promise<checklistTypes.ChecklistDenormalizedWithoutCategories[]> => {
     const activeProfile = await queries.activeProfile(tx, { accountId });
     if (!activeProfile) return [];
 
     const checklists = await Promise.all(
-      activeProfile.checklistIds.map((checklistId) => queries.checklistDenormalized(tx, checklistId))
+      activeProfile.checklistIds.map((checklistId) => queries.checklist(tx, checklistId))
     );
 
-    return checklists.filter((checklist) => checklist) as ChecklistDenormalized[];
+    return checklists.reduce((acc: checklistTypes.ChecklistDenormalizedWithoutCategories[], checklist) => {
+      if (!checklist) return acc;
+
+      return [
+        ...acc,
+        {
+          id: checklist.id,
+          itemsCompletedCount: checklist.itemsCompletedCount,
+          itemsCount: checklist.itemsCount,
+          text: checklist.text,
+        },
+      ];
+    }, []);
   },
-  allProfile: async (tx: ReadTransaction, { accountId }: { accountId: string }): Promise<Profile[]> => {
+  allProfile: async (tx: ReadTransaction, { accountId }: { accountId: string }): Promise<ProfileWithIdAndText[]> => {
     const acc = await account.get(tx, accountId);
     if (!acc) return [];
     const profiles = keyBy(await profile.list(tx), 'id');
-    return acc.profileIds.map((profileId) => profiles[profileId]).filter((profile) => profile);
+
+    return acc.profileIds.reduce((acc: ProfileWithIdAndText[], profileId) => {
+      const profile = profiles[profileId];
+      if (!profile) return acc;
+      return [...acc, { id: profile.id, text: profile.text }];
+    }, []);
   },
-  category: category.get,
-  categoryDenormalized: async (tx: ReadTransaction, id: string): Promise<CategoryDenormalized | undefined> => {
+  category: async (tx: ReadTransaction, id: string): Promise<CategoryDenormalized | undefined> => {
     const cat = await category.get(tx, id);
     if (!cat) return;
     const items = await Promise.all(cat.itemIds.map((itemId) => item.get(tx, itemId)));
@@ -77,7 +92,7 @@ const queries = {
       text: cat.text,
     };
   },
-  checklistDenormalized: async (tx: ReadTransaction, id: string): Promise<ChecklistDenormalized | undefined> => {
+  checklist: async (tx: ReadTransaction, id: string): Promise<checklistTypes.ChecklistDenormalized | undefined> => {
     const che = await checklist.get(tx, id);
     if (!che) return;
     let itemsCount = 0;
@@ -85,24 +100,22 @@ const queries = {
 
     const categories = await Promise.all(
       che.includeCategoryIds.map(async (categoryId) => {
-        const category = await queries.categoryDenormalized(tx, categoryId);
+        const category = await queries.category(tx, categoryId);
         if (!category) return;
 
         return {
-          items: category.items
-            .filter((item) => {
-              const split = item.text.split('  ');
+          items: category.items.reduce((acc: checklistTypes.ChecklistItem[], item) => {
+            const split = item.text.split('  ');
 
-              if (split.length < 2 || che.includeTagIds.some((tag) => split.splice(1).includes(tag))) {
-                itemsCount++;
-                return true;
-              }
-            })
-            .map((item) => {
+            if (split.length < 2 || che.includeTagIds.some((tag) => split.splice(1).includes(tag))) {
+              itemsCount++;
               const completed = che.completedItemIds.includes(String(item.id));
               if (completed) itemsCompletedCount++;
-              return { ...Object(item), completed } as ChecklistItem;
-            }),
+              return [...acc, { ...Object(item), completed }];
+            }
+
+            return acc;
+          }, []),
           text: category.text,
         };
       })
@@ -116,8 +129,6 @@ const queries = {
       text: che.text,
     };
   },
-  item: item.get,
-  profile: profile.get,
 };
 
 export default queries;

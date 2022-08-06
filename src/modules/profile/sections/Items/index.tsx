@@ -21,9 +21,9 @@ const Items = () => {
   const [focusAtPosition, setFocusAtPosition] = useEphemeralState<[string, number]>(['', 0]);
   const [isCategoryExpanded, setIsCategoryExpanded] = useState<Record<string, boolean>>({});
   const activeProfile = useActiveProfile();
+  const replicache = useReplicache();
   const sensors = D.useSensors(D.useSensor(D.MouseSensor), D.useSensor(D.TouchSensor));
   const { categoryMap, itemMap } = useAllCategoryAndItemMap();
-  const { replicache } = useReplicache();
   if (!activeProfile) return null;
   const draggingIdCategoryId = getCategoryId(categoryMap, draggingId);
   const draggingItemOrCategory = itemMap[draggingId] || categoryMap[draggingId];

@@ -1,5 +1,5 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import debounce from 'lodash/debounce';
+import React, { ReactNode, useEffect } from 'react';
+import noop from 'lodash/noop';
 import useLocalStorage from 'react-use/lib/useLocalStorage';
 import { useReplicache } from 'replicache-nextjs/lib/frontend';
 import { useRouter } from 'next/router';
@@ -12,25 +12,16 @@ interface ReplicacheProviderProps {
 }
 
 const ReplicacheProvider = ({ children }: ReplicacheProviderProps) => {
-  const [isSyncing, setIsSyncing] = useState(false);
   const [spaceId] = useLocalStorage<string>(LOCALSTORAGE_KEY.SPACE_ID);
   const replicache = useReplicache(spaceId, mutations);
   const { replace } = useRouter();
 
   useEffect(() => {
-    (async () => {
-      if (spaceId) return;
-      await replace('/open/new-space');
-    })();
+    if (spaceId) return;
+    replace('/open/new-space').then(noop);
   }, [replace, spaceId]);
 
-  useEffect(() => {
-    if (!replicache) return;
-    const setIsNotSyncing = debounce(() => setIsSyncing(false), 500);
-    replicache.onSync = (isSyncing) => (isSyncing ? setIsSyncing(true) : setIsNotSyncing());
-  }, [replicache, setIsSyncing]);
-
-  return <ReplicacheContext.Provider value={{ isSyncing, replicache }}>{children}</ReplicacheContext.Provider>;
+  return <ReplicacheContext.Provider value={replicache}>{children}</ReplicacheContext.Provider>;
 };
 
 export default ReplicacheProvider;

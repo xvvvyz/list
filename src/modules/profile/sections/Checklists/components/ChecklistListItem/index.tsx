@@ -1,17 +1,18 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
+import React, { memo } from 'react';
+import isEqual from 'lodash/isEqual';
 import EditableListItem from '../../../../components/EditableListItem';
 import IconButtonChevronRight from '../../../../components/IconButtonChevronRight';
 import useReplicache from '../../../../../../hooks/use-replicache';
-import { ChecklistDenormalized } from '../../../../../../models/checklist';
+import { ChecklistDenormalizedWithoutCategories } from '../../../../../../models/checklist';
 
 interface ListItemProps {
   autoFocus: boolean;
-  checklist: ChecklistDenormalized;
+  checklist: ChecklistDenormalizedWithoutCategories;
 }
 
 const ListItem = ({ autoFocus, checklist }: ListItemProps) => {
-  const { replicache } = useReplicache();
+  const replicache = useReplicache();
 
   return (
     <C.Flex>
@@ -21,19 +22,11 @@ const ListItem = ({ autoFocus, checklist }: ListItemProps) => {
         inputHeight="5.25rem"
         onDelete={async () => {
           if (!replicache) return;
-
-          await replicache.mutate.deleteChecklist({
-            accountId: replicache.name,
-            id: checklist.id,
-          });
+          await replicache.mutate.deleteChecklist({ accountId: replicache.name, id: checklist.id });
         }}
-        onSubmit={async (value) => {
+        onSubmit={async (text: string) => {
           if (!replicache) return;
-
-          await replicache.mutate.updateChecklist({
-            id: checklist.id,
-            text: value,
-          });
+          await replicache.mutate.updateChecklist({ id: checklist.id, text });
         }}
         previewTextHeight="3.6rem"
         startWithEditView={autoFocus}
@@ -46,4 +39,4 @@ const ListItem = ({ autoFocus, checklist }: ListItemProps) => {
   );
 };
 
-export default ListItem;
+export default memo(ListItem, isEqual);

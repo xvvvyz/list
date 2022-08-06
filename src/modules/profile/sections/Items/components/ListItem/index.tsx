@@ -49,7 +49,7 @@ const ListItem = ({
   value,
 }: ListItemProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
-  const { replicache } = useReplicache();
+  const replicache = useReplicache();
 
   useEffect(() => {
     if (!ref.current || typeof focusAtPosition === 'undefined') return;

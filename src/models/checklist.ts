@@ -13,6 +13,7 @@ type ChecklistDenormalized = ReadonlyJSONValue &
     itemsCount: number;
   };
 
+type ChecklistDenormalizedWithoutCategories = Omit<ChecklistDenormalized, 'categories'>;
 type ChecklistItem = Item & { completed: boolean };
 
 const checklistSchema = entitySchema.extend({
@@ -26,4 +27,4 @@ const checklistSchema = entitySchema.extend({
 const checklist = generate('checklist', checklistSchema);
 
 export default checklist;
-export type { Checklist, ChecklistDenormalized, ChecklistItem };
+export type { Checklist, ChecklistDenormalized, ChecklistItem, ChecklistDenormalizedWithoutCategories };

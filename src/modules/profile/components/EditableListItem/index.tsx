@@ -1,6 +1,6 @@
 import * as C from '@chakra-ui/react';
 import React from 'react';
-import EditableSubtext from './components/EditableSubtext';
+import EditableSubtext from '../EditableSubtext';
 import IconButtonX from '../IconButtonX';
 
 interface EditableListItemProps extends Omit<C.BoxProps, 'onSubmit'> {
@@ -28,20 +28,14 @@ const EditableListItem = ({
   const theme = C.useTheme();
 
   const focusOrHoverStyles = {
-    '.editable-list-item__delete': {
-      visibility: 'visible',
-    },
-    '.editable-list-item__preview': {
-      pr: 14,
-    },
+    '.editable-list-item__delete': { visibility: 'visible' },
+    '.editable-list-item__preview': { pr: 14 },
   };
 
   return (
     <C.Box
       __css={{
-        '@media (hover: hover)': {
-          _hover: focusOrHoverStyles,
-        },
+        '@media (hover: hover)': { _hover: focusOrHoverStyles },
         _focusWithin: focusOrHoverStyles,
         pos: 'relative',
         w: `calc(100% - ${theme.space['14']})`,
