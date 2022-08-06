@@ -1,39 +1,23 @@
-import { GetServerSideProps } from 'next';
-import { createSpace, spaceExists } from 'replicache-nextjs/lib/backend';
+import useLocalStorage from 'react-use/lib/useLocalStorage';
 import { deleteAllReplicacheData } from 'replicache';
 import { useEffect } from 'react';
-import useLocalStorage from 'react-use/lib/useLocalStorage';
-import generateId from '../../utilities/generate-id';
-import { LOCALSTORAGE_KEY } from '../../enums';
+import { useRouter } from 'next/router';
+import isValidSpaceId from '../../utilities/is-valid-space-id';
+import { LocalstorageKey } from '../../enums';
 
-interface OpenIdPageProps {
-  spaceId: string;
-}
-
-const OpenIdPage = ({ spaceId }: OpenIdPageProps) => {
-  const [, setSpaceId] = useLocalStorage<string>(LOCALSTORAGE_KEY.SPACE_ID);
+const OpenIdPage = () => {
+  const [, setSpaceId] = useLocalStorage<string>(LocalstorageKey.SpaceId);
+  const { query } = useRouter();
 
   useEffect(() => {
     (async () => {
       await deleteAllReplicacheData();
-      setSpaceId(spaceId);
+      if (isValidSpaceId(query.id)) setSpaceId(query.id as string);
       location.replace('/');
     })();
-  }, [setSpaceId, spaceId]);
+  }, [setSpaceId, query]);
 
   return null;
 };
 
-const getServerSideProps: GetServerSideProps = async (context) => {
-  let spaceId = context.params?.id;
-
-  if (typeof spaceId !== 'string' || !(await spaceExists(spaceId))) {
-    spaceId = generateId(32);
-    await createSpace(spaceId);
-  }
-
-  return { props: { spaceId } };
-};
-
 export default OpenIdPage;
-export { getServerSideProps };

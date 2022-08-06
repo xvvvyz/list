@@ -20,6 +20,7 @@ const SyncingIndicator = () => {
     <C.Box
       bg="bgSecondaryActive"
       bgGradient="linear(to-r, green.500, blue.500, purple.500, pink.500, red.500, orange.500, yellow.500)"
+      borderBottomRadius="md"
       h={2}
       maxW="container.lg"
       opacity={isSyncing ? '1' : '0.5'}

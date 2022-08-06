@@ -1,6 +1,6 @@
 import { customAlphabet } from 'nanoid';
+import { IdChars, IdSize } from '../enums';
 
-const generateId = (size = 12) =>
-  customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', size)();
+const generateId = (size = IdSize.Default) => customAlphabet(IdChars.Default, size)();
 
 export default generateId;

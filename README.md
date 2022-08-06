@@ -1,6 +1,6 @@
 # lliist
 
-A dynamic, reusable checklist PWA for personal use and learning.
+A WIP dynamic, reusable checklist PWA for personal use and learning.
 
 ## Development Setup
 
@@ -10,14 +10,9 @@ then:
 ```shell
 git clone git@github.com:xvvvyz/lliist.git
 cd lliist
-npm i
-```
-
-```javascript
-// TODO: add vercel & supabase setup instructions
-```
-
-```shell
+npm i --force
+npx replicache get-license
+echo 'NEXT_PUBLIC_REPLICACHE_LICENSE_KEY=<your license key>' > .env
 npm start
 ```
 

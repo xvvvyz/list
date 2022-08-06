@@ -1,6 +1,6 @@
 import * as C from '@chakra-ui/react';
 import React, { memo, useRef } from 'react';
-import { useRouter } from 'next/router';
+import { deleteAllReplicacheData } from 'replicache';
 import CheckCircle from '../../../../../../images/check-circle.svg';
 import Copy from '../../../../../../images/copy.svg';
 import Navigation from '../../../../../../images/navigation.svg';
@@ -16,7 +16,6 @@ const Menu = () => {
   const replicache = useReplicache();
   const { colorMode, toggleColorMode } = C.useColorMode();
   const { hasCopied, onCopy } = C.useClipboard(`${origin}/open/${replicache?.name}`);
-  const { replace } = useRouter();
 
   return (
     <>
@@ -76,7 +75,9 @@ const Menu = () => {
                 ml={4}
                 onClick={async () => {
                   setIsClearingData.on();
-                  await replace('/open/new-space');
+                  await deleteAllReplicacheData();
+                  localStorage.clear();
+                  location.reload();
                 }}
                 size="sm"
                 variant="primary"
