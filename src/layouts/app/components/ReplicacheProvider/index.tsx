@@ -28,17 +28,29 @@ const ReplicacheProvider = ({ children }: ReplicacheProviderProps) => {
       schemaVersion: '1',
     });
 
+    // TODO: add r.close.bind(r) to cleanup when React 18 is supported. it currently leads to an InvalidStateError
+    const cleanup: (() => void)[] = [];
+
     if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
-        .from(`space:id=eq.${spaceId}`)
+      const su = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
+      su.from(`space:id=eq.${spaceId}`)
         .on('*', async () => r.pull())
         .subscribe();
+
+      cleanup.push(su.removeAllSubscriptions.bind(su));
     } else {
       const ev = new EventSource(`/api/replicache/poke-sse?spaceID=${spaceId}`);
-      ev.onmessage = (e) => e.data === 'poke' && r.pull();
+
+      ev.onmessage = (e) => {
+        if (e.data === 'poke') r.pull();
+      };
+
+      cleanup.push(ev.close.bind(ev));
     }
 
     setReplicache(r);
+    return () => cleanup.forEach((f) => f());
   }, [replicache, setReplicache, spaceId]);
 
   return <ReplicacheContext.Provider value={replicache}>{children}</ReplicacheContext.Provider>;
