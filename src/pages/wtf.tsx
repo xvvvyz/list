@@ -4,26 +4,21 @@ import React from 'react';
 import Check from '../images/check.svg';
 import ChevronRight from '../images/chevron-right.svg';
 import Logo from '../images/logo.svg';
+import LogoIcon from '../images/logo-icon.svg';
 
 const WtfPage = () => (
   <C.Container maxW={{ base: 'container.xs', sm: 'container.md' }} pb={24} textAlign="center">
     <C.Box as="header">
-      <C.HStack justify="space-between" pt={8}>
-        <C.Heading as="h1">
-          <C.VisuallyHidden>lliist — dynamic, reusable checklists</C.VisuallyHidden>
-          <C.Icon aria-hidden as={Logo} h={9} w="auto" />
-        </C.Heading>
-        <Link href="/" passHref>
-          <C.Button as={C.Link} size="sm" variant="primary">
-            launch app
-          </C.Button>
-        </Link>
-      </C.HStack>
+      <C.Heading alignItems="center" as="h1" display="flex" justifyContent="space-between" pt={8}>
+        <C.VisuallyHidden>lliist — dynamic, reusable checklists</C.VisuallyHidden>
+        <C.Icon aria-hidden as={Logo} h={10} w="auto" />
+        <C.Icon aria-hidden as={LogoIcon} h={10} w="auto" />
+      </C.Heading>
       <C.Heading as="p" mt={24} size="xl">
         <C.Box
           as="span"
           bgClip="text"
-          bgGradient="linear(to-r, green.500, blue.500, purple.500, pink.500, red.500, orange.500, yellow.500)"
+          bgGradient="linear(to-r, green.400, blue.400, purple.400, pink.400, red.400, orange.400, yellow.400)"
         >
           conquer the chaos with
         </C.Box>{' '}
@@ -91,7 +86,7 @@ const WtfPage = () => (
           variant="primary"
           w="full"
         >
-          launch app
+          give it a whirl
         </C.Button>
       </Link>
       <C.List mt={24} spacing={6}>
