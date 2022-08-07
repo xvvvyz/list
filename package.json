@@ -43,7 +43,6 @@
     "pwa-asset-generator": "^6.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-use": "^17.4.0",
     "replicache": "^11.2.0",
     "replicache-nextjs": "^0.2.1",
     "replicache-react": "^2.8.0",

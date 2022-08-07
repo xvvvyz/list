@@ -1,21 +1,21 @@
-import useLocalStorage from 'react-use/lib/useLocalStorage';
 import { deleteAllReplicacheData } from 'replicache';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import isValidSpaceId from '../../utilities/is-valid-space-id';
 import { LocalstorageKey } from '../../enums';
 
 const OpenIdPage = () => {
-  const [, setSpaceId] = useLocalStorage<string>(LocalstorageKey.SpaceId);
-  const { query } = useRouter();
+  const router = useRouter();
+  const ran = useRef(false);
 
   useEffect(() => {
-    (async () => {
-      await deleteAllReplicacheData();
-      if (isValidSpaceId(query.id)) setSpaceId(query.id as string);
-      location.replace('/');
-    })();
-  }, [setSpaceId, query]);
+    if (ran.current) return;
+    ran.current = true;
+    void deleteAllReplicacheData();
+    const spaceId = router.query.id as string;
+    if (isValidSpaceId(spaceId)) localStorage.setItem(LocalstorageKey.SpaceId, spaceId);
+    void router.replace('/');
+  }, [router]);
 
   return null;
 };
