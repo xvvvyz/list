@@ -1,7 +1,7 @@
 import * as C from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import debounce from 'lodash/debounce';
-import useReplicache from '../../../../hooks/use-replicache';
+import useReplicache from '../../hooks/use-replicache';
 
 const SyncingIndicator = () => {
   const [isSyncing, setIsSyncing] = useState(false);
