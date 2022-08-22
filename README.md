@@ -10,7 +10,7 @@ then:
 ```shell
 git clone git@github.com:xvvvyz/lliist.git
 cd lliist
-npm i --force
+npm i
 npx replicache get-license
 echo 'NEXT_PUBLIC_REPLICACHE_LICENSE_KEY=<your license key>' > .env
 npm start
