@@ -7,15 +7,15 @@ import { LocalstorageKey } from '../../enums';
 const OpenIdPage = () => {
   const router = useRouter();
   const ran = useRef(false);
+  const spaceId = router.query.id;
 
   useEffect(() => {
-    if (ran.current) return;
+    if (typeof spaceId !== 'string' || ran.current) return;
     ran.current = true;
     void deleteAllReplicacheData();
-    const spaceId = router.query.id as string;
     if (isValidSpaceId(spaceId)) localStorage.setItem(LocalstorageKey.SpaceId, spaceId);
     void router.replace('/');
-  }, [router]);
+  }, [router, spaceId]);
 
   return null;
 };
