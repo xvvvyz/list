@@ -8,6 +8,7 @@ type Checklist = z.infer<typeof checklistSchema>;
 
 type ChecklistDenormalized = ReadonlyJSONValue &
   Checklist & {
+    availableTags: string[];
     categories: ChecklistCategoryDenormalized[];
     itemsCompletedCount: number;
     itemsCount: number;

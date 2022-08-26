@@ -9,7 +9,7 @@ import SortableListItem from './components/SortableListItem';
 import generateId from '../../../../utilities/generate-id';
 import getCategoryId from './utilities/get-category-id';
 import useActiveProfile from '../../../../hooks/use-active-profile';
-import useAllCategoryItemTagMap from '../../../../hooks/use-all-category-item-tag-map';
+import useAllCategoryAndItemMap from '../../../../hooks/use-all-category-and-item-map';
 import useEphemeralState from '../../../../hooks/use-ephemeral-state';
 import useReplicache from '../../../../hooks/use-replicache';
 import { Category } from '../../../../models/category';
@@ -23,7 +23,7 @@ const Items = () => {
   const activeProfile = useActiveProfile();
   const replicache = useReplicache();
   const sensors = D.useSensors(D.useSensor(D.MouseSensor), D.useSensor(D.TouchSensor));
-  const { categoryMap, itemMap } = useAllCategoryItemTagMap();
+  const { categoryMap, itemMap } = useAllCategoryAndItemMap();
   if (!activeProfile) return null;
   const draggingIdCategoryId = getCategoryId(categoryMap, draggingId);
   const draggingItemOrCategory = itemMap[draggingId] || categoryMap[draggingId];

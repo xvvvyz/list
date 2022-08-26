@@ -1,13 +1,13 @@
 import React from 'react';
 import Tip from '../../../../components/Tip';
-import useAllCategoryItemTagMap from '../../../../hooks/use-all-category-item-tag-map';
+import useAllCategoryAndItemMap from '../../../../hooks/use-all-category-and-item-map';
 import useAllChecklist from '../../../../hooks/use-all-checklist';
 import useAllProfile from '../../../../hooks/use-all-profile';
 
 const Tips = () => {
   const checklists = useAllChecklist();
   const profiles = useAllProfile();
-  const { categoryMap, itemMap } = useAllCategoryItemTagMap();
+  const { categoryMap, itemMap } = useAllCategoryAndItemMap();
 
   if (profiles.length > 1) {
     return null;

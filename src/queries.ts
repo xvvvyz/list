@@ -6,10 +6,9 @@ import checklist, * as checklistTypes from './models/checklist';
 import item, { Item, ItemMap } from './models/item';
 import profile, { Profile, ProfileWithIdAndText } from './models/profile';
 
-type CategoryItemTagMap = ReadonlyJSONValue & {
+type CategoryAndItemMap = ReadonlyJSONValue & {
   categoryMap: CategoryMap;
   itemMap: ItemMap;
-  tagList: string[];
 };
 
 const queries = {
@@ -20,14 +19,13 @@ const queries = {
     if (!activeProfileId) return;
     return profile.get(tx, activeProfileId);
   },
-  allCategoryItemTagMap: async (
+  allCategoryAndItemMap: async (
     tx: ReadTransaction,
     { accountId }: { accountId: string }
-  ): Promise<CategoryItemTagMap> => {
+  ): Promise<CategoryAndItemMap> => {
     const activeProfile = await queries.activeProfile(tx, { accountId });
-    const res: CategoryItemTagMap = { categoryMap: {}, itemMap: {}, tagList: [] };
+    const res: CategoryAndItemMap = { categoryMap: {}, itemMap: {} };
     if (!activeProfile) return res;
-    const tagSet = new Set<string>();
 
     await Promise.all(
       activeProfile.categoryIds.map(async (categoryId) => {
@@ -40,17 +38,11 @@ const queries = {
             const ite = await item.get(tx, itemId);
             if (!ite) return;
             res.itemMap[ite.id] = ite;
-
-            ite.text
-              .split('  ')
-              .slice(1)
-              .forEach((tag) => tagSet.add(tag));
           })
         );
       })
     );
 
-    res.tagList = Array.from(tagSet);
     return res;
   },
   allChecklist: async (
@@ -94,6 +86,7 @@ const queries = {
   checklist: async (tx: ReadTransaction, id: string): Promise<checklistTypes.ChecklistDenormalized | undefined> => {
     const che = await checklist.get(tx, id);
     if (!che) return;
+    const availableTags = new Set<string>();
     let itemsCount = 0;
     let itemsCompletedCount = 0;
 
@@ -106,12 +99,15 @@ const queries = {
 
         const items = category.items.reduce((acc: checklistTypes.ChecklistItem[], item) => {
           const split = item.text.split('  ');
+          const text = split[0];
+          const tags = split.slice(1);
+          tags.forEach((tag) => availableTags.add(tag));
 
-          if (split.length < 2 || che.includeTags.some((tag) => split.slice(1).includes(tag))) {
+          if (split.length < 2 || che.includeTags.some((tag) => tags.includes(tag))) {
             itemsCount++;
             const completed = che.completedItemIds.includes(String(item.id));
             if (completed) categoryItemsCompletedCount++;
-            return [...acc, { ...Object(item), completed }];
+            return [...acc, { completed, id: item.id, text }];
           }
 
           return acc;
@@ -129,6 +125,7 @@ const queries = {
     );
 
     return {
+      availableTags: Array.from(availableTags),
       categories: categories.filter((category) => category) as ChecklistCategoryDenormalized[],
       completedItemIds: che.completedItemIds,
       id,

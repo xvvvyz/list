@@ -212,6 +212,19 @@ const mutations = {
       id: activeProfile.id,
     });
   },
+  reorderChecklist: async (
+    tx: WriteTransaction,
+    { accountId, id, toIndex }: { accountId: string; id: string; toIndex: number }
+  ) => {
+    const activeProfile = await queries.activeProfile(tx, { accountId });
+    if (!activeProfile) return;
+    const fromIndex = activeProfile.checklistIds.indexOf(id);
+
+    await profile.update(tx, {
+      checklistIds: arrayMove(activeProfile.checklistIds, fromIndex, toIndex),
+      id: activeProfile.id,
+    });
+  },
   reorderItem: async (
     tx: WriteTransaction,
     { categoryId, id, toIndex }: { categoryId: string; id: string; toIndex: number }

@@ -5,7 +5,7 @@ import Checkbox from '../../components/Checkbox';
 import IconButtonChevronLeft from '../../../../components/IconButtonChevronLeft';
 import useActiveChecklist from '../../../../hooks/use-active-checklist';
 import useActiveProfile from '../../../../hooks/use-active-profile';
-import useAllCategoryItemTagMap from '../../../../hooks/use-all-category-item-tag-map';
+import useAllCategoryAndItemMap from '../../../../hooks/use-all-category-and-item-map';
 import useReplicache from '../../../../hooks/use-replicache';
 
 const Header = () => {
@@ -13,7 +13,7 @@ const Header = () => {
   const activeProfile = useActiveProfile();
   const configDisclosure = C.useDisclosure();
   const replicache = useReplicache();
-  const { categoryMap, tagList } = useAllCategoryItemTagMap();
+  const { categoryMap } = useAllCategoryAndItemMap();
   if (!activeProfile || !activeChecklist) return null;
 
   return (
@@ -24,7 +24,7 @@ const Header = () => {
       </C.HStack>
       <C.Collapse in={configDisclosure.isOpen}>
         <C.Box py={3}>
-          {!activeProfile.categoryIds.length && !tagList.length && (
+          {!activeProfile.categoryIds.length && (
             <C.Text color="fgSecondary" textAlign="center">
               no categories or tags available
             </C.Text>
@@ -44,12 +44,12 @@ const Header = () => {
               text={categoryMap[categoryId].text}
             />
           ))}
-          {!!tagList.length && (
-            <C.Box p={4}>
+          {!!activeChecklist.availableTags.length && (
+            <C.Box p={5}>
               <C.Divider />
             </C.Box>
           )}
-          {tagList.map((tag) => (
+          {activeChecklist.availableTags.map((tag) => (
             <Checkbox
               isChecked={activeChecklist.includeTags.includes(tag)}
               key={`include-tag-${tag}`}

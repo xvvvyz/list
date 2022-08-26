@@ -34,7 +34,15 @@ const ListItem = ({ autoFocus, checklist }: ListItemProps) => {
         subtextOffset="1rem"
         value={checklist.text}
       />
-      <IconButtonChevronRight aria-label="open checklist" h="5.25rem" href={`/checklist/${checklist.id}`} />
+      <IconButtonChevronRight
+        aria-label="open checklist"
+        h="5.25rem"
+        href={`/checklist/${checklist.id}`}
+        onClick={async () => {
+          if (!replicache) return;
+          await replicache.mutate.reorderChecklist({ accountId: replicache.name, id: checklist.id, toIndex: 0 });
+        }}
+      />
     </C.Flex>
   );
 };
