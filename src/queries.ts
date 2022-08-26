@@ -1,14 +1,15 @@
 import keyBy from 'lodash/keyBy';
 import { ReadonlyJSONValue, ReadTransaction } from 'replicache';
 import account from './models/account';
-import category, { CategoryDenormalized, CategoryMap } from './models/category';
+import category, { CategoryDenormalized, CategoryMap, ChecklistCategoryDenormalized } from './models/category';
 import checklist, * as checklistTypes from './models/checklist';
 import item, { Item, ItemMap } from './models/item';
 import profile, { Profile, ProfileWithIdAndText } from './models/profile';
 
-type CategoryAndItemMap = ReadonlyJSONValue & {
+type CategoryItemTagMap = ReadonlyJSONValue & {
   categoryMap: CategoryMap;
   itemMap: ItemMap;
+  tagList: string[];
 };
 
 const queries = {
@@ -17,33 +18,40 @@ const queries = {
     if (!acc) return;
     const activeProfileId = acc.profileIds[0];
     if (!activeProfileId) return;
-    return await profile.get(tx, activeProfileId);
+    return profile.get(tx, activeProfileId);
   },
-  allCategoryAndItemMap: async (
+  allCategoryItemTagMap: async (
     tx: ReadTransaction,
     { accountId }: { accountId: string }
-  ): Promise<CategoryAndItemMap> => {
+  ): Promise<CategoryItemTagMap> => {
     const activeProfile = await queries.activeProfile(tx, { accountId });
-    const maps: CategoryAndItemMap = { categoryMap: {}, itemMap: {} };
-    if (!activeProfile) return maps;
+    const res: CategoryItemTagMap = { categoryMap: {}, itemMap: {}, tagList: [] };
+    if (!activeProfile) return res;
+    const tagSet = new Set<string>();
 
     await Promise.all(
       activeProfile.categoryIds.map(async (categoryId) => {
         const cat = await category.get(tx, categoryId);
         if (!cat) return;
-        maps.categoryMap[cat.id] = cat;
+        res.categoryMap[cat.id] = cat;
 
         await Promise.all(
           cat.itemIds.map(async (itemId) => {
             const ite = await item.get(tx, itemId);
             if (!ite) return;
-            maps.itemMap[ite.id] = ite;
+            res.itemMap[ite.id] = ite;
+
+            ite.text
+              .split('  ')
+              .slice(1)
+              .forEach((tag) => tagSet.add(tag));
           })
         );
       })
     );
 
-    return maps;
+    res.tagList = Array.from(tagSet);
+    return res;
   },
   allChecklist: async (
     tx: ReadTransaction,
@@ -58,16 +66,7 @@ const queries = {
 
     return checklists.reduce((acc: checklistTypes.ChecklistDenormalizedWithoutCategories[], checklist) => {
       if (!checklist) return acc;
-
-      return [
-        ...acc,
-        {
-          id: checklist.id,
-          itemsCompletedCount: checklist.itemsCompletedCount,
-          itemsCount: checklist.itemsCount,
-          text: checklist.text,
-        },
-      ];
+      return [...acc, checklist];
     }, []);
   },
   allProfile: async (tx: ReadTransaction, { accountId }: { accountId: string }): Promise<ProfileWithIdAndText[]> => {
@@ -103,27 +102,38 @@ const queries = {
         const category = await queries.category(tx, categoryId);
         if (!category) return;
 
+        let categoryItemsCompletedCount = 0;
+
+        const items = category.items.reduce((acc: checklistTypes.ChecklistItem[], item) => {
+          const split = item.text.split('  ');
+
+          if (split.length < 2 || che.includeTags.some((tag) => split.slice(1).includes(tag))) {
+            itemsCount++;
+            const completed = che.completedItemIds.includes(String(item.id));
+            if (completed) categoryItemsCompletedCount++;
+            return [...acc, { ...Object(item), completed }];
+          }
+
+          return acc;
+        }, []);
+
+        itemsCompletedCount += categoryItemsCompletedCount;
+
         return {
-          items: category.items.reduce((acc: checklistTypes.ChecklistItem[], item) => {
-            const split = item.text.split('  ');
-
-            if (split.length < 2 || che.includeTagIds.some((tag) => split.splice(1).includes(tag))) {
-              itemsCount++;
-              const completed = che.completedItemIds.includes(String(item.id));
-              if (completed) itemsCompletedCount++;
-              return [...acc, { ...Object(item), completed }];
-            }
-
-            return acc;
-          }, []),
+          id: category.id,
+          items,
+          itemsCompletedCount: categoryItemsCompletedCount,
           text: category.text,
         };
       })
     );
 
     return {
-      categories: categories.filter((category) => category) as CategoryDenormalized[],
+      categories: categories.filter((category) => category) as ChecklistCategoryDenormalized[],
+      completedItemIds: che.completedItemIds,
       id,
+      includeCategoryIds: che.includeCategoryIds,
+      includeTags: che.includeTags,
       itemsCompletedCount,
       itemsCount,
       text: che.text,

@@ -2,7 +2,7 @@ import * as C from '@chakra-ui/react';
 import React, { memo } from 'react';
 import isEqual from 'lodash/isEqual';
 import EditableListItem from '../../../../components/EditableListItem';
-import IconButtonChevronRight from '../../../../components/IconButtonChevronRight';
+import IconButtonChevronRight from '../../../../../../components/IconButtonChevronRight';
 import useReplicache from '../../../../../../hooks/use-replicache';
 import { ChecklistDenormalizedWithoutCategories } from '../../../../../../models/checklist';
 
@@ -34,7 +34,7 @@ const ListItem = ({ autoFocus, checklist }: ListItemProps) => {
         subtextOffset="1rem"
         value={checklist.text}
       />
-      <IconButtonChevronRight aria-label="open checklist" h="5.25rem" />
+      <IconButtonChevronRight aria-label="open checklist" h="5.25rem" href={`/checklist/${checklist.id}`} />
     </C.Flex>
   );
 };

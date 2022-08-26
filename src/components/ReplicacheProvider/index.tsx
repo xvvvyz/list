@@ -24,7 +24,7 @@ const ReplicacheProvider = ({ children }: ReplicacheProviderProps) => (
       mutators: mutations,
       name: getSpaceId(),
       pullInterval: null,
-      schemaVersion: '1',
+      schemaVersion: '2',
     })}
   >
     {children}

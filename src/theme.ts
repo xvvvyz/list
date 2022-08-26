@@ -162,6 +162,9 @@ const theme = extendTheme({
             _hover: {
               bg: 'bgSecondaryHover',
               color: 'fgSecondaryHover',
+              svg: {
+                color: 'fgSecondaryHover',
+              },
             },
           },
           _active: {
@@ -177,6 +180,9 @@ const theme = extendTheme({
           },
           borderRadius: 'md',
           color: 'fgSecondary',
+          svg: {
+            color: 'fgSecondary',
+          },
         },
         primary: {
           '.chakra-icon': {
@@ -194,6 +200,52 @@ const theme = extendTheme({
           borderRadius: 'full',
           color: 'fgAccent',
           fontWeight: 'bold',
+        },
+      },
+    },
+    Checkbox: {
+      baseStyle: {
+        container: {
+          _hover: {
+            bg: 'bgSecondaryHover',
+          },
+          borderRadius: 'md',
+          display: 'flex',
+          h: 10,
+          w: 'full',
+        },
+        control: {
+          _checked: {
+            bg: 'transparent',
+          },
+          _hover: {
+            _checked: {
+              bg: 'transparent',
+            },
+            bg: 'bgInput',
+          },
+          bg: 'bgInput',
+          border: 'none',
+          borderRadius: 'sm',
+          mx: 5,
+        },
+        icon: {
+          color: 'fgSecondary',
+        },
+        label: {
+          _checked: {
+            color: 'fgSecondary',
+          },
+        },
+      },
+      sizes: {
+        md: {
+          control: {
+            boxSize: 6,
+          },
+          icon: {
+            boxSize: 6,
+          },
         },
       },
     },
@@ -346,6 +398,7 @@ const theme = extendTheme({
     colors: {
       bgAccent: { _dark: 'gray.50', _light: 'gray.900' },
       bgAccentHover: { _dark: 'gray.300', _light: 'gray.600' },
+      bgInput: { _dark: 'gray.500', _light: 'gray.300' },
       bgPrimary: { _dark: 'gray.900', _light: 'gray.100' },
       bgSecondary: { _dark: 'gray.800', _light: 'gray.50' },
       bgSecondaryActive: { _dark: 'gray.600', _light: 'gray.200' },

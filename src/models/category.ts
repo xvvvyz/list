@@ -5,8 +5,11 @@ import { ChecklistItem } from './checklist';
 import { Item } from './item';
 
 type Category = z.infer<typeof categorySchema>;
-type CategoryDenormalized = ReadonlyJSONValue & Omit<Category, 'itemIds'> & { items: (Item | ChecklistItem)[] };
+type CategoryDenormalized = ReadonlyJSONValue & Omit<Category, 'itemIds'> & { items: Item[] };
 type CategoryMap = Record<string, Category>;
+
+type ChecklistCategoryDenormalized = ReadonlyJSONValue &
+  Omit<Category, 'itemIds'> & { items: ChecklistItem[]; itemsCompletedCount: number };
 
 const categorySchema = entitySchema.extend({
   id: z.string(),
@@ -17,4 +20,4 @@ const categorySchema = entitySchema.extend({
 const category = generate('category', categorySchema);
 
 export default category;
-export type { Category, CategoryDenormalized, CategoryMap };
+export type { Category, CategoryDenormalized, CategoryMap, ChecklistCategoryDenormalized };

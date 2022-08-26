@@ -1,7 +1,7 @@
 import * as C from '@chakra-ui/react';
 import React, { HTMLProps, useEffect, useRef } from 'react';
+import ButtonChevronExpand from '../../../../../../components/ButtonChevronExpand';
 import Grabber from '../../../../../../images/grabber.svg';
-import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
 import IconButtonX from '../../../../components/IconButtonX';
 import generateId from '../../../../../../utilities/generate-id';
 import setCaretPosition from '../../../../../../utilities/set-caret-position';
@@ -262,7 +262,7 @@ const ListItem = ({
           />
         </C.Flex>
         {isCategory && (
-          <IconButtonChevronExpand boxSize={14} isToggled={isCategoryExpanded} onToggle={toggleExpandCategory} />
+          <ButtonChevronExpand boxSize={14} isToggled={isCategoryExpanded} onToggle={toggleExpandCategory} />
         )}
       </C.Flex>
       {isCategory && (

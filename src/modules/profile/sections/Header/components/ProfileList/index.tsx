@@ -2,7 +2,7 @@ import * as C from '@chakra-ui/react';
 import React, { memo } from 'react';
 import isEqual from 'lodash/isEqual';
 import AddButton from '../../../../components/AddButton';
-import IconButtonChevronExpand from '../../../../components/IconButtonChevronExpand';
+import ButtonChevronExpand from '../../../../../../components/ButtonChevronExpand';
 import ListItem from '../ProfileListItem';
 import generateId from '../../../../../../utilities/generate-id';
 import useEphemeralState from '../../../../../../hooks/use-ephemeral-state';
@@ -50,7 +50,7 @@ const ProfileList = ({ profiles }: ProfileListProps) => {
           add profile
         </AddButton>
         {profiles.length > 1 && (
-          <IconButtonChevronExpand isToggled={profilesDisclosure.isOpen} onToggle={profilesDisclosure.onToggle} />
+          <ButtonChevronExpand isToggled={profilesDisclosure.isOpen} onToggle={profilesDisclosure.onToggle} />
         )}
       </C.Flex>
     </C.Box>

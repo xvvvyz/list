@@ -12,6 +12,36 @@ import trimWhitespace from './utilities/trim-whitespace';
 type Mutations = typeof mutations;
 
 const mutations = {
+  addChecklistCategoryId: async (
+    tx: WriteTransaction,
+    { categoryId, checklistId }: { categoryId: string; checklistId: string }
+  ) => {
+    const activeChecklist = await queries.checklist(tx, checklistId);
+    if (!activeChecklist) return;
+
+    await checklist.update(tx, {
+      id: activeChecklist.id,
+      includeCategoryIds: [...activeChecklist.includeCategoryIds, categoryId],
+    });
+  },
+  addChecklistTag: async (tx: WriteTransaction, { checklistId, tag }: { checklistId: string; tag: string }) => {
+    const activeChecklist = await queries.checklist(tx, checklistId);
+    if (!activeChecklist) return;
+
+    await checklist.update(tx, {
+      id: activeChecklist.id,
+      includeTags: [...activeChecklist.includeTags, tag],
+    });
+  },
+  checkItem: async (tx: WriteTransaction, { checklistId, itemId }: { checklistId: string; itemId: string }) => {
+    const activeChecklist = await queries.checklist(tx, checklistId);
+    if (!activeChecklist) return;
+
+    await checklist.update(tx, {
+      completedItemIds: [...activeChecklist.completedItemIds, itemId],
+      id: activeChecklist.id,
+    });
+  },
   createCategory: async (
     tx: WriteTransaction,
     { accountId, atIndex, id, text }: { accountId: string; atIndex: number; id: string; text?: Category['text'] }
@@ -36,7 +66,7 @@ const mutations = {
       completedItemIds: [],
       id,
       includeCategoryIds: [],
-      includeTagIds: [],
+      includeTags: [],
       text: '',
     });
 
@@ -148,6 +178,27 @@ const mutations = {
       itemIds: [...toCategory.itemIds.slice(0, toIndex), id, ...toCategory.itemIds.slice(toIndex)],
     });
   },
+  removeChecklistCategoryId: async (
+    tx: WriteTransaction,
+    { categoryId, checklistId }: { categoryId: string; checklistId: string }
+  ) => {
+    const activeChecklist = await queries.checklist(tx, checklistId);
+    if (!activeChecklist) return;
+
+    await checklist.update(tx, {
+      id: activeChecklist.id,
+      includeCategoryIds: activeChecklist.includeCategoryIds.filter((id) => id !== categoryId),
+    });
+  },
+  removeChecklistTag: async (tx: WriteTransaction, { checklistId, tag }: { checklistId: string; tag: string }) => {
+    const activeChecklist = await queries.checklist(tx, checklistId);
+    if (!activeChecklist) return;
+
+    await checklist.update(tx, {
+      id: activeChecklist.id,
+      includeTags: activeChecklist.includeTags.filter((t) => t !== tag),
+    });
+  },
   reorderCategory: async (
     tx: WriteTransaction,
     { accountId, id, toIndex }: { accountId: string; id: string; toIndex: number }
@@ -185,6 +236,15 @@ const mutations = {
     await account.update(tx, {
       id: accountId,
       profileIds: arrayMove(acc.profileIds, fromIndex, toIndex),
+    });
+  },
+  uncheckItem: async (tx: WriteTransaction, { checklistId, itemId }: { checklistId: string; itemId: string }) => {
+    const activeChecklist = await queries.checklist(tx, checklistId);
+    if (!activeChecklist) return;
+
+    await checklist.update(tx, {
+      completedItemIds: activeChecklist.completedItemIds.filter((id) => id !== itemId),
+      id: activeChecklist.id,
     });
   },
   updateAccount: account.update,
