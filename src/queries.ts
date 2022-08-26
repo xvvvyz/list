@@ -53,7 +53,7 @@ const queries = {
     if (!activeProfile) return [];
 
     const checklists = await Promise.all(
-      activeProfile.checklistIds.map((checklistId) => queries.checklist(tx, checklistId))
+      activeProfile.checklistIds.map((checklistId) => queries.checklistDenormalized(tx, { accountId, id: checklistId }))
     );
 
     return checklists.reduce((acc: checklistTypes.ChecklistDenormalizedWithoutCategories[], checklist) => {
@@ -83,45 +83,51 @@ const queries = {
       text: cat.text,
     };
   },
-  checklist: async (tx: ReadTransaction, id: string): Promise<checklistTypes.ChecklistDenormalized | undefined> => {
+  checklist: checklist.get,
+  checklistDenormalized: async (
+    tx: ReadTransaction,
+    { accountId, id }: { accountId: string; id: string }
+  ): Promise<checklistTypes.ChecklistDenormalized | undefined> => {
+    const activeProfile = await queries.activeProfile(tx, { accountId });
     const che = await checklist.get(tx, id);
-    if (!che) return;
+    if (!activeProfile || !che) return;
     const availableTags = new Set<string>();
     let itemsCount = 0;
     let itemsCompletedCount = 0;
 
     const categories = await Promise.all(
-      che.includeCategoryIds.map(async (categoryId) => {
-        const category = await queries.category(tx, categoryId);
-        if (!category) return;
+      activeProfile.categoryIds
+        .filter((id) => che.includeCategoryIds.includes(id))
+        .map(async (categoryId) => {
+          const category = await queries.category(tx, categoryId);
+          if (!category) return;
+          let categoryItemsCompletedCount = 0;
 
-        let categoryItemsCompletedCount = 0;
+          const items = category.items.reduce((acc: checklistTypes.ChecklistItem[], item) => {
+            const split = item.text.split('  ');
+            const text = split[0];
+            const tags = split.slice(1);
+            tags.forEach((tag) => availableTags.add(tag));
 
-        const items = category.items.reduce((acc: checklistTypes.ChecklistItem[], item) => {
-          const split = item.text.split('  ');
-          const text = split[0];
-          const tags = split.slice(1);
-          tags.forEach((tag) => availableTags.add(tag));
+            if (split.length < 2 || che.includeTags.some((tag) => tags.includes(tag))) {
+              itemsCount++;
+              const completed = che.completedItemIds.includes(String(item.id));
+              if (completed) categoryItemsCompletedCount++;
+              return [...acc, { completed, id: item.id, text }];
+            }
 
-          if (split.length < 2 || che.includeTags.some((tag) => tags.includes(tag))) {
-            itemsCount++;
-            const completed = che.completedItemIds.includes(String(item.id));
-            if (completed) categoryItemsCompletedCount++;
-            return [...acc, { completed, id: item.id, text }];
-          }
+            return acc;
+          }, []);
 
-          return acc;
-        }, []);
+          itemsCompletedCount += categoryItemsCompletedCount;
 
-        itemsCompletedCount += categoryItemsCompletedCount;
-
-        return {
-          id: category.id,
-          items,
-          itemsCompletedCount: categoryItemsCompletedCount,
-          text: category.text,
-        };
-      })
+          return {
+            id: category.id,
+            items,
+            itemsCompletedCount: categoryItemsCompletedCount,
+            text: category.text,
+          };
+        })
     );
 
     return {

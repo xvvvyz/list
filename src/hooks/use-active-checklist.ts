@@ -11,7 +11,7 @@ const useActiveChecklist = () => {
     replicache,
     async (tx) => {
       if (!replicache || typeof router.query.id !== 'string') return null;
-      return (await queries.checklist(tx, router.query.id)) ?? null;
+      return (await queries.checklistDenormalized(tx, { accountId: replicache.name, id: router.query.id })) ?? null;
     },
     null,
     [router.query.id, replicache]
