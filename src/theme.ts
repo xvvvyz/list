@@ -403,7 +403,7 @@ const theme = extendTheme({
       bgSecondary: { _dark: 'gray.800', _light: 'gray.50' },
       bgSecondaryActive: { _dark: 'gray.600', _light: 'gray.200' },
       bgSecondaryHover: { _dark: 'gray.700', _light: 'gray.100' },
-      bgTag: { _dark: 'bgSecondaryHover', _light: 'bgSecondaryHover' },
+      bgTag: { _dark: 'blue.700', _light: 'blue.100' },
       borderPrimary: { _dark: 'whiteAlpha.100', _light: 'blackAlpha.100' },
       borderSecondary: { _dark: 'whiteAlpha.200', _light: 'blackAlpha.200' },
       fgAccent: { _dark: 'gray.900', _light: 'gray.100' },
@@ -411,7 +411,6 @@ const theme = extendTheme({
       fgSecondary: { _dark: 'whiteAlpha.600', _light: 'blackAlpha.600' },
       fgSecondaryActive: { _dark: 'whiteAlpha.900', _light: 'blackAlpha.900' },
       fgSecondaryHover: { _dark: 'whiteAlpha.800', _light: 'blackAlpha.800' },
-      fgTag: { _dark: 'fgSecondary', _light: 'fgSecondary' },
       selection: { _dark: 'whiteAlpha.200', _light: 'blackAlpha.200' },
     },
     shadows: {

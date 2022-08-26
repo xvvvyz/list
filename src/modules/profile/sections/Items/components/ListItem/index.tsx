@@ -201,7 +201,7 @@ const ListItem = ({
             >
               {value}
             </C.Box>
-            {!isCategory && !isOverlay && (
+            {!isCategory && (
               <C.Box
                 aria-hidden
                 className="item__tag-underlay"
@@ -220,11 +220,20 @@ const ListItem = ({
                         <C.Box
                           as="span"
                           sx={{
-                            bg: 'bgTag',
-                            color: 'fgTag',
+                            _after: {
+                              bg: 'bgTag',
+                              borderRadius: 'sm',
+                              bottom: 0,
+                              content: '" "',
+                              left: '-2px',
+                              pos: 'absolute',
+                              right: '-2px',
+                              shadow: 'borderPrimary',
+                              top: 0,
+                            },
+                            color: 'fgPrimary',
                             display: 'inline',
-                            p: 0,
-                            shadow: 'borderPrimary',
+                            pos: 'relative',
                             verticalAlign: 'inherit',
                           }}
                         >
