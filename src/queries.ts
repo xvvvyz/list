@@ -145,3 +145,4 @@ const queries = {
 };
 
 export default queries;
+export type { CategoryAndItemMap };
