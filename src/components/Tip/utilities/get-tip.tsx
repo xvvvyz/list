@@ -1,5 +1,6 @@
 import React from 'react';
 import Tip from '../index';
+import splitByTagDelimiterFiltered from '../../../utilities/split-by-tag-delimiter-filtered';
 import { CategoryAndItemMap } from '../../../queries';
 import { Checklist } from '../../../models/checklist';
 import { ProfileWithIdAndText } from '../../../models/profile';
@@ -36,10 +37,10 @@ const getTip = ({
     );
   }
 
-  if (!Object.values(itemMap).some(({ text }) => text.includes('  '))) {
+  if (!Object.values(itemMap).some(({ text }) => splitByTagDelimiterFiltered(text).length > 1)) {
     return (
       <Tip>
-        type two spaces at the end of an item to create a tag. use categories and tags to augment your checklists
+        type two spaces or a # at the end of an item to create a tag. categories and tags augment your checklists
       </Tip>
     );
   }

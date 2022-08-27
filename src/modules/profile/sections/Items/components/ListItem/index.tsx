@@ -5,6 +5,8 @@ import Grabber from '../../../../../../images/grabber.svg';
 import IconButtonX from '../../../../components/IconButtonX';
 import generateId from '../../../../../../utilities/generate-id';
 import setCaretPosition from '../../../../../../utilities/set-caret-position';
+import splitByTagDelimiter from '../../../../../../utilities/split-by-tag-delimiter';
+import tagRegex from '../../../../../../utilities/tag-regex';
 import useReplicache from '../../../../../../hooks/use-replicache';
 
 interface ListItemProps {
@@ -212,34 +214,31 @@ const ListItem = ({
                   top: 0,
                 }}
               >
-                {value.split('  ').map((text, i) => (
+                {splitByTagDelimiter(value).map((text, i) => (
                   <span key={`${id}-${i}`}>
-                    {i ? (
-                      <>
-                        {'  '}
-                        <C.Box
-                          as="span"
-                          sx={{
-                            _after: {
-                              bg: 'bgTag',
-                              borderRadius: 'sm',
-                              bottom: 0,
-                              content: '" "',
-                              left: '-2px',
-                              pos: 'absolute',
-                              right: '-2px',
-                              shadow: 'borderPrimary',
-                              top: 0,
-                            },
-                            color: 'fgPrimary',
-                            display: 'inline',
-                            pos: 'relative',
-                            verticalAlign: 'inherit',
-                          }}
-                        >
-                          {text}
-                        </C.Box>
-                      </>
+                    {i && !tagRegex.test(text) ? (
+                      <C.Box
+                        as="span"
+                        sx={{
+                          _after: {
+                            bg: 'bgTag',
+                            borderRadius: 'sm',
+                            bottom: 0,
+                            content: '" "',
+                            left: '-2px',
+                            pos: 'absolute',
+                            right: '-2px',
+                            shadow: 'borderPrimary',
+                            top: 0,
+                          },
+                          color: 'fgPrimary',
+                          display: 'inline',
+                          pos: 'relative',
+                          verticalAlign: 'inherit',
+                        }}
+                      >
+                        {text}
+                      </C.Box>
                     ) : (
                       text
                     )}

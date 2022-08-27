@@ -5,6 +5,7 @@ import category, { CategoryDenormalized, CategoryMap, ChecklistCategoryDenormali
 import checklist, * as checklistTypes from './models/checklist';
 import item, { Item, ItemMap } from './models/item';
 import profile, { Profile, ProfileWithIdAndText } from './models/profile';
+import splitByTagDelimiterFiltered from './utilities/split-by-tag-delimiter-filtered';
 
 type CategoryAndItemMap = ReadonlyJSONValue & {
   categoryMap: CategoryMap;
@@ -104,7 +105,7 @@ const queries = {
           let categoryItemsCompletedCount = 0;
 
           const items = category.items.reduce((acc: checklistTypes.ChecklistItem[], item) => {
-            const split = item.text.split('  ');
+            const split = splitByTagDelimiterFiltered(item.text);
             const text = split[0];
             const tags = split.slice(1);
             tags.forEach((tag) => availableTags.add(tag));
