@@ -15,7 +15,7 @@ type ChecklistDenormalized = ReadonlyJSONValue &
   };
 
 type ChecklistDenormalizedWithoutCategories = Omit<ChecklistDenormalized, 'categories'>;
-type ChecklistItem = Item & { completed: boolean };
+type ChecklistItem = Item & { completed: boolean; number: number };
 
 const checklistSchema = entitySchema.extend({
   completedItemIds: z.string().array(),

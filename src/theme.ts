@@ -212,6 +212,7 @@ const theme = extendTheme({
           borderRadius: 'md',
           display: 'flex',
           h: 10,
+          px: 5,
           w: 'full',
         },
         control: {
@@ -227,7 +228,7 @@ const theme = extendTheme({
           bg: 'bgInput',
           border: 'none',
           borderRadius: 'sm',
-          mx: 5,
+          mr: 5,
         },
         icon: {
           color: 'fgSecondary',
@@ -236,6 +237,7 @@ const theme = extendTheme({
           _checked: {
             color: 'fgSecondary',
           },
+          w: 'full',
         },
       },
       sizes: {

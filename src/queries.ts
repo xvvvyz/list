@@ -4,6 +4,7 @@ import account from './models/account';
 import category, { CategoryDenormalized, CategoryMap, ChecklistCategoryDenormalized } from './models/category';
 import checklist, * as checklistTypes from './models/checklist';
 import item, { Item, ItemMap } from './models/item';
+import parseTags from './utilities/parse-tags';
 import profile, { Profile, ProfileWithIdAndText } from './models/profile';
 import splitByTagDelimiterFiltered from './utilities/split-by-tag-delimiter-filtered';
 
@@ -92,7 +93,7 @@ const queries = {
     const activeProfile = await queries.activeProfile(tx, { accountId });
     const che = await checklist.get(tx, id);
     if (!activeProfile || !che) return;
-    const availableTags = new Set<string>();
+    const availableTags: string[] = [];
     let itemsCount = 0;
     let itemsCompletedCount = 0;
 
@@ -107,14 +108,17 @@ const queries = {
           const items = category.items.reduce((acc: checklistTypes.ChecklistItem[], item) => {
             const split = splitByTagDelimiterFiltered(item.text);
             const text = split[0];
-            const tags = split.slice(1);
-            tags.forEach((tag) => availableTags.add(tag));
+            const { count, tags } = parseTags(split.slice(1));
+            tags.forEach((tag) => availableTags.push(tag));
 
-            if (split.length < 2 || che.includeTags.some((tag) => tags.includes(tag))) {
-              itemsCount++;
-              const completed = che.completedItemIds.includes(String(item.id));
-              if (completed) categoryItemsCompletedCount++;
-              return [...acc, { completed, id: item.id, text }];
+            if (!tags.length || che.includeTags.some((tag) => tags.includes(tag))) {
+              for (let i = 1; i <= count; i++) {
+                itemsCount++;
+                const id = `${item.id}-${i}`;
+                const completed = che.completedItemIds.includes(id);
+                if (completed) categoryItemsCompletedCount++;
+                acc.push({ completed, id, number: count > 1 ? i : 0, text });
+              }
             }
 
             return acc;
@@ -132,7 +136,7 @@ const queries = {
     );
 
     return {
-      availableTags: Array.from(availableTags),
+      availableTags,
       categories: categories.filter((category) => category) as ChecklistCategoryDenormalized[],
       completedItemIds: che.completedItemIds,
       id,

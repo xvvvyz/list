@@ -41,8 +41,9 @@ const Header = () => {
                   checklistId: activeChecklist.id,
                 });
               }}
-              text={categoryMap[categoryId].text}
-            />
+            >
+              {categoryMap[categoryId].text}
+            </Checkbox>
           ))}
           {!!activeChecklist.availableTags.length && (
             <C.Box p={5}>
@@ -61,8 +62,9 @@ const Header = () => {
                   tag,
                 });
               }}
-              text={tag}
-            />
+            >
+              {tag}
+            </Checkbox>
           ))}
         </C.Box>
       </C.Collapse>

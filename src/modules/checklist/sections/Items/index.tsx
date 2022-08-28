@@ -45,8 +45,18 @@ const Items = () => {
                     itemId: item.id,
                   });
                 }}
-                text={item.text}
-              />
+              >
+                <C.Flex justifyContent="space-between" w="full">
+                  <C.Text as="span" color="inherit">
+                    {item.text}
+                  </C.Text>
+                  {!!item.number && (
+                    <C.Text as="span" color="fgSecondary" textAlign="center" w={6}>
+                      {item.number}
+                    </C.Text>
+                  )}
+                </C.Flex>
+              </Checkbox>
             ))}
           </C.Collapse>
         </Fragment>
