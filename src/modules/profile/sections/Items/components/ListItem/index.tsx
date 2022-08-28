@@ -3,6 +3,7 @@ import React, { HTMLProps, useEffect, useRef } from 'react';
 import ButtonChevronExpand from '../../../../../../components/ButtonChevronExpand';
 import Grabber from '../../../../../../images/grabber.svg';
 import IconButtonX from '../../../../components/IconButtonX';
+import Tag from '../../../../components/Tag';
 import generateId from '../../../../../../utilities/generate-id';
 import setCaretPosition from '../../../../../../utilities/set-caret-position';
 import splitByTagDelimiter from '../../../../../../utilities/split-by-tag-delimiter';
@@ -215,34 +216,7 @@ const ListItem = ({
                 }}
               >
                 {splitByTagDelimiter(value).map((text, i) => (
-                  <span key={`${id}-${i}`}>
-                    {i && !tagRegex.test(text) ? (
-                      <C.Box
-                        as="span"
-                        sx={{
-                          _after: {
-                            bg: 'bgTag',
-                            borderRadius: 'sm',
-                            bottom: 0,
-                            content: '" "',
-                            left: '-2px',
-                            pos: 'absolute',
-                            right: '-2px',
-                            shadow: 'borderPrimary',
-                            top: 0,
-                          },
-                          color: 'fgPrimary',
-                          display: 'inline',
-                          pos: 'relative',
-                          verticalAlign: 'inherit',
-                        }}
-                      >
-                        {text}
-                      </C.Box>
-                    ) : (
-                      text
-                    )}
-                  </span>
+                  <span key={`${id}-${i}`}>{i && !tagRegex.test(text) ? <Tag>{text}</Tag> : text}</span>
                 ))}
               </C.Box>
             )}
