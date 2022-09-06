@@ -12,7 +12,6 @@ const IconButtonChevronRight = ({ href, ...props }: IconButtonChevronRightProps)
     <C.IconButton
       as={href ? C.Link : undefined}
       flexShrink={0}
-      h={14}
       icon={<C.Icon as={ChevronRight} boxSize={6} />}
       w={14}
       {...props}

@@ -209,6 +209,7 @@ const Items = () => {
 
                     setFocusAtPosition([id, 0]);
                   }}
+                  size="sm"
                 >
                   add item
                 </AddButton>
@@ -258,7 +259,7 @@ const Items = () => {
                         value={itemMap[itemId].text}
                       />
                     ))}
-                    <AddButton>add item</AddButton>
+                    <AddButton size="sm">add item</AddButton>
                   </>
                 ) : null}
               </ListItem>

@@ -1,9 +1,10 @@
 import React from 'react';
+import flatten from 'lodash/flatten';
 import Tip from '../../../../../components/Tip';
 import { ChecklistDenormalized } from '../../../../../models/checklist';
 
 const getTip = ({ activeChecklist }: { activeChecklist: ChecklistDenormalized | null }) => {
-  if (!activeChecklist || activeChecklist.categories[0]?.items?.length) {
+  if (!activeChecklist || flatten(activeChecklist.categories.map((c) => c.items)).length) {
     return null;
   }
 

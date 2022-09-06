@@ -36,7 +36,6 @@ const ProfileListItem = ({ autoFocus, isActive, onOpen, profile }: ProfileListIt
       {!isActive && (
         <IconButtonChevronRight
           aria-label="open profile"
-          h={16}
           onClick={async () => {
             if (!replicache) return;
             if (onOpen) onOpen();

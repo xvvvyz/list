@@ -98,6 +98,7 @@ const ListItem = ({
                 _focus: { outline: 'none' },
                 fontVariantLigatures: 'none',
                 fontWeight: isCategory ? 'bold' : 'normal',
+                lineHeight: 'shorter',
                 minH: isCategory ? 14 : 10,
                 px: 2,
                 py: isCategory ? 4 : 2,
@@ -198,7 +199,7 @@ const ListItem = ({
                 WebkitUserSelect: 'text',
                 pos: 'relative',
                 userSelect: 'text',
-                zIndex: 1,
+                zIndex: 2,
               }}
               tabIndex={0}
             >

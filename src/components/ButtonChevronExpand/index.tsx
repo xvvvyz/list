@@ -12,7 +12,16 @@ const ButtonChevronExpand = ({ children, isToggled, onToggle, ...rest }: ButtonC
   const icon = <C.Icon as={ChevronDown} boxSize={6} transform={isToggled ? 'rotate(-180deg)' : 'none'} />;
 
   return children ? (
-    <C.Button h={14} justifyContent="space-between" onClick={onToggle} px={5} rightIcon={icon} w="full" {...rest}>
+    <C.Button
+      justifyContent="space-between"
+      onClick={onToggle}
+      px={5}
+      rightIcon={icon}
+      textAlign="left"
+      w="full"
+      whiteSpace="break-spaces"
+      {...rest}
+    >
       {children}
     </C.Button>
   ) : (

@@ -13,28 +13,31 @@ const Items = () => {
   if (!activeChecklist || !activeChecklist.categories.length) return null;
 
   return (
-    <C.Box aria-label="items" as="section" layerStyle="bgCard" mt={12}>
+    <C.Box
+      aria-label="items"
+      as="section"
+      layerStyle="bgCard"
+      mt={12}
+      sx={{ '.chakra-collapse:last-of-type': { '.chakra-checkbox:last-of-type': { mb: 2 } } }}
+    >
       {activeChecklist.categories.map((category) => (
         <Fragment key={category.id}>
-          <C.HStack _first={{ mt: 0 }} justifyContent="space-between" mt={-2}>
-            <ButtonChevronExpand
-              isToggled={isCategoryExpanded[category.id]}
-              onToggle={() => setIsCategoryExpanded((state) => ({ ...state, [category.id]: !state[category.id] }))}
-            >
-              <C.HStack justifyContent="space-between" pr={5} w="full">
-                <C.Text as="span" color="fgPrimary" fontWeight="bold">
-                  {category.text}
-                </C.Text>
-                <C.Text as="span">
-                  {category.itemsCompletedCount}/{category.items.length}
-                </C.Text>
-              </C.HStack>
-            </ButtonChevronExpand>
-          </C.HStack>
+          <ButtonChevronExpand
+            isToggled={isCategoryExpanded[category.id]}
+            onToggle={() => setIsCategoryExpanded((state) => ({ ...state, [category.id]: !state[category.id] }))}
+          >
+            <C.HStack justifyContent="space-between" pr={5} spacing={7} w="full">
+              <C.Text as="span" color="fgPrimary" fontWeight="bold">
+                {category.text}
+              </C.Text>
+              <C.Text as="span">
+                {category.itemsCompletedCount}/{category.items.length}
+              </C.Text>
+            </C.HStack>
+          </ButtonChevronExpand>
           <C.Collapse in={isCategoryExpanded[category.id]}>
             {category.items.map((item) => (
               <Checkbox
-                _last={{ mb: 2 }}
                 isChecked={(item as ChecklistItem).completed}
                 key={item.id}
                 onChange={async (e) => {

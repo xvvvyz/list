@@ -7,6 +7,7 @@ import useActiveChecklist from '../../../../hooks/use-active-checklist';
 import useActiveProfile from '../../../../hooks/use-active-profile';
 import useAllCategoryAndItemMap from '../../../../hooks/use-all-category-and-item-map';
 import useReplicache from '../../../../hooks/use-replicache';
+import Tag from '../../../profile/components/Tag';
 
 const Header = () => {
   const activeChecklist = useActiveChecklist();
@@ -20,7 +21,9 @@ const Header = () => {
     <C.Box as="header" borderTopRadius="none" layerStyle="bgCard">
       <C.HStack justifyContent="space-between" pr={4} pt={5}>
         <IconButtonChevronLeft aria-label="back to profile" h={16} href="/" />
-        <C.Heading as="h1">{activeChecklist.text}</C.Heading>
+        <C.Heading as="h1" py={4}>
+          {activeChecklist.text}
+        </C.Heading>
       </C.HStack>
       <C.Collapse in={configDisclosure.isOpen}>
         <C.Box py={3}>
@@ -45,11 +48,6 @@ const Header = () => {
               {categoryMap[categoryId].text}
             </Checkbox>
           ))}
-          {!!activeChecklist.availableTags.length && (
-            <C.Box p={5}>
-              <C.Divider />
-            </C.Box>
-          )}
           {activeChecklist.availableTags.map((tag) => (
             <Checkbox
               isChecked={activeChecklist.includeTags.includes(tag)}
@@ -63,7 +61,7 @@ const Header = () => {
                 });
               }}
             >
-              {tag}
+              <Tag>{tag}</Tag>
             </Checkbox>
           ))}
         </C.Box>

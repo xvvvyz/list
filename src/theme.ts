@@ -139,6 +139,7 @@ const theme = extendTheme({
     Button: {
       baseStyle: {
         fontWeight: 'normal',
+        lineHeight: 'shorter',
         textDecor: 'none',
       },
       defaultProps: {
@@ -147,13 +148,15 @@ const theme = extendTheme({
       sizes: {
         md: {
           fontSize: 'base',
-          h: 14,
+          h: 'auto',
           px: 7,
+          py: 4,
         },
         sm: {
           fontSize: 'base',
-          h: 8,
+          h: 'auto',
           px: 4,
+          py: 2,
         },
       },
       variants: {
@@ -211,8 +214,6 @@ const theme = extendTheme({
           },
           borderRadius: 'md',
           display: 'flex',
-          h: 10,
-          px: 5,
           w: 'full',
         },
         control: {
@@ -228,7 +229,7 @@ const theme = extendTheme({
           bg: 'bgInput',
           border: 'none',
           borderRadius: 'sm',
-          mr: 5,
+          mr: 7,
         },
         icon: {
           color: 'fgSecondary',
@@ -237,11 +238,17 @@ const theme = extendTheme({
           _checked: {
             color: 'fgSecondary',
           },
+          lineHeight: 'shorter',
+          m: 0,
           w: 'full',
         },
       },
       sizes: {
         md: {
+          container: {
+            px: 5,
+            py: 2,
+          },
           control: {
             boxSize: 6,
           },
