@@ -93,7 +93,7 @@ const queries = {
     const activeProfile = await queries.activeProfile(tx, { accountId });
     const che = await checklist.get(tx, id);
     if (!activeProfile || !che) return;
-    const availableTags: string[] = [];
+    const availableTags = new Set<string>();
     let itemsCount = 0;
     let itemsCompletedCount = 0;
 
@@ -109,7 +109,7 @@ const queries = {
             const split = splitByTagDelimiterFiltered(item.text);
             const text = split[0];
             const { count, tags } = parseTags(split.slice(1));
-            tags.forEach((tag) => availableTags.push(tag));
+            tags.forEach((tag) => availableTags.add(tag));
 
             if (!tags.length || che.includeTags.some((tag) => tags.includes(tag))) {
               for (let i = 1; i <= count; i++) {
@@ -136,7 +136,7 @@ const queries = {
     );
 
     return {
-      availableTags,
+      availableTags: Array.from(availableTags),
       categories: categories.filter((category) => category) as ChecklistCategoryDenormalized[],
       completedItemIds: che.completedItemIds,
       id,
