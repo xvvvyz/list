@@ -24,18 +24,17 @@ const WtfPage = () => (
         </C.Box>{' '}
         dynamic, reusable checklists
       </C.Heading>
-      <Link href="/" passHref>
-        <C.Button
-          as={C.Link}
-          iconSpacing={6}
-          mt={24}
-          rightIcon={<C.Icon as={ChevronRight} boxSize={6} />}
-          variant="primary"
-          w="full"
-        >
-          give it a whirl
-        </C.Button>
-      </Link>
+      <C.Button
+        as={Link}
+        href="/"
+        iconSpacing={6}
+        mt={24}
+        rightIcon={<C.Icon as={ChevronRight} boxSize={6} />}
+        variant="primary"
+        w="full"
+      >
+        give it a whirl
+      </C.Button>
       <C.Center>
         <C.Divider display={{ base: 'none', sm: 'block' }} h={24} orientation="vertical" />
       </C.Center>
@@ -78,27 +77,26 @@ const WtfPage = () => (
       <C.Divider h={24} orientation="vertical" />
     </C.Center>
     <C.Box as="footer" mt={{ base: 24, sm: 0 }}>
-      <Link href="/" passHref>
-        <C.Button
-          as={C.Link}
-          iconSpacing={6}
-          rightIcon={<C.Icon as={ChevronRight} boxSize={6} />}
-          variant="primary"
-          w="full"
-        >
-          give it a whirl
-        </C.Button>
-      </Link>
+      <C.Button
+        as={Link}
+        href="/"
+        iconSpacing={6}
+        rightIcon={<C.Icon as={ChevronRight} boxSize={6} />}
+        variant="primary"
+        w="full"
+      >
+        give it a whirl
+      </C.Button>
       <C.List mt={24} spacing={6}>
         <C.ListItem>
-          <Link href="#" passHref>
-            <C.Link>privacy policy</C.Link>
-          </Link>
+          <C.Link as={Link} href="#">
+            privacy policy
+          </C.Link>
         </C.ListItem>
         <C.ListItem>
-          <Link href="#" passHref>
-            <C.Link>terms &amp; conditions</C.Link>
-          </Link>
+          <C.Link as={Link} href="#">
+            terms &amp; conditions
+          </C.Link>
         </C.ListItem>
         <C.ListItem>
           <C.Link href="https://github.com/xvvvyz/lliist">source code</C.Link>

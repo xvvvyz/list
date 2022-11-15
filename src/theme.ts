@@ -310,6 +310,7 @@ const theme = extendTheme({
             bg: 'bgSecondaryHover',
             color: 'fgSecondaryHover',
           },
+          bg: 'bgSecondary',
           borderRadius: 'md',
           color: 'fgSecondary',
           h: 12,
