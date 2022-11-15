@@ -1,6 +1,6 @@
 # lliist
 
-A WIP dynamic, reusable checklist PWA for personal use and learning.
+> Dynamic, reusable checklists.
 
 ## Development Setup
 
@@ -16,12 +16,6 @@ echo 'NEXT_PUBLIC_REPLICACHE_LICENSE_KEY=<your license key>' > .env
 npm start
 ```
 
-## Production Setup
-
-```javascript
-// TODO: add production setup instructions
-```
-
 ## Built With
 
 - [Figma](https://www.figma.com) to explore UI concepts
@@ -32,6 +26,3 @@ npm start
 - [dnd kit](https://dndkit.com) for accessible drag and drop
 - [Prettier](https://prettier.io) for automatic code formatting
 - [ESLint](https://eslint.org) to enforce code best practices
-- [Jest](https://jestjs.io) to enable seamless unit tests
-- [RTL](https://testing-library.com/docs/react-testing-library/intro/) to test React components
-- [Cypress](https://www.cypress.io) to test end-to-end
