@@ -7,9 +7,9 @@
     { "purpose": "maskable", "sizes": "192x192", "src": "/manifest-icon-192.maskable.png", "type": "image/png" },
     { "purpose": "maskable", "sizes": "512x512", "src": "/manifest-icon-512.maskable.png", "type": "image/png" }
   ],
-  "name": "lliist",
+  "name": "llist",
   "orientation": "portrait",
-  "short_name": "lliist",
+  "short_name": "llist",
   "start_url": "/",
   "theme_color": "#0c0c0c"
 }

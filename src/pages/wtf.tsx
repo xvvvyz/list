@@ -10,7 +10,7 @@ const WtfPage = () => (
   <C.Container maxW={{ base: 'container.xs', sm: 'container.md' }} pb={24} textAlign="center">
     <C.Box as="header">
       <C.Heading alignItems="center" as="h1" display="flex" justifyContent="space-between" pt={8}>
-        <C.VisuallyHidden>lliist — dynamic, reusable checklists</C.VisuallyHidden>
+        <C.VisuallyHidden>llist — dynamic, reusable checklists</C.VisuallyHidden>
         <C.Icon aria-hidden as={Logo} h={10} w="auto" />
         <C.Icon aria-hidden as={LogoIcon} h={10} w="auto" />
       </C.Heading>
@@ -89,17 +89,7 @@ const WtfPage = () => (
       </C.Button>
       <C.List mt={24} spacing={6}>
         <C.ListItem>
-          <C.Link as={Link} href="#">
-            privacy policy
-          </C.Link>
-        </C.ListItem>
-        <C.ListItem>
-          <C.Link as={Link} href="#">
-            terms &amp; conditions
-          </C.Link>
-        </C.ListItem>
-        <C.ListItem>
-          <C.Link href="https://github.com/xvvvyz/lliist">source code</C.Link>
+          <C.Link href="https://github.com/xvvvyz/llist">source code</C.Link>
         </C.ListItem>
       </C.List>
     </C.Box>

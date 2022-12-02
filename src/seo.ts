@@ -1,5 +1,5 @@
-const name = 'lliist';
-const url = 'https://lliist.app';
+const name = 'llist';
+const url = 'https://llist.app';
 
 const description =
   'The free and open source reusable checklist web app that nobody asked for. Dynamically create and share checklists by categorizing and tagging list items.';
@@ -17,11 +17,11 @@ const seo = {
     { content: name, name: 'application-name' },
   ],
   canonical: url,
-  defaultTitle: 'lliist — dynamic, reusable checklists',
+  defaultTitle: 'llist — dynamic, reusable checklists',
   description: description,
   openGraph: {
     description,
-    images: [{ alt: 'lliist logo', height: 460, url: `${url}/apple-splash-dark-1136-640.png`, width: 1136 }],
+    images: [{ alt: 'llist logo', height: 460, url: `${url}/apple-splash-dark-1136-640.png`, width: 1136 }],
     locale: 'en_US',
     site_name: name,
     title: name,

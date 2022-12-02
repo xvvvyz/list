@@ -11,7 +11,7 @@ const Tip = ({ children }: InformationComponentProps) => (
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: 20 }}
     initial={{ opacity: 0, y: 20 }}
-    transition={{ delay: 1.25, duration: 0.4 }}
+    transition={{ delay: 1, duration: 0.4 }}
   >
     <C.Container aria-label="information" as="section" maxW="container.sm" mt={12}>
       <C.VStack spacing={12}>

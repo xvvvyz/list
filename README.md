@@ -1,4 +1,4 @@
-# lliist
+# llist
 
 > Dynamic, reusable checklists.
 
@@ -8,8 +8,8 @@ Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and
 then:
 
 ```shell
-git clone git@github.com:xvvvyz/lliist.git
-cd lliist
+git clone git@github.com:xvvvyz/llist.git
+cd llist
 npm i
 npx replicache get-license
 echo 'NEXT_PUBLIC_REPLICACHE_LICENSE_KEY=<your license key>' > .env
