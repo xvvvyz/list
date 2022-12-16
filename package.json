@@ -9,9 +9,6 @@
     "link": "vercel link",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "pwa": "npm run pwa:favicon && npm run pwa:icons",
-    "pwa:favicon": "pwa-asset-generator src/images/logo-icon.svg public -v '' -x -c -t png -f -o false",
-    "pwa:icons": "pwa-asset-generator src/images/logo-icon.svg public -v '' -x -c -t png -p '25%' -b '#0c0c0c'",
     "serve": "next start",
     "start": "next dev"
   },
@@ -38,7 +35,6 @@
     "next": "^13.0.7",
     "next-seo": "^5.15.0",
     "prettier": "^2.8.1",
-    "pwa-asset-generator": "^6.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "replicache": "^12.0.1",
