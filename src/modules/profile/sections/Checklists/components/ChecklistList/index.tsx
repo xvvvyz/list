@@ -1,13 +1,13 @@
 import * as C from '@chakra-ui/react';
-import React, { memo } from 'react';
 import isEqual from 'lodash/isEqual';
-import AddButton from '../../../../components/AddButton';
+import { memo } from 'react';
 import ButtonChevronExpand from '../../../../../../components/ButtonChevronExpand';
-import ListItem from '../ChecklistListItem';
-import generateId from '../../../../../../utilities/generate-id';
 import useEphemeralState from '../../../../../../hooks/use-ephemeral-state';
 import useReplicache from '../../../../../../hooks/use-replicache';
 import { ChecklistDenormalizedWithoutCategories } from '../../../../../../models/checklist';
+import generateId from '../../../../../../utilities/generate-id';
+import AddButton from '../../../../components/AddButton';
+import ListItem from '../ChecklistListItem';
 
 interface ChecklistListProps {
   checklists: ChecklistDenormalizedWithoutCategories[];

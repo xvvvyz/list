@@ -1,5 +1,4 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
 import EditableSubtext from '../EditableSubtext';
 import IconButtonX from '../IconButtonX';
 

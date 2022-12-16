@@ -1,7 +1,6 @@
-import React from 'react';
 import { AnimatePresence } from 'framer-motion';
-import getTip from './utilities/get-tip';
 import useActiveChecklist from '../../../../hooks/use-active-checklist';
+import getTip from './utilities/get-tip';
 
 const Tips = () => {
   const activeChecklist = useActiveChecklist();

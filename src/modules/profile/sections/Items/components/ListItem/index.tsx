@@ -1,14 +1,14 @@
 import * as C from '@chakra-ui/react';
 import React, { HTMLProps, useEffect, useRef } from 'react';
 import ButtonChevronExpand from '../../../../../../components/ButtonChevronExpand';
+import useReplicache from '../../../../../../hooks/use-replicache';
 import Grabber from '../../../../../../images/grabber.svg';
-import IconButtonX from '../../../../components/IconButtonX';
-import Tag from '../../../../components/Tag';
 import generateId from '../../../../../../utilities/generate-id';
 import setCaretPosition from '../../../../../../utilities/set-caret-position';
 import splitByTagDelimiter from '../../../../../../utilities/split-by-tag-delimiter';
 import tagRegex from '../../../../../../utilities/tag-regex';
-import useReplicache from '../../../../../../hooks/use-replicache';
+import IconButtonX from '../../../../components/IconButtonX';
+import Tag from '../../../../components/Tag';
 
 interface ListItemProps {
   categoryId: string;

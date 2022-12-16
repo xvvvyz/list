@@ -1,10 +1,10 @@
 import * as C from '@chakra-ui/react';
-import React, { memo } from 'react';
 import isEqual from 'lodash/isEqual';
-import EditableListItem from '../../../../components/EditableListItem';
+import { memo } from 'react';
 import IconButtonChevronRight from '../../../../../../components/IconButtonChevronRight';
 import useReplicache from '../../../../../../hooks/use-replicache';
 import { ProfileWithIdAndText } from '../../../../../../models/profile';
+import EditableListItem from '../../../../components/EditableListItem';
 
 interface ProfileListItemProps {
   autoFocus: boolean;

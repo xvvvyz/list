@@ -1,13 +1,12 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
 import ButtonChevronExpand from '../../../../components/ButtonChevronExpand';
-import Checkbox from '../../components/Checkbox';
 import IconButtonChevronLeft from '../../../../components/IconButtonChevronLeft';
 import useActiveChecklist from '../../../../hooks/use-active-checklist';
 import useActiveProfile from '../../../../hooks/use-active-profile';
 import useAllCategoryAndItemMap from '../../../../hooks/use-all-category-and-item-map';
 import useReplicache from '../../../../hooks/use-replicache';
 import Tag from '../../../profile/components/Tag';
+import Checkbox from '../../components/Checkbox';
 
 const Header = () => {
   const activeChecklist = useActiveChecklist();

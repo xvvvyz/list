@@ -1,6 +1,5 @@
-import React from 'react';
-import { CSS } from '@dnd-kit/utilities';
 import { defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import ListItem, { ListItemProps } from '../ListItem';
 
 const SortableListItem = ({ id, ...rest }: ListItemProps) => {

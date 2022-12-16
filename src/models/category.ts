@@ -1,5 +1,5 @@
-import { ReadonlyJSONValue } from 'replicache';
 import { entitySchema, generate } from '@rocicorp/rails';
+import { ReadonlyJSONValue } from 'replicache';
 import { z } from 'zod';
 import { ChecklistItem } from './checklist';
 import { Item } from './item';

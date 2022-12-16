@@ -1,10 +1,10 @@
+import { ChakraProvider } from '@chakra-ui/provider';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/700.css';
-import React, { ReactElement } from 'react';
-import { AppProps } from 'next/app';
-import { ChakraProvider } from '@chakra-ui/provider';
-import { DefaultSeo } from 'next-seo';
 import { NextPage } from 'next';
+import { DefaultSeo } from 'next-seo';
+import { AppProps } from 'next/app';
+import { ReactElement } from 'react';
 import seo from '../seo';
 import theme from '../theme';
 

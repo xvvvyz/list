@@ -1,4 +1,3 @@
-import React from 'react';
 import IconButtonChevronRight, { IconButtonChevronRightProps } from '../IconButtonChevronRight';
 
 const IconButtonChevronLeft = (props: IconButtonChevronRightProps) => (

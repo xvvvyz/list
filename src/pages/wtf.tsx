@@ -1,10 +1,9 @@
 import * as C from '@chakra-ui/react';
 import Link from 'next/link';
-import React from 'react';
 import Check from '../images/check.svg';
 import ChevronRight from '../images/chevron-right.svg';
-import Logo from '../images/logo.svg';
 import LogoIcon from '../images/logo-icon.svg';
+import Logo from '../images/logo.svg';
 
 const WtfPage = () => (
   <C.Container maxW={{ base: 'container.xs', sm: 'container.md' }} pb={24} textAlign="center">

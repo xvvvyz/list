@@ -1,6 +1,6 @@
+import { arrayMove } from '@dnd-kit/sortable';
 import { Update } from '@rocicorp/rails';
 import { WriteTransaction } from 'replicache';
-import { arrayMove } from '@dnd-kit/sortable';
 import account from './models/account';
 import category, { Category } from './models/category';
 import checklist from './models/checklist';

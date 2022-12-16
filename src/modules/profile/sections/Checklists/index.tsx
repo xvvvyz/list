@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
-import ChecklistList from './components/ChecklistList';
+import { memo } from 'react';
 import useActiveProfile from '../../../../hooks/use-active-profile';
 import useAllChecklist from '../../../../hooks/use-all-checklist';
+import ChecklistList from './components/ChecklistList';
 
 const Checklists = () => {
   const activeProfile = useActiveProfile();

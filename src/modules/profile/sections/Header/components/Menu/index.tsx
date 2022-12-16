@@ -1,12 +1,12 @@
 import * as C from '@chakra-ui/react';
-import React, { memo, useRef } from 'react';
+import { memo, useRef } from 'react';
 import { deleteAllReplicacheData } from 'replicache';
+import useReplicache from '../../../../../../hooks/use-replicache';
 import CheckCircle from '../../../../../../images/check-circle.svg';
 import Copy from '../../../../../../images/copy.svg';
 import Navigation from '../../../../../../images/navigation.svg';
 import ThemeToggle from '../../../../../../images/theme-toggle.svg';
 import Trash from '../../../../../../images/trash.svg';
-import useReplicache from '../../../../../../hooks/use-replicache';
 
 const Menu = () => {
   const [isClearingData, setIsClearingData] = C.useBoolean();

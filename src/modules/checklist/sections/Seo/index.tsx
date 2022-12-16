@@ -1,4 +1,3 @@
-import React from 'react';
 import { NextSeo } from 'next-seo';
 import useActiveChecklist from '../../../../hooks/use-active-checklist';
 

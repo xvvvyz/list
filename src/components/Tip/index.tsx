@@ -1,6 +1,6 @@
 import * as C from '@chakra-ui/react';
-import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
+import { ReactNode } from 'react';
 
 interface InformationComponentProps {
   children: ReactNode;

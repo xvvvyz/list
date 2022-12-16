@@ -4,8 +4,8 @@ import account from './models/account';
 import category, { CategoryDenormalized, CategoryMap, ChecklistCategoryDenormalized } from './models/category';
 import checklist, * as checklistTypes from './models/checklist';
 import item, { Item, ItemMap } from './models/item';
-import parseTags from './utilities/parse-tags';
 import profile, { Profile, ProfileWithIdAndText } from './models/profile';
+import parseTags from './utilities/parse-tags';
 import splitByTagDelimiterFiltered from './utilities/split-by-tag-delimiter-filtered';
 
 type CategoryAndItemMap = ReadonlyJSONValue & {

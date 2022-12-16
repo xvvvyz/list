@@ -1,5 +1,4 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
 import X from '../../../../images/x.svg';
 
 const IconButtonX = (props: C.IconButtonProps) => (

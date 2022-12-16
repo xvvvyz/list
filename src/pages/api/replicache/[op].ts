@@ -1,7 +1,7 @@
 import { NextApiHandler } from 'next';
 import { createSpace, handleRequest, spaceExists } from 'replicache-nextjs/lib/backend';
-import isValidSpaceId from '../../../utilities/is-valid-space-id';
 import mutations from '../../../mutations';
+import isValidSpaceId from '../../../utilities/is-valid-space-id';
 
 const handler: NextApiHandler = async (req, res) => {
   try {

@@ -1,6 +1,5 @@
 import * as C from '@chakra-ui/react';
 import Link from 'next/link';
-import React from 'react';
 import ChevronRight from '../../images/chevron-right.svg';
 
 interface IconButtonChevronRightProps extends C.IconButtonProps {

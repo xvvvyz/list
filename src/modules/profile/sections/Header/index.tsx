@@ -1,8 +1,8 @@
 import * as C from '@chakra-ui/react';
-import React, { memo } from 'react';
+import { memo } from 'react';
+import useAllProfile from '../../../../hooks/use-all-profile';
 import Menu from './components/Menu';
 import ProfileList from './components/ProfileList';
-import useAllProfile from '../../../../hooks/use-all-profile';
 
 const Header = () => {
   const profiles = useAllProfile();

@@ -1,5 +1,4 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
 
 const EditableSubtext = (props: C.TextProps) => {
   const { isEditing } = C.useEditableControls();

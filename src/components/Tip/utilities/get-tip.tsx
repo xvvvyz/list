@@ -1,11 +1,10 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
-import Tag from '../../../modules/profile/components/Tag';
-import Tip from '../index';
-import splitByTagDelimiterFiltered from '../../../utilities/split-by-tag-delimiter-filtered';
-import { CategoryAndItemMap } from '../../../queries';
 import { Checklist } from '../../../models/checklist';
 import { ProfileWithIdAndText } from '../../../models/profile';
+import Tag from '../../../modules/profile/components/Tag';
+import { CategoryAndItemMap } from '../../../queries';
+import splitByTagDelimiterFiltered from '../../../utilities/split-by-tag-delimiter-filtered';
+import Tip from '../index';
 
 const getTip = ({
   categoryMap,

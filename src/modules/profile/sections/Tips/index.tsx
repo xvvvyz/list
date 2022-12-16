@@ -1,4 +1,3 @@
-import React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import getTip from '../../../../components/Tip/utilities/get-tip';
 import useAllCategoryAndItemMap from '../../../../hooks/use-all-category-and-item-map';

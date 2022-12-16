@@ -1,10 +1,10 @@
 import * as C from '@chakra-ui/react';
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import ButtonChevronExpand from '../../../../components/ButtonChevronExpand';
-import Checkbox from '../../components/Checkbox';
 import useActiveChecklist from '../../../../hooks/use-active-checklist';
 import useReplicache from '../../../../hooks/use-replicache';
 import { ChecklistItem } from '../../../../models/checklist';
+import Checkbox from '../../components/Checkbox';
 
 const Items = () => {
   const [isCategoryExpanded, setIsCategoryExpanded] = useState<Record<string, boolean>>({});

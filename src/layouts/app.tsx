@@ -1,5 +1,5 @@
 import * as C from '@chakra-ui/react';
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import ReplicacheProvider from '../components/ReplicacheProvider';
 import SyncingIndicator from '../components/SyncingIndicator';
 import { NextPageWithLayout } from '../pages/_app';

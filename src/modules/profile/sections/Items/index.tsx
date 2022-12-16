@@ -1,19 +1,19 @@
 import * as C from '@chakra-ui/react';
 import * as D from '@dnd-kit/core';
 import * as DS from '@dnd-kit/sortable';
-import React, { useState } from 'react';
 import noop from 'lodash/noop';
-import AddButton from '../../components/AddButton';
-import ListItem from './components/ListItem';
-import SortableListItem from './components/SortableListItem';
-import generateId from '../../../../utilities/generate-id';
-import getCategoryId from './utilities/get-category-id';
+import { useState } from 'react';
 import useActiveProfile from '../../../../hooks/use-active-profile';
 import useAllCategoryAndItemMap from '../../../../hooks/use-all-category-and-item-map';
 import useEphemeralState from '../../../../hooks/use-ephemeral-state';
 import useReplicache from '../../../../hooks/use-replicache';
 import { Category } from '../../../../models/category';
 import { Item } from '../../../../models/item';
+import generateId from '../../../../utilities/generate-id';
+import AddButton from '../../components/AddButton';
+import ListItem from './components/ListItem';
+import SortableListItem from './components/SortableListItem';
+import getCategoryId from './utilities/get-category-id';
 
 const Items = () => {
   const [draggingId, setDraggingId] = useState('');

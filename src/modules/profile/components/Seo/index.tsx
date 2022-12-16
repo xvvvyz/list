@@ -1,4 +1,3 @@
-import React from 'react';
 import { NextSeo } from 'next-seo';
 import useActiveProfile from '../../../../hooks/use-active-profile';
 

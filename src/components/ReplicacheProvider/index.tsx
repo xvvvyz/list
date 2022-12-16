@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 import { useReplicache } from 'replicache-nextjs/lib/frontend';
 import ReplicacheContext from '../../context/replicache';
-import generateId from '../../utilities/generate-id';
-import mutations from '../../mutations';
 import { IdSize, LocalstorageKey } from '../../enums';
+import mutations from '../../mutations';
+import generateId from '../../utilities/generate-id';
 
 const getSpaceId = () => {
   if (typeof window === 'undefined') return;

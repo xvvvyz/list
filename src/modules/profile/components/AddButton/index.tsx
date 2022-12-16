@@ -1,5 +1,4 @@
 import * as C from '@chakra-ui/react';
-import React from 'react';
 import Plus from '../../../../images/plus.svg';
 
 const AddButton = (props: C.ButtonProps) => (

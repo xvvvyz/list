@@ -1,8 +1,8 @@
-import { deleteAllReplicacheData } from 'replicache';
-import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
-import isValidSpaceId from '../../utilities/is-valid-space-id';
+import { useEffect, useRef } from 'react';
+import { deleteAllReplicacheData } from 'replicache';
 import { LocalstorageKey } from '../../enums';
+import isValidSpaceId from '../../utilities/is-valid-space-id';
 
 const OpenIdPage = () => {
   const router = useRouter();

@@ -1,5 +1,5 @@
 import * as C from '@chakra-ui/react';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import Check from '../../../../images/check.svg';
 
 interface IconProps extends C.IconProps {
