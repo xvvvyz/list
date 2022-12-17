@@ -332,13 +332,13 @@ const theme = extendTheme({
       baseStyle: {
         body: {
           color: 'fgSecondary',
-          mt: 5,
+          mt: 2,
           p: 0,
         },
         dialog: {
           bg: 'bgSecondary',
           borderRadius: 'lg',
-          p: 7,
+          p: 8,
           shadow: 'none',
         },
         footer: {

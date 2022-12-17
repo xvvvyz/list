@@ -54,11 +54,10 @@ const Menu = () => {
         <C.AlertDialogOverlay>
           <C.AlertDialogContent>
             <C.Heading as={C.AlertDialogHeader} fontWeight="bold" size="lg">
-              clear local data
+              clear local data?
             </C.Heading>
             <C.AlertDialogBody>
-              copy and save your backup link before continuing. any local changes that have not been synced will be
-              permanently lost.
+              copy and store your backup link or you will lose access to your&nbsp;profiles.
             </C.AlertDialogBody>
             <C.AlertDialogFooter>
               <C.Button
