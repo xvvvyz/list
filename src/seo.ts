@@ -1,8 +1,9 @@
 const name = 'llist';
+const title = 'llist — dynamic checklists';
 const url = 'https://llist.app';
 
 const description =
-  'The free and open source dynamic checklist web app that nobody asked for. Create and share checklists by categorizing and tagging list items.';
+  'The free and open source dynamic checklist web app that nobody asked for. Categorize and tag list items to generate checklists on the fly.';
 
 const seo = {
   additionalLinkTags: [
@@ -17,19 +18,19 @@ const seo = {
     { content: name, name: 'application-name' },
   ],
   canonical: url,
-  defaultTitle: 'llist — dynamic checklists',
+  defaultTitle: title,
   description: description,
   openGraph: {
     description,
-    images: [{ alt: 'llist logo', height: 460, url: `${url}/apple-splash-dark-1136-640.png`, width: 1136 }],
+    images: [{ alt: 'conquer the chaos with dynamic checklists', height: 630, url: `${url}/og.png`, width: 1200 }],
     locale: 'en_US',
     site_name: name,
-    title: name,
+    title: title,
     type: 'website',
     url,
   },
   titleTemplate: `%s - ${name}`,
-  twitter: { handle: '@xvvvyz' },
+  twitter: { cardType: 'summary_large_image', handle: '@xvvvyz' },
 };
 
 export default seo;
