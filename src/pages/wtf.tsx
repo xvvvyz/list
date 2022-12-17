@@ -88,6 +88,9 @@ const WtfPage = () => (
       </C.Button>
       <C.List mt={24} spacing={6}>
         <C.ListItem>
+          built by <C.Link href="https://twitter.com/xvvvyz">@xvvvyz</C.Link>
+        </C.ListItem>
+        <C.ListItem>
           <C.Link href="https://github.com/xvvvyz/llist">source code</C.Link>
         </C.ListItem>
       </C.List>
