@@ -262,13 +262,15 @@ const mutations = {
   },
   updateAccount: account.update,
   updateCategory: async (tx: WriteTransaction, data: Update<Item>) => {
-    if (data.text) data.text = trimWhitespace(data.text);
-    return category.update(tx, data);
+    const newData = { ...data };
+    if (newData.text) newData.text = trimWhitespace(newData.text);
+    return category.update(tx, newData);
   },
   updateChecklist: checklist.update,
   updateItem: async (tx: WriteTransaction, data: Update<Item>) => {
-    if (data.text) data.text = trimWhitespace(data.text);
-    return item.update(tx, data);
+    const newData = { ...data };
+    if (newData.text) newData.text = trimWhitespace(newData.text);
+    return item.update(tx, newData);
   },
   updateProfile: profile.update,
 };
