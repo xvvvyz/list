@@ -2,7 +2,7 @@ const name = 'llist';
 const url = 'https://llist.app';
 
 const description =
-  'The free and open source reusable checklist web app that nobody asked for. Dynamically create and share checklists by categorizing and tagging list items.';
+  'The free and open source dynamic checklist web app that nobody asked for. Create and share checklists by categorizing and tagging list items.';
 
 const seo = {
   additionalLinkTags: [
@@ -17,7 +17,7 @@ const seo = {
     { content: name, name: 'application-name' },
   ],
   canonical: url,
-  defaultTitle: 'llist — dynamic, reusable checklists',
+  defaultTitle: 'llist — dynamic checklists',
   description: description,
   openGraph: {
     description,

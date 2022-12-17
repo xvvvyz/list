@@ -26,14 +26,19 @@ const getTip = ({
   }
 
   if (!Object.keys(categoryMap).length) {
-    return <Tip>add categories to organize your items. for example: &ldquo;id & finance&rdquo;</Tip>;
+    return (
+      <Tip>
+        add categories to organize your items. for example: &ldquo;before leaving&rdquo;, &ldquo;id & finance&rdquo;,
+        &ldquo;photography&rdquo;
+      </Tip>
+    );
   }
 
   if (!Object.keys(itemMap).length) {
     return (
       <Tip>
-        add an item for each thing that you need to remember. for example: &ldquo;passport&rdquo; or &ldquo;$100
-        cash&rdquo;
+        add an item for each thing that you need to remember. for example: &ldquo;phone&rdquo;, &ldquo;laptop&rdquo;,
+        &ldquo;socks&rdquo;
       </Tip>
     );
   }

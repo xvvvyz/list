@@ -1,6 +1,6 @@
 # llist
 
-> Dynamic, reusable checklists.
+> Dynamic checklists.
 
 ## Development Setup
 

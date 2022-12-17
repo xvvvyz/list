@@ -9,7 +9,7 @@ const WtfPage = () => (
   <C.Container maxW={{ base: 'container.xs', sm: 'container.md' }} pb={24} textAlign="center">
     <C.Box as="header">
       <C.Heading alignItems="center" as="h1" display="flex" justifyContent="space-between" pt={8}>
-        <C.VisuallyHidden>llist — dynamic, reusable checklists</C.VisuallyHidden>
+        <C.VisuallyHidden>llist — dynamic checklists</C.VisuallyHidden>
         <C.Icon aria-hidden as={Logo} h={10} w="auto" />
         <C.Icon aria-hidden as={LogoIcon} h={10} w="auto" />
       </C.Heading>
@@ -21,7 +21,7 @@ const WtfPage = () => (
         >
           conquer the chaos with
         </C.Box>{' '}
-        dynamic, reusable checklists
+        dynamic checklists
       </C.Heading>
       <C.Button
         as={Link}
@@ -53,9 +53,10 @@ const WtfPage = () => (
     </C.Center>
     <C.Box as="main" bg="inherit" layerStyle="borderCard">
       {[
-        ['streamlined design', 'outdated, clunky checklist apps never stood a chance'],
-        ['categories & tags', 'create unique checklists from a base set of list items'],
-        ['cross-device sync', 'manage and utilize your checklists from any device with ease'],
+        ['categories & tags', <>generate checklists for&nbsp;any&nbsp;occasion</>],
+        ['cross-device sync', <>access your checklists from&nbsp;anywhere</>],
+        ['export as markdown', <>share your checklists with&nbsp;anyone</>],
+        ['streamlined design', <>adios, outdated, clunky checklist&nbsp;apps</>],
       ].map(([heading, description]) => (
         <C.Box
           _first={{ borderStyle: 'none' }}
@@ -64,7 +65,7 @@ const WtfPage = () => (
           borderStyle="solid none none"
           borderWidth="1px"
           key={heading as string}
-          px={{ sm: 10 }}
+          px={{ base: 4, sm: 14 }}
           py={24}
         >
           <C.Heading as="h2">{heading}</C.Heading>
