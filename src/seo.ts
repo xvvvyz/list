@@ -1,9 +1,9 @@
 const name = 'llist';
-const title = 'llist — dynamic checklists';
+const title = 'llist — adaptable checklists';
 const url = 'https://llist.app';
 
 const description =
-  'The free and open source dynamic checklist web app that nobody asked for. Categorize and tag list items to generate checklists on the fly.';
+  'The free and open source adaptable checklist web app that nobody asked for. Categorize and tag list items to generate checklists on the fly.';
 
 const seo = {
   additionalLinkTags: [
@@ -22,7 +22,7 @@ const seo = {
   description: description,
   openGraph: {
     description,
-    images: [{ alt: 'conquer the chaos with dynamic checklists', height: 630, url: `${url}/og.png`, width: 1200 }],
+    images: [{ alt: 'conquer the chaos with adaptable checklists', height: 630, url: `${url}/og.png`, width: 1200 }],
     locale: 'en_US',
     site_name: name,
     title: title,

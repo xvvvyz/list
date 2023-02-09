@@ -1,6 +1,9 @@
 # llist
 
-> Dynamic checklists.
+&ldquo;Adaptable checklists&rdquo; are **reusable** and **easily tailored** for different situations. For instance, a
+packing list for a domestic trip may include &ldquo;clothes&rdquo; and &ldquo;toiletries&rdquo; but not
+&ldquo;passport&rdquo;. By pre-organizing list items with categories and tags, you can quickly generate checklists for
+any occasion in a matter of seconds.
 
 ## Development Setup
 

@@ -9,7 +9,7 @@ const WtfPage = () => (
   <C.Container maxW={{ base: 'container.xs', sm: 'container.md' }} pb={24} textAlign="center">
     <C.Box as="header">
       <C.Heading alignItems="center" as="h1" display="flex" justifyContent="space-between" pt={8}>
-        <C.VisuallyHidden>llist — dynamic checklists</C.VisuallyHidden>
+        <C.VisuallyHidden>llist — adaptable checklists</C.VisuallyHidden>
         <C.Icon aria-hidden as={Logo} h={10} w="auto" />
         <C.Icon aria-hidden as={LogoIcon} h={10} w="auto" />
       </C.Heading>
@@ -21,7 +21,7 @@ const WtfPage = () => (
         >
           conquer the chaos with
         </C.Box>{' '}
-        dynamic checklists
+        adaptable checklists
       </C.Heading>
       <C.Button
         as={Link}
