@@ -1,4 +1,6 @@
 import { useSubscribe } from 'replicache-react';
+import { CategoryMap } from '../models/category';
+import { ItemMap } from '../models/item';
 import queries from '../queries';
 import useReplicache from './use-replicache';
 
@@ -8,7 +10,7 @@ const useAllCategoryAndItemMap = () => {
   return useSubscribe(
     replicache,
     async (tx) => {
-      if (!replicache) return { categoryMap: {}, itemMap: {}, tagList: [] };
+      if (!replicache) return { categoryMap: {} as CategoryMap, itemMap: {} as ItemMap, tagList: [] };
       return queries.allCategoryAndItemMap(tx, { accountId: replicache.name });
     },
     { categoryMap: {}, itemMap: {}, tagList: [] },

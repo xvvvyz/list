@@ -28,4 +28,4 @@ const checklistSchema = entitySchema.extend({
 const checklist = generate('checklist', checklistSchema);
 
 export default checklist;
-export type { Checklist, ChecklistDenormalized, ChecklistItem, ChecklistDenormalizedWithoutCategories };
+export type { Checklist, ChecklistDenormalized, ChecklistDenormalizedWithoutCategories, ChecklistItem };
