@@ -8,6 +8,9 @@ dependencies:
   '@babel/core':
     specifier: ^7.22.5
     version: 7.23.3
+  '@chakra-ui/provider':
+    specifier: ^2.4.2
+    version: 2.4.2(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(react-dom@18.2.0)(react@18.2.0)
   '@chakra-ui/react':
     specifier: ^2.7.0
     version: 2.8.2(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.39)(framer-motion@10.16.5)(react-dom@18.2.0)(react@18.2.0)
@@ -17,6 +20,9 @@ dependencies:
   '@dnd-kit/sortable':
     specifier: ^7.0.2
     version: 7.0.2(@dnd-kit/core@6.1.0)(react@18.2.0)
+  '@dnd-kit/utilities':
+    specifier: ^3.2.2
+    version: 3.2.2(react@18.2.0)
   '@emotion/react':
     specifier: ^11.11.1
     version: 11.11.1(@types/react@18.2.39)(react@18.2.0)
@@ -32,6 +38,9 @@ dependencies:
   '@svgr/webpack':
     specifier: ^8.0.1
     version: 8.1.0(typescript@5.3.2)
+  '@types/lodash':
+    specifier: ^4.14.202
+    version: 4.14.202
   '@types/node':
     specifier: ^20.3.1
     version: 20.10.0
@@ -3439,7 +3448,7 @@ packages:
     resolution: {integrity: sha512-8KG5RD0GVP4ydEzRn/I4BNDuxDtqVbOdm8675T49OIG/NGhaK0pjPX7ZcDlvKYbA+ulvVK3ztfcF4uBdOxuJbQ==}
     dependencies:
       '@gar/promisify': 1.1.3
-      semver: 7.3.8
+      semver: 7.5.4
     dev: false
 
   /@npmcli/move-file@1.1.2:
@@ -4305,7 +4314,7 @@ packages:
       recast: 0.21.5
       remark-frontmatter: 4.0.1
       remark-mdx-frontmatter: 1.1.1
-      semver: 7.3.8
+      semver: 7.5.4
       sort-package-json: 1.57.0
       tar-fs: 2.1.1
       tsconfig-paths: 4.2.0
@@ -7157,7 +7166,7 @@ packages:
       '@types/glob': 7.2.0
       array-union: 2.1.0
       dir-glob: 3.0.1
-      fast-glob: 3.2.11
+      fast-glob: 3.3.2
       glob: 7.2.3
       ignore: 5.3.0
       merge2: 1.4.1
