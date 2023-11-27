@@ -1,4 +1,4 @@
-# llist
+# list
 
 &ldquo;Adaptable checklists&rdquo; are **reusable** and **easily tailored** for different situations. For instance, a
 packing list for a domestic trip may include &ldquo;clothes&rdquo; and &ldquo;toiletries&rdquo; but not
@@ -11,8 +11,8 @@ Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and
 then:
 
 ```shell
-git clone git@github.com:xvvvyz/llist.git
-cd llist
+git clone git@github.com:xvvvyz/list.git
+cd list
 npm i
 npx replicache get-license
 echo 'NEXT_PUBLIC_REPLICACHE_LICENSE_KEY=<your license key>' > .env

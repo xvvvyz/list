@@ -1,6 +1,6 @@
-const name = 'llist';
-const title = 'llist — adaptable checklists';
-const url = 'https://llist.app';
+const name = 'list';
+const title = 'list — adaptable checklists';
+const url = 'https://list.xvvvyz.xyz';
 
 const description =
   'The free and open source adaptable checklist web app that nobody asked for. Categorize and tag list items to generate checklists on the fly.';

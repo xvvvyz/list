@@ -1,5 +1,5 @@
 {
-  "name": "llist",
+  "name": "list",
   "private": true,
   "scripts": {
     "build": "next build",

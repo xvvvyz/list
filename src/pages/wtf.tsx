@@ -9,7 +9,7 @@ const WtfPage = () => (
   <C.Container maxW={{ base: 'container.xs', sm: 'container.md' }} pb={24} textAlign="center">
     <C.Box as="header">
       <C.Heading alignItems="center" as="h1" display="flex" justifyContent="space-between" pt={8}>
-        <C.VisuallyHidden>llist — adaptable checklists</C.VisuallyHidden>
+        <C.VisuallyHidden>list — adaptable checklists</C.VisuallyHidden>
         <C.Icon aria-hidden as={Logo} h={10} w="auto" />
         <C.Icon aria-hidden as={LogoIcon} h={10} w="auto" />
       </C.Heading>
@@ -89,10 +89,10 @@ const WtfPage = () => (
       </C.Button>
       <C.List mt={24} spacing={6}>
         <C.ListItem>
-          built by <C.Link href="https://twitter.com/xvvvyz">@xvvvyz</C.Link>
+          built by <C.Link href="https://xvvvyz.xyz">@xvvvyz</C.Link>
         </C.ListItem>
         <C.ListItem>
-          <C.Link href="https://github.com/xvvvyz/llist">source code</C.Link>
+          <C.Link href="https://github.com/xvvvyz/list">source code</C.Link>
         </C.ListItem>
       </C.List>
     </C.Box>
