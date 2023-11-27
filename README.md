@@ -13,10 +13,10 @@ then:
 ```shell
 git clone git@github.com:xvvvyz/list.git
 cd list
-npm i
-npx replicache get-license
+pnpm i
+pnpm dlx replicache get-license
 echo 'NEXT_PUBLIC_REPLICACHE_LICENSE_KEY=<your license key>' > .env
-npm start
+pnpm start
 ```
 
 ## Built With
