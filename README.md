@@ -5,6 +5,8 @@ packing list for a domestic trip may include &ldquo;clothes&rdquo; and &ldquo;to
 &ldquo;passport&rdquo;. By pre-organizing list items with categories and tags, you can generate checklists for any
 occasion in a matter of seconds.
 
+![Sreenshot](SCREENSHOT.png)
+
 ## Development Setup
 
 Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Node](https://nodejs.org/en/download) and
