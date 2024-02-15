@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next';
-import { createSpace, handleRequest, spaceExists } from 'replicache-nextjs/lib/backend';
+import { createSpace, handleRequest, spaceExists } from '../../../libs/replicache-nextjs/src/backend';
 import mutations from '../../../mutations';
 import isValidSpaceId from '../../../utilities/is-valid-space-id';
 

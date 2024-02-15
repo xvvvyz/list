@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
-import { useReplicache } from 'replicache-nextjs/lib/frontend';
 import ReplicacheContext from '../../context/replicache';
 import { IdSize, LocalstorageKey } from '../../enums';
+import { useReplicache } from '../../libs/replicache-nextjs/src/frontend';
 import mutations from '../../mutations';
 import generateId from '../../utilities/generate-id';
 
@@ -20,12 +20,14 @@ interface ReplicacheProviderProps {
 
 const ReplicacheProvider = ({ children }: ReplicacheProviderProps) => (
   <ReplicacheContext.Provider
-    value={useReplicache({
-      mutators: mutations,
-      name: getSpaceId(),
-      pullInterval: null,
-      schemaVersion: '2',
-    })}
+    value={
+      useReplicache({
+        mutators: mutations,
+        name: getSpaceId(),
+        pullInterval: null,
+        schemaVersion: '2',
+      }) as never
+    }
   >
     {children}
   </ReplicacheContext.Provider>

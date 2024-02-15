@@ -7,16 +7,16 @@ occasion in a matter of seconds.
 
 ## Development Setup
 
-Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Node](https://nodejs.org/en/download),
-then:
+Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Node](https://nodejs.org/en/download) and
+[bun](https://bun.sh/docs/installation), then:
 
 ```shell
 git clone git@github.com:xvvvyz/list.git
 cd list
-pnpm i
-pnpm dlx replicache get-license
+bun i
+bun x replicache get-license
 echo 'NEXT_PUBLIC_REPLICACHE_LICENSE_KEY=<your license key>' > .env
-pnpm start
+bun start
 ```
 
 ## Built With
